@@ -64,3 +64,14 @@ yarn-error.log
 
 # testing
 /coverage
+
+# app
+orval.config.js
+.env
+
+# react-native-config codegen
+ios/tmp.xcconfig
+
+# firebase config
+android/app/google-services.json
+ios/GoogleService-Info.plist

@@ -1,3 +1,22 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json"
+	"extends": "@react-native/typescript-config/tsconfig.json",
+	"compilerOptions": {
+		"baseUrl": "./src",
+		"module": "esnext",
+		"paths": {
+			"@api": ["./api"],
+			"@assets/*": ["./assets/*"],
+			"@features/*": ["./features/*"],
+			"@environment/*": ["./environment/*"],
+			"@navigations": ["./navigations"],
+			"@navigations/*": ["./navigations/*"],
+			"@store/*": ["./store/*"],
+			"@hooks/*": ["./shared/hooks/*"],
+			"@components/*": ["./shared/components/*"],
+			"@services/*": ["./shared/services/*"],
+			"@utils/*": ["./shared/utils/*"],
+			"@environment": ["./environment"]
+		}
+	},
+	"include": ["src","types.d.ts"]
 }
