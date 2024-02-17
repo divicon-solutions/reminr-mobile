@@ -4,8 +4,8 @@
  * RemInr Api
  * OpenAPI spec version: 1.0
  */
+import type { UserDto } from "./userDto";
 
-export interface UpdateUserDto {
-	email?: string;
-	fullName?: string;
-}
+export type UsersControllerUpdate200AllOf = {
+	result?: UserDto;
+};

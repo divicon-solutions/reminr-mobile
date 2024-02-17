@@ -7,14 +7,14 @@
 		"@typescript-eslint/no-empty-function": "off",
 		"no-mixed-spaces-and-tabs": ["error", "smart-tabs"],
 		"prettier/prettier": ["error"],
-		"@typescript-eslint/no-shadow": ["error"],
-		"react/react-in-jsx-scope": ["error"]
+		"@typescript-eslint/no-shadow": "off",
+		"react/react-in-jsx-scope": ["error"],
 	},
 	"ignorePatterns": [
 		"babel.config.js",
 		"metro.config.js",
 		"jest.config.js",
 		"orval*.js",
-		"src/api/**/*"
-	]
+		"src/api/**/*",
+	],
 }

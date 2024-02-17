@@ -7,6 +7,8 @@ import App from "./App";
 import { setJSExceptionHandler, setNativeExceptionHandler } from "react-native-exception-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { customTheme } from "@utils/theme";
+import { AuthProvider } from "@providers/auth";
+import * as RootNavigation from "@navigations/RootNavigation";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -25,7 +27,7 @@ const errorHandler = (error: Error, isFatal: boolean) => {
 	console.error("[exceptionHandler] JS error:", error, { isFatal });
 };
 
-setJSExceptionHandler(errorHandler, true);
+setJSExceptionHandler(errorHandler, false);
 
 // Handle native crashes (Android only)
 const nativeErrorHandler = (errorString: string) => {
@@ -46,11 +48,13 @@ export default function Main() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<SafeAreaProvider>
-				<NavigationContainer>
-					<PaperProvider theme={customTheme}>
-						<App />
-					</PaperProvider>
-				</NavigationContainer>
+				<AuthProvider>
+					<NavigationContainer ref={RootNavigation.navigationRef}>
+						<PaperProvider theme={customTheme}>
+							<App />
+						</PaperProvider>
+					</NavigationContainer>
+				</AuthProvider>
 			</SafeAreaProvider>
 		</QueryClientProvider>
 	);

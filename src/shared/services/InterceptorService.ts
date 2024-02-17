@@ -2,39 +2,23 @@ import axios, { AxiosInstance } from "axios";
 import { AlertService } from "./AlertService";
 import { LoaderService } from "./LoaderService";
 import { environment } from "@environment";
+import auth from "@react-native-firebase/auth";
 
 class InterceptorService {
 	private _axiosInstance: AxiosInstance;
-	private authTokenGetter: () => Promise<string | null> = () => Promise.resolve(null);
-	private _userId: string | null = null;
 
 	constructor(http: AxiosInstance) {
 		this._axiosInstance = http;
 	}
 
-	setAuthTokenGetter(arg0: (() => Promise<string | null>) | undefined) {
-		if (arg0) {
-			this.authTokenGetter = arg0;
-		}
-	}
-
-	getAuthToken() {
-		return this.authTokenGetter();
-	}
-
-	setUserId(arg0: string | null) {
-		this._userId = arg0;
+	private async authTokenGetter() {
+		const idToken = await auth().currentUser?.getIdToken();
+		return idToken;
 	}
 
 	addRequestInterceptor(): this {
 		this._axiosInstance.interceptors.request.use(
 			async (config) => {
-				console.log(
-					"[InterceptorService] calling",
-					config.url,
-					config.method,
-					config.method === "get" ? config.params : config.data,
-				);
 				if (["post", "put", "delete"].includes(config.method || "")) {
 					if (!config.url?.includes("search")) {
 						LoaderService.showLoader();
@@ -44,6 +28,12 @@ class InterceptorService {
 				if (authToken) {
 					config.headers.Authorization = `Bearer ${authToken}`;
 				}
+				console.log(
+					`[InterceptorService] calling with ${authToken ? "auth" : "no auth"} token`,
+					config.url,
+					config.method,
+					config.method === "get" ? { params: config.params } : { data: config.data },
+				);
 				return config;
 			},
 			(error) => {

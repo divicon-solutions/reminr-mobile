@@ -5,12 +5,11 @@ import { StackNavigationOptions, StackScreenProps } from "@react-navigation/stac
 export type AppBottomNavigatorParamList = {
 	Today: undefined;
 	Dashboard: undefined;
-	Medications: undefined;
-	InrTest: undefined;
 };
 
 export type RootStackParamList = {
 	Login: undefined;
+	SignUp: undefined;
 	Home: NavigatorScreenParams<AppBottomNavigatorParamList>;
 };
 

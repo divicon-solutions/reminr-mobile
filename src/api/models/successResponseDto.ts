@@ -5,7 +5,6 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface UpdateUserDto {
-	email?: string;
-	fullName?: string;
+export interface SuccessResponseDto {
+	message: string;
 }

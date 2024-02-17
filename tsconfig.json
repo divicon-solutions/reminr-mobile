@@ -15,6 +15,7 @@
 			"@components/*": ["./shared/components/*"],
 			"@services/*": ["./shared/services/*"],
 			"@utils/*": ["./shared/utils/*"],
+			"@providers/*": ["./shared/providers/*"],
 			"@environment": ["./environment"]
 		}
 	},

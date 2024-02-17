@@ -12,7 +12,7 @@ const commonHooks = {
 	afterAllFilesWrite: "yarn format",
 };
 
-const baseUrl = "http://localhost:8080/api/v1";
+const baseUrl = "http://localhost:5001/api/v1";
 
 const instanceTemplate = `import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { http } from "@services/InterceptorService";

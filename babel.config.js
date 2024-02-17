@@ -29,6 +29,7 @@ module.exports = {
 					"@components": ["./src/shared/components"],
 					"@services": ["./src/shared/services"],
 					"@utils": ["./src/shared/utils"],
+					"@providers": ["./src/shared/providers"],
 				},
 			},
 		],

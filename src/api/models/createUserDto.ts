@@ -4,9 +4,11 @@
  * RemInr Api
  * OpenAPI spec version: 1.0
  */
+import type { CreateUserDtoRole } from "./createUserDtoRole";
 
 export interface CreateUserDto {
-	deletedAt?: string | null;
 	email: string;
-	fullName?: string | null;
+	fullName: string;
+	id?: string;
+	role?: CreateUserDtoRole;
 }

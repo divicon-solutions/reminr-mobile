@@ -13,12 +13,19 @@ import type {
 	UseQueryOptions,
 	UseQueryResult,
 } from "@tanstack/react-query";
-import type { CreateUserDto, UpdateUserDto } from "./models";
+import type {
+	CreateUserDto,
+	SuccessResponseDto,
+	UpdateUserDto,
+	UserDto,
+	UsersControllerCreate201,
+	UsersControllerUpdate200,
+} from "./models";
 import { mutator } from "./mutators/index";
 import type { ErrorType } from "./mutators/index";
 
 export const usersControllerCreate = (createUserDto: CreateUserDto) => {
-	return mutator<string>({
+	return mutator<UsersControllerCreate201>({
 		url: `/api/v1/users`,
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
@@ -78,7 +85,7 @@ export const useUsersControllerCreate = <
 	return useMutation(mutationOptions);
 };
 export const usersControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<string>({ url: `/api/v1/users`, method: "GET", signal });
+	return mutator<UserDto[]>({ url: `/api/v1/users`, method: "GET", signal });
 };
 
 export const getUsersControllerFindAllQueryKey = () => {
@@ -130,7 +137,7 @@ export const useUsersControllerFindAll = <
 };
 
 export const usersControllerFindOne = (id: string, signal?: AbortSignal) => {
-	return mutator<string>({ url: `/api/v1/users/${id}`, method: "GET", signal });
+	return mutator<UserDto>({ url: `/api/v1/users/${id}`, method: "GET", signal });
 };
 
 export const getUsersControllerFindOneQueryKey = (id: string) => {
@@ -188,7 +195,7 @@ export const useUsersControllerFindOne = <
 };
 
 export const usersControllerUpdate = (id: string, updateUserDto: UpdateUserDto) => {
-	return mutator<string>({
+	return mutator<UsersControllerUpdate200>({
 		url: `/api/v1/users/${id}`,
 		method: "PATCH",
 		headers: { "Content-Type": "application/json" },
@@ -248,7 +255,7 @@ export const useUsersControllerUpdate = <
 	return useMutation(mutationOptions);
 };
 export const usersControllerRemove = (id: string) => {
-	return mutator<string>({ url: `/api/v1/users/${id}`, method: "DELETE" });
+	return mutator<SuccessResponseDto>({ url: `/api/v1/users/${id}`, method: "DELETE" });
 };
 
 export const getUsersControllerRemoveMutationOptions = <

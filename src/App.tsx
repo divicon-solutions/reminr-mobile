@@ -11,12 +11,12 @@ import { makeStyles } from "@hooks/makeStyles";
 import SplashScreen from "@components/SplashScreen";
 import { RootStackParamList } from "@navigations/types";
 import { StatusBar } from "react-native";
+import { useAuth } from "@providers/auth";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 function AppContainer() {
-	const isLoading = true;
-	const user = null;
+	const { isLoading, user } = useAuth();
 
 	if (isLoading) {
 		return <SplashScreen />;
