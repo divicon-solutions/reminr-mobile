@@ -8,6 +8,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import TodayScreen from "@features/Home/Today";
 import DashboardScreen from "@features/Home/Dashboard";
 import { useAuth } from "@providers/auth";
+import MedicationsScreen from "@features/Medication/MedicationsList";
 
 const Tab = createBottomTabNavigator<AppBottomNavigatorParamList>();
 
@@ -40,6 +41,16 @@ export default function AppBottomNavigator() {
 					headerTitle: "Dashboard",
 					tabBarLabel: "Dashboard",
 					tabBarIcon: ({ color }) => <Icon name="dashboard" color={color} size={24} />,
+					headerRight: logout,
+				}}
+			/>
+			<Tab.Screen
+				name="Medications"
+				component={MedicationsScreen}
+				options={{
+					headerTitle: "Medications",
+					tabBarLabel: "Medications",
+					tabBarIcon: ({ color }) => <Icon name="medication" color={color} size={24} />,
 					headerRight: logout,
 				}}
 			/>

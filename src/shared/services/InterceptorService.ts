@@ -13,6 +13,7 @@ class InterceptorService {
 
 	private async authTokenGetter() {
 		const idToken = await auth().currentUser?.getIdToken();
+
 		return idToken;
 	}
 
@@ -25,6 +26,7 @@ class InterceptorService {
 					}
 				}
 				const authToken = await this.authTokenGetter();
+				console.log(authToken);
 				if (authToken) {
 					config.headers.Authorization = `Bearer ${authToken}`;
 				}
