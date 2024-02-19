@@ -8,4 +8,6 @@
 export interface UpdateUserDto {
 	email?: string;
 	fullName?: string;
+	phoneNumber?: string | null;
+	stickyReminder?: boolean;
 }

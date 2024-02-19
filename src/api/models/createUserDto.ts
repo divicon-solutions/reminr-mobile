@@ -10,5 +10,7 @@ export interface CreateUserDto {
 	email: string;
 	fullName: string;
 	id?: string;
+	phoneNumber?: string | null;
 	role?: CreateUserDtoRole;
+	stickyReminder?: boolean;
 }

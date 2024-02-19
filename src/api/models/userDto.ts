@@ -12,6 +12,9 @@ export interface UserDto {
 	email: string;
 	fullName: string;
 	id: string;
+	isVerified: boolean;
+	phoneNumber: string | null;
 	role: UserDtoRole;
+	stickyReminder: boolean;
 	updatedAt: string;
 }
