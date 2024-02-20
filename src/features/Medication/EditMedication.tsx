@@ -35,7 +35,7 @@ export default function EditMedication(props: EditMedcationProps) {
 	};
 	return (
 		<SafeAreaView>
-			<ScrollView>
+			<ScrollView style={{ padding: 20 }}>
 				<KeyboardAvoidView>
 					<Formik
 						initialValues={{
@@ -51,24 +51,34 @@ export default function EditMedication(props: EditMedcationProps) {
 					>
 						{({ handleSubmit, isValid, isSubmitting }) => (
 							<View>
-								<Text>Edit Medication</Text>
-
-								<TextFormField name="name" label="Medication Name" />
+								<TextFormField name="name" label="Medication Name" style={{ height: 40 }} />
 								<SelectFormField
 									name="frequency"
 									label="Frequency"
 									items={[{ label: "Daily", value: "daily" }]}
 								/>
-								<DateFormField name="startDate" label="Start Date" />
-
-								<Button
-									mode="contained"
-									onPress={() => handleSubmit()}
-									disabled={!isValid || isSubmitting}
-									loading={isSubmitting}
+								<TextFormField name="dosage" label="Dose" style={{ height: 40 }} />
+								<DateFormField name="startDate" label="Start Date" style={{ height: 40 }} />
+								<View
+									style={{ flexDirection: "row", justifyContent: "space-around", marginTop: 15 }}
 								>
-									Add Medication
-								</Button>
+									<Button
+										buttonColor="#e34040"
+										mode="contained"
+										style={{ borderRadius: 0, width: 160 }}
+									>
+										Delete
+									</Button>
+									<Button
+										mode="contained"
+										onPress={() => handleSubmit()}
+										disabled={!isValid || isSubmitting}
+										loading={isSubmitting}
+										style={{ borderRadius: 0, width: 160 }}
+									>
+										Save Changes
+									</Button>
+								</View>
 							</View>
 						)}
 					</Formik>

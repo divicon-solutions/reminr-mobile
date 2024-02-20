@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ScrollView } from "react-native";
+import { View, Text, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import React from "react";
 import { Formik } from "formik";
 import { Schema, array, number, object, string } from "yup";
@@ -11,8 +11,8 @@ import { Button } from "react-native-paper";
 
 const schema: Schema = object({
 	frequency: string().required(),
-	intervalCount: number(),
-	intervalUnit: string(),
+	intervalCount: number().nullable(),
+	intervalUnit: string().nullable(),
 	name: string().required(),
 	specificDays: array(),
 	startDate: string().required(),
@@ -26,13 +26,13 @@ export default function AddMedication() {
 	};
 	return (
 		<SafeAreaView>
-			<ScrollView>
+			<ScrollView style={{ padding: 20 }}>
 				<KeyboardAvoidView>
 					<Formik
 						initialValues={{
 							frequency: "",
-							intervalCount: 0,
-							intervalUnit: "",
+							intervalCount: null,
+							intervalUnit: null,
 							name: "",
 							specificDays: [],
 							startDate: new Date(),
@@ -42,24 +42,26 @@ export default function AddMedication() {
 					>
 						{({ handleSubmit, isValid, isSubmitting }) => (
 							<View>
-								<Text>AddMedication</Text>
-
-								<TextFormField name="name" label="Medication Name" />
+								<TextFormField name="name" label="Medication Name" style={{ height: 40 }} />
 								<SelectFormField
 									name="frequency"
 									label="Frequency"
-									items={[{ label: "Daily", value: "daily" }]}
+									items={[{ label: "Daily", value: "DAILY" }]}
 								/>
-								<DateFormField name="startDate" label="Start Date" />
+								<TextFormField name="dosage" label="Dose" style={{ height: 40 }} />
+								<DateFormField name="startDate" label="Start Date" style={{ height: 40 }} />
 
-								<Button
-									mode="contained"
-									onPress={() => handleSubmit()}
-									disabled={!isValid || isSubmitting}
-									loading={isSubmitting}
-								>
-									Add Medication
-								</Button>
+								<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+									<Button
+										mode="contained"
+										onPress={() => handleSubmit()}
+										disabled={!isValid || isSubmitting}
+										loading={isSubmitting}
+										style={{ marginTop: 15, borderRadius: 0, width: 300 }}
+									>
+										Add Medication
+									</Button>
+								</View>
 							</View>
 						)}
 					</Formik>

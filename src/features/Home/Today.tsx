@@ -1,5 +1,5 @@
 import { View, Text, FlatList, RefreshControl, Modal } from "react-native";
-import React from "react";
+import React, { Fragment } from "react";
 import { BottomTabNavigationProps } from "@navigations/types";
 import { ReminderDto, useRemindersControllerFindAll } from "@api";
 import Loader from "@components/Loader";
@@ -20,41 +20,42 @@ export default function Today({ navigation }: TodayProps) {
 	};
 	if (isLoading) return <Loader />;
 	return (
-		<FlatList
-			data={data}
-			renderItem={({ item }) => (
-				<TouchableOpacity onPress={() => handleReminderPress(item)}>
-					<View>
-						<Text>{item.title}</Text>
-					</View>
-				</TouchableOpacity>
-			)}
-			keyExtractor={(item) => item.id.toString()}
-			ListEmptyComponent={<Text>No Medications</Text>}
-			ListHeaderComponent={<Text>Today</Text>}
-			refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
-			ListFooterComponent={
-				<Modal animationType="slide" presentationStyle="pageSheet" visible={modalVisible}>
-					<View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-						<TouchableOpacity
-							onPress={() => {
-								setModalVisible(!modalVisible);
-							}}
-						>
-							<Icon name="close" size={24} />
-						</TouchableOpacity>
-					</View>
-					<View>{selectedReminder && <ViewReminder reminder={selectedReminder} />}</View>
+		<Fragment>
+			<FlatList
+				data={data}
+				renderItem={({ item }) => (
+					<TouchableOpacity onPress={() => handleReminderPress(item)}>
+						<View>
+							<Text>{item.title}</Text>
+						</View>
+					</TouchableOpacity>
+				)}
+				keyExtractor={(item) => item.id.toString()}
+				ListEmptyComponent={<Text>No Medications</Text>}
+				ListHeaderComponent={<Text>Today</Text>}
+				refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
+			/>
 
+			<Modal animationType="slide" presentationStyle="pageSheet" visible={modalVisible}>
+				<View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
 					<TouchableOpacity
 						onPress={() => {
 							setModalVisible(!modalVisible);
 						}}
 					>
-						<Text>Hide Modal</Text>
+						<Icon name="close" size={24} />
 					</TouchableOpacity>
-				</Modal>
-			}
-		/>
+				</View>
+				<View>{selectedReminder && <ViewReminder reminder={selectedReminder} />}</View>
+
+				<TouchableOpacity
+					onPress={() => {
+						setModalVisible(!modalVisible);
+					}}
+				>
+					<Text>Hide Modal</Text>
+				</TouchableOpacity>
+			</Modal>
+		</Fragment>
 	);
 }
