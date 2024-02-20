@@ -43,11 +43,12 @@ export default function ViewReminder(props: ViewReminderProps) {
 	);
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 	root: {
 		padding: 10,
 		flexGrow: 1,
 		justifyContent: "space-between",
+		backgroundColor: theme.colors.background,
 	},
 	closeButton: {
 		alignSelf: "flex-end",

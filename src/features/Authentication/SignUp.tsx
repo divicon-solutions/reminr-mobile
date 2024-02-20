@@ -1,11 +1,14 @@
 import React from "react";
-import { SafeAreaView, View } from "react-native";
+import { Dimensions, View } from "react-native";
 import { Formik } from "formik";
 import { Schema, object, string } from "yup";
 import { TextFormField } from "@components/FormFields/TextFormField";
 import { Button } from "react-native-paper";
 import { useAuth } from "@providers/auth";
 import { CreateUserDto } from "@api";
+import { makeStyles } from "@hooks/makeStyles";
+import KeyboardAvoidView from "@components/KeyboardAvoidView";
+import { StackNavigationProps } from "@navigations/types";
 
 type FormValues = CreateUserDto & {
 	password: string;
@@ -13,36 +16,40 @@ type FormValues = CreateUserDto & {
 };
 
 const schema: Schema<FormValues> = object({
-	email: string().email().required(),
-	fullName: string().required(),
-	password: string().min(8).required(),
+	email: string().email().required("Email is required"),
+	fullName: string().required("Full Name is required"),
+	password: string()
+		.min(8, "Password must be at least 8 characters")
+		.required("Password is required"),
 	confirmPassword: string()
-		.required()
+		.required("Confirm Password is required")
 		.test({
 			name: "passwords-match",
-			message: "Passwords must match",
+			message: "Confirm Password must match Password",
 			test: function (value) {
 				return this.parent.password === value;
 			},
 		}),
 });
 
-export default function Login() {
+type SignUpProps = StackNavigationProps<"SignUp">;
+export default function SignUp({ navigation }: SignUpProps) {
 	const { signUp } = useAuth();
+	const styles = useStyles();
 
 	const onSubmit = async ({ confirmPassword: _, ...values }: FormValues) => {
 		await signUp(values);
 	};
 
 	return (
-		<SafeAreaView>
-			<Formik
-				initialValues={{ email: "", password: "", confirmPassword: "", fullName: "" }}
-				validationSchema={schema}
-				onSubmit={onSubmit}
-			>
-				{({ handleSubmit, isSubmitting, isValid }) => (
-					<View>
+		<Formik
+			initialValues={{ email: "", password: "", confirmPassword: "", fullName: "" }}
+			validationSchema={schema}
+			onSubmit={onSubmit}
+		>
+			{({ handleSubmit, isSubmitting, isValid }) => (
+				<KeyboardAvoidView style={styles.container} contentContainerStyle={styles.content}>
+					<View style={styles.form}>
 						<TextFormField name="fullName" label="Full Name" />
 						<TextFormField
 							name="email"
@@ -63,17 +70,46 @@ export default function Login() {
 							secureTextEntry
 							textContentType="password"
 						/>
-						<Button
-							mode="contained"
-							onPress={() => handleSubmit()}
-							disabled={isSubmitting || !isValid}
-							loading={isSubmitting}
-						>
-							Sign Up
-						</Button>
+						<View style={styles.buttonGroup}>
+							<Button
+								mode="contained"
+								onPress={() => handleSubmit()}
+								disabled={isSubmitting || !isValid}
+								loading={isSubmitting}
+								style={styles.signUpButton}
+							>
+								Sign Up
+							</Button>
+
+							<Button mode="text" onPress={() => navigation.goBack()}>
+								Already have an account? Login
+							</Button>
+						</View>
 					</View>
-				)}
-			</Formik>
-		</SafeAreaView>
+				</KeyboardAvoidView>
+			)}
+		</Formik>
 	);
 }
+
+const useStyles = makeStyles((theme) => ({
+	container: {
+		padding: 16,
+		backgroundColor: theme.colors.background,
+	},
+	content: {
+		flexGrow: 1,
+		justifyContent: "center",
+	},
+	form: {
+		gap: 10,
+	},
+	buttonGroup: {
+		marginTop: 20,
+	},
+	signUpButton: {
+		width: Dimensions.get("window").width * 0.7,
+		borderRadius: 0,
+		alignSelf: "center",
+	},
+}));

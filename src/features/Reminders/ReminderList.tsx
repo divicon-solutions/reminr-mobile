@@ -72,9 +72,10 @@ export default function ReminderList() {
 	);
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 	root: {
 		padding: 10,
+		backgroundColor: theme.colors.background,
 	},
 	card: {
 		borderRadius: 5,

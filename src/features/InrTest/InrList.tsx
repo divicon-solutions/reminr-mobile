@@ -60,9 +60,10 @@ export default function InrList() {
 	);
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 	root: {
 		padding: 10,
+		backgroundColor: theme.colors.background,
 	},
 	addInrButton: {
 		marginBottom: 10,

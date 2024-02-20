@@ -26,7 +26,6 @@ class InterceptorService {
 					}
 				}
 				const authToken = await this.authTokenGetter();
-				console.log(authToken);
 				if (authToken) {
 					config.headers.Authorization = `Bearer ${authToken}`;
 				}

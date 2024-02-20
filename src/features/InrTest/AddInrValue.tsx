@@ -76,9 +76,10 @@ export default function AddInrValue({ hideModal }: AddInrValueProps) {
 	);
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 	root: {
 		padding: 10,
+		backgroundColor: theme.colors.background,
 	},
 	form: {
 		flexDirection: "column",

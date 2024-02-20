@@ -105,9 +105,10 @@ export default function AddMedication({ hideModal }: AddMedicationProps) {
 	);
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 	container: {
 		padding: 10,
+		backgroundColor: theme.colors.background,
 	},
 	closeButton: {
 		alignSelf: "flex-end",
