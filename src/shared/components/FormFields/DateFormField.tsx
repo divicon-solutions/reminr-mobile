@@ -45,10 +45,10 @@ export default function DateFormField({
 					textColor={colors.primary2}
 					value={moment(selectedDate).utc().format("MM/DD/YYYY")}
 					onChangeText={(value: string) => {
-						const utcDate = moment(value).utc().toDate();
-						setSelectedDate(utcDate);
-						onDateChange?.(utcDate);
-						helpers.setValue(utcDate.toISOString());
+						const utcDate = moment(value).utc().format("YYYY-MM-DD");
+						setSelectedDate(new Date(utcDate));
+						onDateChange?.(new Date(utcDate));
+						helpers.setValue(utcDate + "T00:00:00.000Z");
 					}}
 					error={!!errorText}
 					outlineStyle={styles.outlineStyle}
@@ -60,6 +60,7 @@ export default function DateFormField({
 						/>
 					}
 					{...props}
+					editable={false}
 				/>
 				{errorText && <HelperText type="error">{errorText}</HelperText>}
 			</View>
@@ -73,10 +74,10 @@ export default function DateFormField({
 				maximumDate={maximumDate}
 				onConfirm={(date) => {
 					setOpen(false);
-					const utcDate = moment(date).utc().toDate();
-					setSelectedDate(utcDate);
-					onDateChange?.(utcDate);
-					helpers.setValue(utcDate.toISOString());
+					const utcDate = moment(date).utc().format("YYYY-MM-DD");
+					setSelectedDate(date);
+					onDateChange?.(date);
+					helpers.setValue(utcDate + "T00:00:00.000Z");
 				}}
 				onCancel={() => setOpen(false)}
 			/>

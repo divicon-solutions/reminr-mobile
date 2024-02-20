@@ -6,7 +6,7 @@ import { makeStyles } from "@hooks/makeStyles";
 
 interface TextFormFieldProps extends TextInputProps {
 	name: string;
-	type?: "text" | "password";
+	type?: "text" | "password" | "number";
 }
 
 export function TextFormField({ label, name, type, ...props }: Readonly<TextFormFieldProps>) {
@@ -23,8 +23,13 @@ export function TextFormField({ label, name, type, ...props }: Readonly<TextForm
 			</HelperText>
 			<TextInput
 				mode="outlined"
-				value={field.value}
+				value={typeof field.value === "number" ? field.value.toString() : field.value}
 				onChangeText={(value: string) => helpers.setValue(value)}
+				onEndEditing={() => {
+					if (type === "number") {
+						helpers.setValue(Number(field.value));
+					}
+				}}
 				error={!!errorText}
 				secureTextEntry={hidePassword && type === "password"}
 				right={

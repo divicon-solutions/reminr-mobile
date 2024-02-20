@@ -1,4 +1,4 @@
-import { MedicationDto, ReminderDto } from "@api";
+import { MedicationDto, Reminder } from "@api";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { StackNavigationOptions, StackScreenProps } from "@react-navigation/stack";
@@ -14,7 +14,7 @@ export type RootStackParamList = {
 	SignUp: undefined;
 	Home: NavigatorScreenParams<AppBottomNavigatorParamList>;
 	AddMedication: undefined;
-	ViewReminderScreen: { item: ReminderDto };
+	ViewReminderScreen: { item: Reminder };
 	EditMedicationScreen: { item: MedicationDto };
 };
 

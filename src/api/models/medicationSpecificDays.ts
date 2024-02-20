@@ -5,11 +5,11 @@
  * OpenAPI spec version: 1.0
  */
 
-export type CreateMedicationDtoSpecificDays =
-	(typeof CreateMedicationDtoSpecificDays)[keyof typeof CreateMedicationDtoSpecificDays];
+export type MedicationSpecificDays =
+	(typeof MedicationSpecificDays)[keyof typeof MedicationSpecificDays];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const CreateMedicationDtoSpecificDays = {
+export const MedicationSpecificDays = {
 	SUNDAY: "SUNDAY",
 	MONDAY: "MONDAY",
 	TUESDAY: "TUESDAY",

@@ -1,89 +1,132 @@
-import { View, Text, SafeAreaView, ScrollView } from "react-native";
+import { View, SafeAreaView, Dimensions } from "react-native";
 import React from "react";
-import { Schema, array, number, object, string } from "yup";
-import { MedicationDto, UpdateMedicationDto, useMedicationsControllerUpdate } from "@api";
-import KeyboardAvoidView from "@components/KeyboardAvoidView";
 import { Formik } from "formik";
+import { Schema, array, mixed, number, object, string } from "yup";
+import {
+	CreateMedicationDto,
+	CreateMedicationDtoFrequency,
+	CreateMedicationDtoIntervalUnit,
+	CreateMedicationDtoSpecificDaysItem,
+	getMedicationsControllerFindAllQueryKey,
+	useMedicationsControllerRemove,
+	useMedicationsControllerUpdate,
+} from "@api";
+import KeyboardAvoidView from "@components/KeyboardAvoidView";
 import { TextFormField } from "@components/FormFields/TextFormField";
 import { SelectFormField } from "@components/FormFields/SelectFormField";
 import DateFormField from "@components/FormFields/DateFormField";
 import { Button } from "react-native-paper";
+import { makeStyles } from "@hooks/makeStyles";
+import { useQueryClient } from "@tanstack/react-query";
+import { StackNavigationProps } from "@navigations/types";
 
-const schema: Schema = object({
-	frequency: string().required(),
-	intervalCount: number(),
-	intervalUnit: string(),
+const schema: Schema<CreateMedicationDto> = object({
+	frequency: mixed<CreateMedicationDtoFrequency>()
+		.oneOf(Object.values(CreateMedicationDtoFrequency))
+		.required(),
+	intervalCount: number().nullable(),
+	intervalUnit: mixed<NonNullable<CreateMedicationDtoIntervalUnit>>()
+		.oneOf(Object.values(CreateMedicationDtoIntervalUnit))
+		.nullable(),
 	name: string().required(),
-	specificDays: array(),
+	specificDays: array()
+		.of(
+			mixed<CreateMedicationDtoSpecificDaysItem>()
+				.oneOf(Object.values(CreateMedicationDtoSpecificDaysItem))
+				.required(),
+		)
+		.required(),
+	dosage: string(),
+	noOfPills: number().required(),
 	startDate: string().required(),
 });
 
-type EditMedcationProps = {
-	route: {
-		params: {
-			item: MedicationDto;
-		};
-	};
-};
-
-export default function EditMedication(props: EditMedcationProps) {
-	const { item } = props.route.params;
+type AddMedicationProps = StackNavigationProps<"EditMedicationScreen">;
+export default function AddMedication({ navigation, route }: AddMedicationProps) {
+	const { item: medication } = route.params;
 	const { mutateAsync } = useMedicationsControllerUpdate();
+	const { mutateAsync: deleteMutateAsync } = useMedicationsControllerRemove();
 
-	const onSubmit = async (values: UpdateMedicationDto) => {
-		await mutateAsync({ id: item.id, data: values });
+	const styles = useStyles();
+
+	const queryClient = useQueryClient();
+
+	const onSubmit = async (values: CreateMedicationDto) => {
+		await mutateAsync({ id: medication.id, data: values });
+		const queryKey = getMedicationsControllerFindAllQueryKey();
+		await queryClient.invalidateQueries({ queryKey });
+		navigation.goBack();
 	};
+
+	const onDelete = async () => {
+		await deleteMutateAsync({ id: medication.id });
+		const queryKey = getMedicationsControllerFindAllQueryKey();
+		await queryClient.invalidateQueries({ queryKey });
+		navigation.goBack();
+	};
+
+	const initialValues: CreateMedicationDto = medication;
+
 	return (
-		<SafeAreaView>
-			<ScrollView style={{ padding: 20 }}>
-				<KeyboardAvoidView>
-					<Formik
-						initialValues={{
-							frequency: item.frequency,
-							intervalCount: item.intervalCount,
-							intervalUnit: item.intervalUnit,
-							name: item.name,
-							specificDays: item.specificDays,
-							startDate: item.startDate,
-						}}
-						validationSchema={schema}
-						onSubmit={onSubmit}
-					>
-						{({ handleSubmit, isValid, isSubmitting }) => (
-							<View>
-								<TextFormField name="name" label="Medication Name" style={{ height: 40 }} />
-								<SelectFormField
-									name="frequency"
-									label="Frequency"
-									items={[{ label: "Daily", value: "daily" }]}
-								/>
-								<TextFormField name="dosage" label="Dose" style={{ height: 40 }} />
-								<DateFormField name="startDate" label="Start Date" style={{ height: 40 }} />
-								<View
-									style={{ flexDirection: "row", justifyContent: "space-around", marginTop: 15 }}
-								>
-									<Button
-										buttonColor="#e34040"
-										mode="contained"
-										style={{ borderRadius: 0, width: 160 }}
-									>
-										Delete
-									</Button>
-									<Button
-										mode="contained"
-										onPress={() => handleSubmit()}
-										disabled={!isValid || isSubmitting}
-										loading={isSubmitting}
-										style={{ borderRadius: 0, width: 160 }}
-									>
-										Save Changes
-									</Button>
-								</View>
-							</View>
-						)}
-					</Formik>
+		<Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>
+			{({ handleSubmit, isValid, isSubmitting }) => (
+				<KeyboardAvoidView style={styles.container} contentContainerStyle={styles.containerStyle}>
+					<View>
+						<TextFormField name="name" label="Medication Name" />
+						<SelectFormField
+							name="frequency"
+							label="Frequency"
+							items={Object.values(CreateMedicationDtoFrequency).map((value) => ({
+								value,
+								label: value,
+							}))}
+						/>
+						<TextFormField name="dosage" label="Dose" />
+						<DateFormField name="startDate" label="Start Date" />
+					</View>
+
+					<SafeAreaView style={styles.submitContainer}>
+						<Button mode="contained" style={styles.deleteButton} onPress={onDelete}>
+							Delete
+						</Button>
+						<Button
+							mode="contained"
+							onPress={() => handleSubmit()}
+							disabled={!isValid || isSubmitting}
+							loading={isSubmitting}
+							style={styles.buttonStyle}
+						>
+							Save Changes
+						</Button>
+					</SafeAreaView>
 				</KeyboardAvoidView>
-			</ScrollView>
-		</SafeAreaView>
+			)}
+		</Formik>
 	);
 }
+
+const useStyles = makeStyles((theme) => ({
+	container: {
+		padding: 10,
+		backgroundColor: theme.colors.background,
+	},
+	containerStyle: {
+		flexGrow: 1,
+		justifyContent: "space-between",
+	},
+	submitContainer: {
+		flexDirection: "row",
+		justifyContent: "space-around",
+		gap: 10,
+	},
+	buttonStyle: {
+		borderRadius: 0,
+		alignSelf: "center",
+		width: Dimensions.get("window").width / 3,
+	},
+	deleteButton: {
+		borderRadius: 0,
+		backgroundColor: theme.colors.error,
+		width: Dimensions.get("window").width / 3,
+	},
+}));

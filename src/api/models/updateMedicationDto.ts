@@ -5,13 +5,16 @@
  * OpenAPI spec version: 1.0
  */
 import type { UpdateMedicationDtoFrequency } from "./updateMedicationDtoFrequency";
-import type { UpdateMedicationDtoSpecificDays } from "./updateMedicationDtoSpecificDays";
+import type { UpdateMedicationDtoIntervalUnit } from "./updateMedicationDtoIntervalUnit";
+import type { UpdateMedicationDtoSpecificDaysItem } from "./updateMedicationDtoSpecificDaysItem";
 
 export interface UpdateMedicationDto {
+	dosage?: string | null;
 	frequency?: UpdateMedicationDtoFrequency;
 	intervalCount?: number | null;
-	intervalUnit?: string | null;
+	intervalUnit?: UpdateMedicationDtoIntervalUnit;
 	name?: string;
-	specificDays?: UpdateMedicationDtoSpecificDays;
+	noOfPills?: number;
+	specificDays?: UpdateMedicationDtoSpecificDaysItem[];
 	startDate?: string;
 }

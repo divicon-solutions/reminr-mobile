@@ -4,8 +4,8 @@
  * RemInr Api
  * OpenAPI spec version: 1.0
  */
-import type { ReminderDto } from "./reminderDto";
+import type { Reminder } from "./reminder";
 
 export type RemindersControllerUpdate200AllOf = {
-	result?: ReminderDto;
+	result?: Reminder;
 };

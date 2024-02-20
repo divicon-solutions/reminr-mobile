@@ -15,7 +15,7 @@ import type {
 } from "@tanstack/react-query";
 import type {
 	CreateReminderDto,
-	ReminderDto,
+	Reminder,
 	RemindersControllerCreate201,
 	RemindersControllerUpdate200,
 	SuccessResponseDto,
@@ -85,7 +85,7 @@ export const useRemindersControllerCreate = <
 	return useMutation(mutationOptions);
 };
 export const remindersControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<ReminderDto[]>({ url: `/api/v1/reminders`, method: "GET", signal });
+	return mutator<Reminder[]>({ url: `/api/v1/reminders`, method: "GET", signal });
 };
 
 export const getRemindersControllerFindAllQueryKey = () => {
@@ -138,7 +138,7 @@ export const useRemindersControllerFindAll = <
 };
 
 export const remindersControllerFindOne = (id: string, signal?: AbortSignal) => {
-	return mutator<ReminderDto>({ url: `/api/v1/reminders/${id}`, method: "GET", signal });
+	return mutator<Reminder>({ url: `/api/v1/reminders/${id}`, method: "GET", signal });
 };
 
 export const getRemindersControllerFindOneQueryKey = (id: string) => {

@@ -11,7 +11,19 @@ export const unprotectedScreens: Navigation[] = [
 ];
 
 export const protectedScreens: Navigation[] = [
-	{ name: "AddMedication", Component: AddMedicationScreen },
-	{ name: "ViewReminderScreen", Component: ViewReminderScreen },
-	{ name: "EditMedicationScreen", Component: EditMedicationScreen },
+	{
+		name: "AddMedication",
+		Component: AddMedicationScreen,
+		options: { headerTitle: "Add Medication" },
+	},
+	{
+		name: "ViewReminderScreen",
+		Component: ViewReminderScreen,
+		options: { headerTitle: "View Reminder" },
+	},
+	{
+		name: "EditMedicationScreen",
+		Component: EditMedicationScreen,
+		options: { headerTitle: "Edit Medication" },
+	},
 ];

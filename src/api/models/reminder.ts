@@ -4,13 +4,15 @@
  * RemInr Api
  * OpenAPI spec version: 1.0
  */
+import type { Medication } from "./medication";
 
-export interface ReminderDto {
+export interface Reminder {
 	acknowledgedAt: string | null;
 	createdAt: string;
 	deletedAt: string | null;
 	description: string | null;
 	id: string;
+	medication?: Medication;
 	medicationId: string;
 	remindAt: string;
 	status: boolean | null;
