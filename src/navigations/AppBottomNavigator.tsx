@@ -4,11 +4,13 @@ import { AppBottomNavigatorParamList } from "./types";
 import { BottomTabBarProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BottomNavigation } from "react-native-paper";
 import { CommonActions } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import TodayScreen from "@features/Home/Today";
-import DashboardScreen from "@features/Home/Dashboard";
 import { useAuth } from "@providers/auth";
+import MIIcon from "react-native-vector-icons/MaterialIcons";
+import FIcon from "react-native-vector-icons/Fontisto";
+import TodayScreen from "@features/Reminders/ReminderList";
+import DashboardScreen from "@features/Home/Dashboard";
 import MedicationsScreen from "@features/Medication/MedicationsList";
+import InrScreen from "@features/InrTest/InrList";
 
 const Tab = createBottomTabNavigator<AppBottomNavigatorParamList>();
 
@@ -16,7 +18,7 @@ export default function AppBottomNavigator() {
 	const { signOut } = useAuth();
 
 	const logout = useCallback(() => {
-		return <Icon name="logout" size={24} onPress={signOut} />;
+		return <MIIcon name="logout" size={24} onPress={signOut} />;
 	}, [signOut]);
 
 	return (
@@ -30,7 +32,7 @@ export default function AppBottomNavigator() {
 				options={{
 					headerTitle: "Today",
 					tabBarLabel: "Today",
-					tabBarIcon: ({ color }) => <Icon name="today" color={color} size={24} />,
+					tabBarIcon: ({ color }) => <MIIcon name="today" color={color} size={24} />,
 					headerRight: logout,
 				}}
 			/>
@@ -40,7 +42,7 @@ export default function AppBottomNavigator() {
 				options={{
 					headerTitle: "Dashboard",
 					tabBarLabel: "Dashboard",
-					tabBarIcon: ({ color }) => <Icon name="dashboard" color={color} size={24} />,
+					tabBarIcon: ({ color }) => <MIIcon name="dashboard" color={color} size={24} />,
 					headerRight: logout,
 				}}
 			/>
@@ -50,7 +52,17 @@ export default function AppBottomNavigator() {
 				options={{
 					headerTitle: "Medications",
 					tabBarLabel: "Medications",
-					tabBarIcon: ({ color }) => <Icon name="medication" color={color} size={24} />,
+					tabBarIcon: ({ color }) => <MIIcon name="medication" color={color} size={24} />,
+					headerRight: logout,
+				}}
+			/>
+			<Tab.Screen
+				name="InrTest"
+				component={InrScreen}
+				options={{
+					headerTitle: "INR Test",
+					tabBarLabel: "INR Test",
+					tabBarIcon: ({ color }) => <FIcon name="blood-drop" color={color} size={24} />,
 					headerRight: logout,
 				}}
 			/>

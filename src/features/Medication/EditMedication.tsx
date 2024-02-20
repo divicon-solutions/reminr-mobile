@@ -7,6 +7,7 @@ import {
 	CreateMedicationDtoFrequency,
 	CreateMedicationDtoIntervalUnit,
 	CreateMedicationDtoSpecificDaysItem,
+	MedicationDto,
 	getMedicationsControllerFindAllQueryKey,
 	useMedicationsControllerRemove,
 	useMedicationsControllerUpdate,
@@ -15,10 +16,9 @@ import KeyboardAvoidView from "@components/KeyboardAvoidView";
 import { TextFormField } from "@components/FormFields/TextFormField";
 import { SelectFormField } from "@components/FormFields/SelectFormField";
 import DateFormField from "@components/FormFields/DateFormField";
-import { Button } from "react-native-paper";
+import { Button, IconButton } from "react-native-paper";
 import { makeStyles } from "@hooks/makeStyles";
 import { useQueryClient } from "@tanstack/react-query";
-import { StackNavigationProps } from "@navigations/types";
 
 const schema: Schema<CreateMedicationDto> = object({
 	frequency: mixed<CreateMedicationDtoFrequency>()
@@ -41,9 +41,12 @@ const schema: Schema<CreateMedicationDto> = object({
 	startDate: string().required(),
 });
 
-type AddMedicationProps = StackNavigationProps<"EditMedicationScreen">;
-export default function AddMedication({ navigation, route }: AddMedicationProps) {
-	const { item: medication } = route.params;
+type EditMedicationProps = Readonly<{
+	hideModal: () => void;
+	medication: MedicationDto;
+}>;
+
+export default function EditMedication({ hideModal, medication }: EditMedicationProps) {
 	const { mutateAsync } = useMedicationsControllerUpdate();
 	const { mutateAsync: deleteMutateAsync } = useMedicationsControllerRemove();
 
@@ -54,15 +57,15 @@ export default function AddMedication({ navigation, route }: AddMedicationProps)
 	const onSubmit = async (values: CreateMedicationDto) => {
 		await mutateAsync({ id: medication.id, data: values });
 		const queryKey = getMedicationsControllerFindAllQueryKey();
+		hideModal();
 		await queryClient.invalidateQueries({ queryKey });
-		navigation.goBack();
 	};
 
 	const onDelete = async () => {
 		await deleteMutateAsync({ id: medication.id });
 		const queryKey = getMedicationsControllerFindAllQueryKey();
+		hideModal();
 		await queryClient.invalidateQueries({ queryKey });
-		navigation.goBack();
 	};
 
 	const initialValues: CreateMedicationDto = medication;
@@ -72,6 +75,7 @@ export default function AddMedication({ navigation, route }: AddMedicationProps)
 			{({ handleSubmit, isValid, isSubmitting }) => (
 				<KeyboardAvoidView style={styles.container} contentContainerStyle={styles.containerStyle}>
 					<View>
+						<IconButton style={styles.closeButton} icon="close" onPress={hideModal} />
 						<TextFormField name="name" label="Medication Name" />
 						<SelectFormField
 							name="frequency"
@@ -109,6 +113,9 @@ const useStyles = makeStyles((theme) => ({
 	container: {
 		padding: 10,
 		backgroundColor: theme.colors.background,
+	},
+	closeButton: {
+		alignSelf: "flex-end",
 	},
 	containerStyle: {
 		flexGrow: 1,

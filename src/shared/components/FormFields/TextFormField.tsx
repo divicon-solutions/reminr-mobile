@@ -48,12 +48,11 @@ export function TextFormField({ label, name, type, ...props }: Readonly<TextForm
 	);
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	container: {
 		width: "100%",
 	},
 	helperText: {
-		color: theme.colors.primary1,
 		fontSize: 14,
 		fontWeight: "bold",
 		marginLeft: -8,
@@ -62,6 +61,5 @@ const useStyles = makeStyles((theme) => ({
 	outlineStyle: {
 		borderRadius: 8,
 		borderWidth: 0.5,
-		borderColor: theme.colors.primary2,
 	},
 }));

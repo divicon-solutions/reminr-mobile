@@ -10,7 +10,6 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { makeStyles } from "@hooks/makeStyles";
 import SplashScreen from "@components/SplashScreen";
 import { RootStackParamList } from "@navigations/types";
-import { StatusBar } from "react-native";
 import { useAuth } from "@providers/auth";
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -72,7 +71,6 @@ export default function App() {
 
 	return (
 		<>
-			<StatusBar backgroundColor={"#99CBD1"} animated={true} />
 			<AppContainer />
 			<Snackbar
 				visible={open}
@@ -89,15 +87,15 @@ export default function App() {
 
 const useStyles = makeStyles((theme) => ({
 	success: {
-		backgroundColor: theme.colors.success1,
+		backgroundColor: theme.colors.primary,
 	},
 	error: {
 		backgroundColor: theme.colors.error,
 	},
 	info: {
-		backgroundColor: theme.colors.cornflowerBlue2,
+		backgroundColor: theme.colors.primaryContainer,
 	},
 	warning: {
-		backgroundColor: theme.colors.moderate1,
+		backgroundColor: theme.colors.secondaryContainer,
 	},
 }));

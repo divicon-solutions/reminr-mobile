@@ -1,28 +1,27 @@
 import { RefreshControl, Dimensions, Modal, View } from "react-native";
-import React, { useCallback, useState } from "react";
-import { MedicationDto, useMedicationsControllerFindAll } from "@api";
+import React, { useCallback } from "react";
+import { InrTestDto, useInrTestControllerFindAll } from "@api";
 import { FlatList } from "react-native-gesture-handler";
 import Loader from "@components/Loader";
 import { Button, Card, List } from "react-native-paper";
 import { parseDateToFormat } from "@utils/formatters";
 import { makeStyles } from "@hooks/makeStyles";
+import FIcon from "react-native-vector-icons/Fontisto";
 import { useDialog } from "@hooks/useDialog";
-import AddMedication from "./AddMedication";
-import EditMedication from "./EditMedication";
+import AddInrValue from "./AddInrValue";
 
-export default function MedicationsList() {
-	const { data, isLoading, isRefetching, refetch } = useMedicationsControllerFindAll();
+export default function InrList() {
+	const { data, isLoading, isRefetching, refetch } = useInrTestControllerFindAll();
 	const styles = useStyles();
 	const { open, handleClickOpen, handleClose } = useDialog();
-	const [selectedMedication, setSelectedMedication] = useState<MedicationDto | null>(null);
 
-	const renderItem = useCallback(({ item }: { item: MedicationDto }) => {
+	const renderItem = useCallback(({ item }: { item: InrTestDto }) => {
 		return (
 			<Card mode="contained">
 				<List.Item
-					title={item.name}
-					description={`${item.dosage} pills - ${parseDateToFormat(item.startDate)}`}
-					onPress={() => setSelectedMedication(item)}
+					title={item.inrValue.toString()}
+					description={parseDateToFormat(item.date, "MMM DD, YYYY")}
+					right={(props) => <FIcon name="blood-drop" size={24} {...props} color={"red"} />}
 				/>
 			</Card>
 		);
@@ -40,7 +39,7 @@ export default function MedicationsList() {
 				keyExtractor={(item) => item.id}
 				ListHeaderComponent={
 					<Button mode="contained" style={styles.addInrButton} onPress={handleClickOpen}>
-						Add Medication
+						Add Inr Value
 					</Button>
 				}
 				ItemSeparatorComponent={() => <View style={styles.divider} />}
@@ -55,20 +54,7 @@ export default function MedicationsList() {
 				presentationStyle="pageSheet"
 				onDismiss={handleClose}
 			>
-				<AddMedication hideModal={handleClose} />
-			</Modal>
-			<Modal
-				visible={!!selectedMedication}
-				animationType="slide"
-				presentationStyle="pageSheet"
-				onDismiss={() => setSelectedMedication(null)}
-			>
-				{selectedMedication && (
-					<EditMedication
-						hideModal={() => setSelectedMedication(null)}
-						medication={selectedMedication}
-					/>
-				)}
+				<AddInrValue hideModal={handleClose} />
 			</Modal>
 		</>
 	);

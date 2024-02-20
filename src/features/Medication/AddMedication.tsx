@@ -1,4 +1,4 @@
-import { View, SafeAreaView } from "react-native";
+import { View, SafeAreaView, Dimensions } from "react-native";
 import React from "react";
 import { Formik } from "formik";
 import { Schema, array, mixed, number, object, string } from "yup";
@@ -14,11 +14,10 @@ import KeyboardAvoidView from "@components/KeyboardAvoidView";
 import { TextFormField } from "@components/FormFields/TextFormField";
 import { SelectFormField } from "@components/FormFields/SelectFormField";
 import DateFormField from "@components/FormFields/DateFormField";
-import { Button } from "react-native-paper";
+import { Button, IconButton } from "react-native-paper";
 import { getCurrentUtcTimestamp } from "@utils/formatters";
 import { makeStyles } from "@hooks/makeStyles";
 import { useQueryClient } from "@tanstack/react-query";
-import { StackNavigationProps } from "@navigations/types";
 
 const schema: Schema<CreateMedicationDto> = object({
 	frequency: mixed<CreateMedicationDtoFrequency>()
@@ -41,8 +40,10 @@ const schema: Schema<CreateMedicationDto> = object({
 	startDate: string().required(),
 });
 
-type AddMedicationProps = StackNavigationProps<"AddMedication">;
-export default function AddMedication({ navigation }: AddMedicationProps) {
+type AddMedicationProps = Readonly<{
+	hideModal: () => void;
+}>;
+export default function AddMedication({ hideModal }: AddMedicationProps) {
 	const { mutateAsync } = useMedicationsControllerCreate();
 	const styles = useStyles();
 
@@ -51,8 +52,8 @@ export default function AddMedication({ navigation }: AddMedicationProps) {
 	const onSubmit = async (values: CreateMedicationDto) => {
 		await mutateAsync({ data: values });
 		const queryKey = getMedicationsControllerFindAllQueryKey();
+		hideModal();
 		await queryClient.invalidateQueries({ queryKey });
-		navigation.goBack();
 	};
 
 	const initialValues: CreateMedicationDto = {
@@ -63,13 +64,12 @@ export default function AddMedication({ navigation }: AddMedicationProps) {
 		specificDays: [],
 	};
 
-	console.log("initialValues", initialValues);
-
 	return (
 		<Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>
 			{({ handleSubmit, isValid, isSubmitting }) => (
 				<KeyboardAvoidView style={styles.container} contentContainerStyle={styles.containerStyle}>
 					<View>
+						<IconButton style={styles.closeButton} icon="close" onPress={hideModal} />
 						<TextFormField name="name" label="Medication Name" />
 						<SelectFormField
 							name="frequency"
@@ -105,19 +105,20 @@ export default function AddMedication({ navigation }: AddMedicationProps) {
 	);
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	container: {
 		padding: 10,
-		backgroundColor: theme.colors.background,
+	},
+	closeButton: {
+		alignSelf: "flex-end",
 	},
 	containerStyle: {
 		flexGrow: 1,
 		justifyContent: "space-between",
 	},
 	buttonStyle: {
-		marginTop: 15,
 		borderRadius: 0,
-		width: 300,
+		width: Dimensions.get("window").width / 2,
 		alignSelf: "center",
 	},
 }));
