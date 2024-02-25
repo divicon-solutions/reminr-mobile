@@ -16,6 +16,6 @@ const useStyles = makeStyles((theme) => ({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: theme.colors.backgroundColor,
+		backgroundColor: theme.colors.background,
 	},
 }));

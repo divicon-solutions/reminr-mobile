@@ -1,11 +1,10 @@
-import { makeStyles, useAppTheme } from "@hooks/makeStyles";
+import { makeStyles } from "@hooks/makeStyles";
 import { useField } from "formik";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import DatePicker from "react-native-date-picker";
 import { HelperText, TextInput, TextInputProps } from "react-native-paper";
-import { Picker } from "@react-native-picker/picker";
 
 interface DateFormFieldProps extends TextInputProps {
 	name: string;
@@ -13,6 +12,7 @@ interface DateFormFieldProps extends TextInputProps {
 	minimumDate?: Date;
 	maximumDate?: Date;
 	onDateChange?: (date: Date) => void;
+	pickerMode?: "date" | "time" | "datetime";
 }
 
 export default function DateFormField({
@@ -33,7 +33,6 @@ export default function DateFormField({
 		setSelectedDate(new Date(field.value));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-	const { colors } = useAppTheme();
 
 	return (
 		<>
@@ -43,23 +42,10 @@ export default function DateFormField({
 				</HelperText>
 				<TextInput
 					mode="outlined"
-					textColor={colors.primary2}
 					value={moment(selectedDate).utc().format("MM/DD/YYYY")}
-					onChangeText={(value: string) => {
-						const utcDate = moment(value).utc().format("YYYY-MM-DD");
-						setSelectedDate(new Date(utcDate));
-						onDateChange?.(new Date(utcDate));
-						helpers.setValue(utcDate + "T00:00:00.000Z");
-					}}
 					error={!!errorText}
 					outlineStyle={styles.outlineStyle}
-					right={
-						<TextInput.Icon
-							icon={"calendar"}
-							color={colors.primary2}
-							onPress={() => setOpen(true)}
-						/>
-					}
+					right={<TextInput.Icon icon={"calendar"} onPress={() => setOpen(true)} />}
 					{...props}
 					editable={false}
 				/>
@@ -86,12 +72,11 @@ export default function DateFormField({
 	);
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	container: {
 		width: "100%",
 	},
 	helperText: {
-		color: theme.colors.primary1,
 		fontWeight: "bold",
 		fontSize: 14,
 		marginLeft: -8,
@@ -100,6 +85,5 @@ const useStyles = makeStyles((theme) => ({
 	outlineStyle: {
 		borderRadius: 8,
 		borderWidth: 0.5,
-		borderColor: theme.colors.primary2,
 	},
 }));

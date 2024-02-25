@@ -1111,12 +1111,12 @@ PODS:
   - RecaptchaInterop (100.0.0)
   - RNCPicker (2.6.1):
     - React-Core
-  - RNDeviceInfo (10.12.0):
+  - RNDeviceInfo (10.13.0):
     - React-Core
-  - RNFBApp (18.8.0):
+  - RNFBApp (18.9.0):
     - Firebase/CoreOnly (= 10.20.0)
     - React-Core
-  - RNFBAuth (18.8.0):
+  - RNFBAuth (18.9.0):
     - Firebase/Auth (= 10.20.0)
     - React-Core
     - RNFBApp
@@ -1129,9 +1129,9 @@ PODS:
     - RNNotifee/NotifeeCore (= 7.8.2)
   - RNNotifee/NotifeeCore (7.8.2):
     - React-Core
-  - RNPermissions (4.1.1):
+  - RNPermissions (4.1.4):
     - React-Core
-  - RNReanimated (3.7.0):
+  - RNReanimated (3.7.1):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1431,13 +1431,13 @@ SPEC CHECKSUMS:
   ReactNativeExceptionHandler: b11ff67c78802b2f62eed0e10e75cb1ef7947c60
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   RNCPicker: b18aaf30df596e9b1738e7c1f9ee55402a229dca
-  RNDeviceInfo: db5c64a060e66e5db3102d041ebe3ef307a85120
-  RNFBApp: a4f5b074984cf612e4c97d68b42be690c59e2638
-  RNFBAuth: bd014d486a51b5414b642dd155763c5873a2b3e4
+  RNDeviceInfo: 5e4695f906aeb624855cee8d568a46037e4a50f7
+  RNFBApp: 9b25191f7a5e72c185b7e43fffb0d906869c4659
+  RNFBAuth: 95acca18353778903885b2b25c25ddb81c050fed
   RNGestureHandler: 7feb85c5a30ebbcd4d5c7a851ba9e7eafb9860cb
   RNNotifee: 8e2d3df3f0e9ce8f5d1fe4c967431138190b6175
-  RNPermissions: f18c61c418a3f6e7ed79d2ad145551685e3b614a
-  RNReanimated: ea7e98bf4f1167ca3cd3c348604d34dc4294e848
+  RNPermissions: 3674eeb8484aa39a18c3685963731f2ad7409c6c
+  RNReanimated: 06342ad46707263f3009e00b88beca6188c3675d
   RNScreens: 2b73f5eb2ac5d94fbd61fa4be0bfebd345716825
   RNSVG: ba3e7232f45e34b7b47e74472386cf4e1a676d0a
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17

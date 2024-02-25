@@ -35,37 +35,17 @@ export default function FileFormField({ label, name }: Readonly<DateFormFieldPro
 					{label}
 				</HelperText>
 
-				{field.value && (
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							justifyContent: "space-around",
-							marginTop: 10,
-						}}
-					>
-						<Image source={{ uri: field.value }} style={{ width: 100, height: 100 }} />
+				{typeof field.value === "string" && field.value.length > 0 && (
+					<View style={styles.imageContainer}>
+						<Image source={{ uri: field.value }} style={styles.image} />
 					</View>
 				)}
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						justifyContent: "space-around",
-						marginTop: 10,
-					}}
-				>
-					<Pressable
-						onPress={() => onUpload("gallery")}
-						style={{ alignItems: "center", justifyContent: "center", gap: 5 }}
-					>
+				<View style={styles.buttonContainer}>
+					<Pressable onPress={() => onUpload("gallery")} style={styles.button}>
 						<Icon name="image" size={20} />
 						<Text>Upload Photo</Text>
 					</Pressable>
-					<Pressable
-						onPress={() => onUpload("camera")}
-						style={{ alignItems: "center", justifyContent: "center", gap: 5 }}
-					>
+					<Pressable onPress={() => onUpload("camera")} style={styles.button}>
 						<Icon name="camera" size={20} />
 						<Text>Take Photo</Text>
 					</Pressable>
@@ -77,12 +57,11 @@ export default function FileFormField({ label, name }: Readonly<DateFormFieldPro
 	);
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	container: {
 		width: "100%",
 	},
 	helperText: {
-		color: theme.colors.primary1,
 		fontWeight: "bold",
 		fontSize: 14,
 		marginLeft: -8,
@@ -91,6 +70,26 @@ const useStyles = makeStyles((theme) => ({
 	outlineStyle: {
 		borderRadius: 8,
 		borderWidth: 0.5,
-		borderColor: theme.colors.primary2,
+	},
+	buttonContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-around",
+		marginTop: 10,
+	},
+	button: {
+		alignItems: "center",
+		justifyContent: "center",
+		gap: 5,
+	},
+	imageContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-around",
+		marginTop: 10,
+	},
+	image: {
+		width: 100,
+		height: 100,
 	},
 }));

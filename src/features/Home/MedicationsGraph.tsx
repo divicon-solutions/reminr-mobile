@@ -28,7 +28,9 @@ class DecoratorExample extends React.PureComponent {
 			));
 		};
 
-		const Line = ({ line }) => <Path d={line} stroke={"rgba(134, 65, 244)"} fill={"none"} />;
+		const Line = ({ line }: { line?: string }) => (
+			<Path d={line} stroke={"rgba(134, 65, 244)"} fill={"none"} />
+		);
 		const axesSvg = { fontSize: 10, fill: "grey" };
 		const verticalContentInset = { top: 10, bottom: 10 };
 		const xAxisHeight = 30;
