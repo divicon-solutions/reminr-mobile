@@ -6,3 +6,5 @@ export * from "./reminders";
 export * from "./wellness-scores";
 export * from "./incentives";
 export * from "./redeems";
+export * from "./dashboard";
+export * from "./upload";

@@ -1,4 +1,4 @@
-import { View, SafeAreaView, Dimensions } from "react-native";
+import { View, SafeAreaView, Dimensions, Alert } from "react-native";
 import React from "react";
 import { Formik } from "formik";
 import { Schema, array, mixed, number, object, string } from "yup";
@@ -7,7 +7,6 @@ import {
 	CreateMedicationDtoFrequency,
 	CreateMedicationDtoIntervalUnit,
 	CreateMedicationDtoSpecificDaysItem,
-	MedicationDto,
 	getMedicationsControllerFindAllQueryKey,
 	useMedicationsControllerRemove,
 	useMedicationsControllerUpdate,
@@ -16,9 +15,10 @@ import KeyboardAvoidView from "@components/KeyboardAvoidView";
 import { TextFormField } from "@components/FormFields/TextFormField";
 import { SelectFormField } from "@components/FormFields/SelectFormField";
 import DateFormField from "@components/FormFields/DateFormField";
-import { Button, IconButton } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { makeStyles } from "@hooks/makeStyles";
 import { useQueryClient } from "@tanstack/react-query";
+import { StackNavigationProps } from "@navigations/types";
 
 const schema: Schema<CreateMedicationDto> = object({
 	frequency: mixed<CreateMedicationDtoFrequency>()
@@ -29,24 +29,20 @@ const schema: Schema<CreateMedicationDto> = object({
 		.oneOf(Object.values(CreateMedicationDtoIntervalUnit))
 		.nullable(),
 	name: string().required(),
-	specificDays: array()
-		.of(
-			mixed<CreateMedicationDtoSpecificDaysItem>()
-				.oneOf(Object.values(CreateMedicationDtoSpecificDaysItem))
-				.required(),
-		)
-		.required(),
-	dosage: string(),
+	specificDays: array().of(
+		mixed<CreateMedicationDtoSpecificDaysItem>()
+			.oneOf(Object.values(CreateMedicationDtoSpecificDaysItem))
+			.required(),
+	),
+	dosage: string().nullable(),
 	noOfPills: number().required(),
 	startDate: string().required(),
 });
 
-type EditMedicationProps = Readonly<{
-	hideModal: () => void;
-	medication: MedicationDto;
-}>;
+type EditMedicationProps = StackNavigationProps<"EditMedication">;
 
-export default function EditMedication({ hideModal, medication }: EditMedicationProps) {
+export default function EditMedication({ navigation, route }: EditMedicationProps) {
+	const { medication } = route.params;
 	const { mutateAsync } = useMedicationsControllerUpdate();
 	const { mutateAsync: deleteMutateAsync } = useMedicationsControllerRemove();
 
@@ -55,17 +51,31 @@ export default function EditMedication({ hideModal, medication }: EditMedication
 	const queryClient = useQueryClient();
 
 	const onSubmit = async (values: CreateMedicationDto) => {
-		await mutateAsync({ id: medication.id, data: values });
+		await mutateAsync({
+			id: medication.id,
+			data: { ...values, noOfPills: Number(values.noOfPills) },
+		});
 		const queryKey = getMedicationsControllerFindAllQueryKey();
-		hideModal();
 		await queryClient.invalidateQueries({ queryKey });
+		navigation.goBack();
 	};
 
 	const onDelete = async () => {
-		await deleteMutateAsync({ id: medication.id });
-		const queryKey = getMedicationsControllerFindAllQueryKey();
-		hideModal();
-		await queryClient.invalidateQueries({ queryKey });
+		Alert.alert("Are you sure?", "You want to delete this medication?", [
+			{
+				text: "Cancel",
+				style: "cancel",
+			},
+			{
+				text: "OK",
+				onPress: async () => {
+					await deleteMutateAsync({ id: medication.id });
+					const queryKey = getMedicationsControllerFindAllQueryKey();
+					await queryClient.invalidateQueries({ queryKey });
+					navigation.goBack();
+				},
+			},
+		]);
 	};
 
 	const initialValues: CreateMedicationDto = medication;
@@ -75,7 +85,6 @@ export default function EditMedication({ hideModal, medication }: EditMedication
 			{({ handleSubmit, isValid, isSubmitting }) => (
 				<KeyboardAvoidView style={styles.container} contentContainerStyle={styles.containerStyle}>
 					<View>
-						<IconButton style={styles.closeButton} icon="close" onPress={hideModal} />
 						<TextFormField name="name" label="Medication Name" />
 						<SelectFormField
 							name="frequency"
@@ -85,7 +94,7 @@ export default function EditMedication({ hideModal, medication }: EditMedication
 								label: value,
 							}))}
 						/>
-						<TextFormField name="dosage" label="Dose" />
+						<TextFormField name="noOfPills" label="No of pills" />
 						<DateFormField name="startDate" label="Start Date" />
 					</View>
 
@@ -100,7 +109,7 @@ export default function EditMedication({ hideModal, medication }: EditMedication
 							loading={isSubmitting}
 							style={styles.buttonStyle}
 						>
-							Save Changes
+							Save
 						</Button>
 					</SafeAreaView>
 				</KeyboardAvoidView>

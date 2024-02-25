@@ -1,32 +1,33 @@
-import { RefreshControl, Dimensions, Modal, View } from "react-native";
-import React, { useCallback, useState } from "react";
+import { RefreshControl, Dimensions, View } from "react-native";
+import React, { useCallback } from "react";
 import { MedicationDto, useMedicationsControllerFindAll } from "@api";
 import { FlatList } from "react-native-gesture-handler";
 import Loader from "@components/Loader";
 import { Button, Card, List } from "react-native-paper";
 import { parseDateToFormat } from "@utils/formatters";
 import { makeStyles } from "@hooks/makeStyles";
-import { useDialog } from "@hooks/useDialog";
-import AddMedication from "./AddMedication";
-import EditMedication from "./EditMedication";
+import { BottomTabNavigationProps } from "@navigations/types";
 
-export default function MedicationsList() {
+type MedicationsListProps = BottomTabNavigationProps<"Medications">;
+
+export default function MedicationsList({ navigation }: MedicationsListProps) {
 	const { data, isLoading, isRefetching, refetch } = useMedicationsControllerFindAll();
 	const styles = useStyles();
-	const { open, handleClickOpen, handleClose } = useDialog();
-	const [selectedMedication, setSelectedMedication] = useState<MedicationDto | null>(null);
 
-	const renderItem = useCallback(({ item }: { item: MedicationDto }) => {
-		return (
-			<Card mode="contained">
-				<List.Item
-					title={item.name}
-					description={`${item.dosage} pills - ${parseDateToFormat(item.startDate)}`}
-					onPress={() => setSelectedMedication(item)}
-				/>
-			</Card>
-		);
-	}, []);
+	const renderItem = useCallback(
+		({ item }: { item: MedicationDto }) => {
+			return (
+				<Card mode="contained">
+					<List.Item
+						title={item.name}
+						description={`${item.noOfPills} pills - ${parseDateToFormat(item.startDate)}`}
+						onPress={() => navigation.navigate("EditMedication", { medication: item })}
+					/>
+				</Card>
+			);
+		},
+		[navigation],
+	);
 
 	if (isLoading) {
 		return <Loader />;
@@ -39,7 +40,11 @@ export default function MedicationsList() {
 				renderItem={renderItem}
 				keyExtractor={(item) => item.id}
 				ListHeaderComponent={
-					<Button mode="contained" style={styles.addInrButton} onPress={handleClickOpen}>
+					<Button
+						mode="contained"
+						style={styles.addInrButton}
+						onPress={() => navigation.navigate("AddMedication")}
+					>
 						Add Medication
 					</Button>
 				}
@@ -49,27 +54,6 @@ export default function MedicationsList() {
 				refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
 				style={styles.root}
 			/>
-			<Modal
-				visible={open}
-				animationType="slide"
-				presentationStyle="pageSheet"
-				onDismiss={handleClose}
-			>
-				<AddMedication hideModal={handleClose} />
-			</Modal>
-			<Modal
-				visible={!!selectedMedication}
-				animationType="slide"
-				presentationStyle="pageSheet"
-				onDismiss={() => setSelectedMedication(null)}
-			>
-				{selectedMedication && (
-					<EditMedication
-						hideModal={() => setSelectedMedication(null)}
-						medication={selectedMedication}
-					/>
-				)}
-			</Modal>
 		</>
 	);
 }

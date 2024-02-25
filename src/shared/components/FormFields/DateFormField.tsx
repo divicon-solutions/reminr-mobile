@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import DatePicker from "react-native-date-picker";
 import { HelperText, TextInput, TextInputProps } from "react-native-paper";
+import { Picker } from "@react-native-picker/picker";
 
 interface DateFormFieldProps extends TextInputProps {
 	name: string;

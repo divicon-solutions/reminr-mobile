@@ -5,6 +5,7 @@
  * OpenAPI spec version: 1.0
  */
 
+export * from "./completedInrTest";
 export * from "./createIncentiveDto";
 export * from "./createInrTestDto";
 export * from "./createMedicationDto";
@@ -19,6 +20,7 @@ export * from "./createUserDto";
 export * from "./createUserDtoRole";
 export * from "./createWellnessScoreDto";
 export * from "./cursorPaginatedDto";
+export * from "./dashboardDataDto";
 export * from "./incentiveDto";
 export * from "./incentivesControllerCreate201";
 export * from "./incentivesControllerCreate201AllOf";
@@ -55,6 +57,7 @@ export * from "./remindersControllerCreate201AllOf";
 export * from "./remindersControllerUpdate200";
 export * from "./remindersControllerUpdate200AllOf";
 export * from "./successResponseDto";
+export * from "./takenMedicationDto";
 export * from "./updateIncentiveDto";
 export * from "./updateInrTestDto";
 export * from "./updateMedicationDto";
@@ -67,6 +70,8 @@ export * from "./updateRedeemDtoMethod";
 export * from "./updateReminderDto";
 export * from "./updateUserDto";
 export * from "./updateWellnessScoreDto";
+export * from "./uploadFileRequestDto";
+export * from "./uploadFileResponseDto";
 export * from "./user";
 export * from "./userDto";
 export * from "./userDtoRole";

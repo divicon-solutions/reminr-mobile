@@ -3,11 +3,10 @@ import React from "react";
 import {
 	CreateInrTestDto,
 	getInrTestControllerFindAllQueryKey,
-	useInrTestControllerCreate,
+	useInrTestControllerUpdate,
 } from "@api";
 import { Schema, number, object, string } from "yup";
 import { Formik } from "formik";
-import { getCurrentUtcTimestamp } from "@utils/formatters";
 import KeyboardAvoidView from "@components/KeyboardAvoidView";
 import { TextFormField } from "@components/FormFields/TextFormField";
 import DateFormField from "@components/FormFields/DateFormField";
@@ -24,21 +23,22 @@ const schema: Schema<CreateInrTestDto> = object({
 	verificationImage: string().nullable(),
 });
 
-type AddInrValueProps = StackNavigationProps<"AddInrValue">;
-export default function AddInrValue({ navigation }: AddInrValueProps) {
-	const { mutateAsync } = useInrTestControllerCreate();
+type EditInrValueProps = StackNavigationProps<"EditInrValue">;
+export default function EditInrValue({ route, navigation }: EditInrValueProps) {
+	const { inrTest } = route.params;
+	const { mutateAsync } = useInrTestControllerUpdate();
 	const styles = useStyles();
 	const queryClient = useQueryClient();
 
 	const initialValues: CreateInrTestDto = {
-		date: getCurrentUtcTimestamp(),
-		inrValue: 0,
-		remarks: null,
-		verificationImage: null,
+		date: inrTest.date,
+		inrValue: inrTest.inrValue,
+		remarks: inrTest.remarks,
+		verificationImage: inrTest.verificationImage,
 	};
 
 	const onSubmit = async (values: CreateInrTestDto) => {
-		await mutateAsync({ data: { ...values, inrValue: Number(values.inrValue) } });
+		await mutateAsync({ id: inrTest.id, data: { ...values, inrValue: Number(values.inrValue) } });
 		const queryKey = getInrTestControllerFindAllQueryKey();
 		queryClient.invalidateQueries({ queryKey });
 		navigation.goBack();
@@ -67,7 +67,7 @@ export default function AddInrValue({ navigation }: AddInrValueProps) {
 							loading={isSubmitting}
 							style={styles.addInrButton}
 						>
-							Add INR Value
+							Save Changes
 						</Button>
 					</SafeAreaView>
 				</KeyboardAvoidView>

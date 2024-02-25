@@ -14,10 +14,11 @@ import KeyboardAvoidView from "@components/KeyboardAvoidView";
 import { TextFormField } from "@components/FormFields/TextFormField";
 import { SelectFormField } from "@components/FormFields/SelectFormField";
 import DateFormField from "@components/FormFields/DateFormField";
-import { Button, IconButton } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { getCurrentUtcTimestamp } from "@utils/formatters";
 import { makeStyles } from "@hooks/makeStyles";
 import { useQueryClient } from "@tanstack/react-query";
+import { StackNavigationProps } from "@navigations/types";
 
 const schema: Schema<CreateMedicationDto> = object({
 	frequency: mixed<CreateMedicationDtoFrequency>()
@@ -40,20 +41,19 @@ const schema: Schema<CreateMedicationDto> = object({
 	startDate: string().required(),
 });
 
-type AddMedicationProps = Readonly<{
-	hideModal: () => void;
-}>;
-export default function AddMedication({ hideModal }: AddMedicationProps) {
+type AddMedicationProps = StackNavigationProps<"AddMedication">;
+
+export default function AddMedication({ navigation }: AddMedicationProps) {
 	const { mutateAsync } = useMedicationsControllerCreate();
 	const styles = useStyles();
 
 	const queryClient = useQueryClient();
 
 	const onSubmit = async (values: CreateMedicationDto) => {
-		await mutateAsync({ data: values });
+		await mutateAsync({ data: { ...values, noOfPills: Number(values.noOfPills) } });
 		const queryKey = getMedicationsControllerFindAllQueryKey();
-		hideModal();
 		await queryClient.invalidateQueries({ queryKey });
+		navigation.goBack();
 	};
 
 	const initialValues: CreateMedicationDto = {
@@ -69,7 +69,6 @@ export default function AddMedication({ hideModal }: AddMedicationProps) {
 			{({ handleSubmit, isValid, isSubmitting }) => (
 				<KeyboardAvoidView style={styles.container} contentContainerStyle={styles.containerStyle}>
 					<View>
-						<IconButton style={styles.closeButton} icon="close" onPress={hideModal} />
 						<TextFormField name="name" label="Medication Name" />
 						<SelectFormField
 							name="frequency"

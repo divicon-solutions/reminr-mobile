@@ -70,5 +70,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Reminr uses your photo library to let you share images, videos, and other content.</string>
+	<key>NSCameraUsageDescription</key>
+    <string>Reminr uses your camera to take photos or to communicate using video.</string>
 </dict>
 </plist>

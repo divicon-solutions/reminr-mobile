@@ -1,31 +1,36 @@
-import { RefreshControl, Dimensions, Modal, View } from "react-native";
+import { RefreshControl, Dimensions, View } from "react-native";
 import React, { useCallback } from "react";
 import { InrTestDto, useInrTestControllerFindAll } from "@api";
 import { FlatList } from "react-native-gesture-handler";
 import Loader from "@components/Loader";
-import { Button, Card, List } from "react-native-paper";
+import { Button, Card, List, Text } from "react-native-paper";
 import { parseDateToFormat } from "@utils/formatters";
 import { makeStyles } from "@hooks/makeStyles";
 import FIcon from "react-native-vector-icons/Fontisto";
-import { useDialog } from "@hooks/useDialog";
-import AddInrValue from "./AddInrValue";
+import { BottomTabNavigationProps } from "@navigations/types";
 
-export default function InrList() {
+type InrListProps = BottomTabNavigationProps<"InrTest">;
+
+export default function InrList(props: InrListProps) {
+	const { navigation } = props;
 	const { data, isLoading, isRefetching, refetch } = useInrTestControllerFindAll();
 	const styles = useStyles();
-	const { open, handleClickOpen, handleClose } = useDialog();
 
-	const renderItem = useCallback(({ item }: { item: InrTestDto }) => {
-		return (
-			<Card mode="contained">
-				<List.Item
-					title={item.inrValue.toString()}
-					description={parseDateToFormat(item.date, "MMM DD, YYYY")}
-					right={(props) => <FIcon name="blood-drop" size={24} {...props} color={"red"} />}
-				/>
-			</Card>
-		);
-	}, []);
+	const renderItem = useCallback(
+		({ item }: { item: InrTestDto }) => {
+			return (
+				<Card mode="contained">
+					<List.Item
+						title={<Text style={styles.inrResultValue}>{item.inrValue.toString()}</Text>}
+						description={parseDateToFormat(item.date, "MMM DD, YYYY")}
+						right={(props) => <FIcon name="blood-drop" size={24} {...props} color={"red"} />}
+						onPress={() => navigation.navigate("EditInrValue", { inrTest: item })}
+					/>
+				</Card>
+			);
+		},
+		[navigation, styles.inrResultValue],
+	);
 
 	if (isLoading) {
 		return <Loader />;
@@ -38,8 +43,12 @@ export default function InrList() {
 				renderItem={renderItem}
 				keyExtractor={(item) => item.id}
 				ListHeaderComponent={
-					<Button mode="contained" style={styles.addInrButton} onPress={handleClickOpen}>
-						Add Inr Value
+					<Button
+						mode="contained"
+						style={styles.addInrButton}
+						onPress={() => navigation.navigate("AddInrValue")}
+					>
+						Add INR Value
 					</Button>
 				}
 				ItemSeparatorComponent={() => <View style={styles.divider} />}
@@ -48,14 +57,6 @@ export default function InrList() {
 				refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
 				style={styles.root}
 			/>
-			<Modal
-				visible={open}
-				animationType="slide"
-				presentationStyle="pageSheet"
-				onDismiss={handleClose}
-			>
-				<AddInrValue hideModal={handleClose} />
-			</Modal>
 		</>
 	);
 }
@@ -73,5 +74,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	divider: {
 		height: 10,
+	},
+	inrResultValue: {
+		fontWeight: "bold",
+		fontSize: 20,
 	},
 }));
