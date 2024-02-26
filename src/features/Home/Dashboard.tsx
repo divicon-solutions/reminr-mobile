@@ -120,7 +120,11 @@ export default function Dashboard() {
 						</Text>
 					</Button>
 				</View>
-				{showMedicationsGraph ? <MedicationsGraph /> : <InrTestsGraph />}
+				{showMedicationsGraph ? (
+					<MedicationsGraph data={data?.takenMedications ?? []} />
+				) : (
+					<InrTestsGraph data={data?.inrTests ?? []} />
+				)}
 			</View>
 		</ScrollView>
 	);

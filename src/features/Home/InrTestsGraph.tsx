@@ -1,49 +1,116 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Grid, LineChart, XAxis, YAxis } from "react-native-svg-charts";
 import { ScrollView, View } from "react-native";
+import { Circle } from "react-native-svg";
+import { makeStyles, useAppTheme } from "@hooks/makeStyles";
+import { CompletedInrTest } from "@api";
+import { parseDateToFormat } from "@utils/formatters";
+import { Text } from "react-native-paper";
 
-class AxesExample extends React.PureComponent {
-	render() {
-		const data = Array.from({ length: 100 }, () => Math.random() * (2.7 - 1.6) + 1.6);
+function Decorator({ x, y, data }: { x: any; y: any; data: any }) {
+	const { colors } = useAppTheme();
 
-		const axesSvg = { fontSize: 10, fill: "grey" };
-		const verticalContentInset = { top: 10, bottom: 10 };
-		const xAxisHeight = 30;
+	return data.map((value: any, index: number) => (
+		<Circle
+			key={index}
+			cx={x(index)}
+			cy={y(value)}
+			r={4}
+			stroke={colors.primary}
+			fill={colors.onPrimary}
+		/>
+	));
+}
 
-		// Layout of an x-axis together with a y-axis is a problem that stems from flexbox.
-		// All react-native-svg-charts components support full flexbox and therefore all
-		// layout problems should be approached with the mindset "how would I layout regular Views with flex in this way".
-		// In order for us to align the axes correctly we must know the height of the x-axis or the width of the x-axis
-		// and then displace the other axis with just as many pixels. Simple but manual.
+type InrTestsGraphProps = Readonly<{
+	data: CompletedInrTest[];
+}>;
+function InrTestsGraph({ data }: InrTestsGraphProps) {
+	const { colors } = useAppTheme();
 
+	const yAxisData = useMemo(() => data.map((test) => test.inrValue), [data]);
+	const xAxisData = useMemo(() => data.map((test) => parseDateToFormat(test.date)), [data]);
+
+	const axesSvg = { fontSize: 10, fill: "grey" };
+	const verticalContentInset = { top: 10, bottom: 10 };
+	const horizontalContentInset = { left: 30, right: 30 };
+	const xAxisHeight = 30;
+
+	const styles = useStyles();
+
+	if (data.length === 0) {
 		return (
-			<View style={{ height: 200, padding: 20, flexDirection: "row" }}>
-				<YAxis
-					data={data}
-					style={{ marginBottom: xAxisHeight }}
-					contentInset={verticalContentInset}
-					svg={axesSvg}
-				/>
-				<ScrollView contentContainerStyle={{ flexGrow: 1 }} horizontal>
-					<LineChart
-						style={{ flex: 1, width: data.length * 10 }}
-						data={data}
-						contentInset={verticalContentInset}
-						svg={{ stroke: "rgb(134, 65, 244)" }}
-					>
-						<Grid />
-					</LineChart>
-					<XAxis
-						style={{ marginHorizontal: -10, height: xAxisHeight }}
-						data={data}
-						formatLabel={(_value: any, index: number) => index}
-						contentInset={{ left: 10, right: 10 }}
-						svg={axesSvg}
-					/>
-				</ScrollView>
+			<View style={styles.emptyGraph}>
+				<Text variant="titleMedium">No inr tests taken</Text>
 			</View>
 		);
 	}
+
+	return (
+		<View style={styles.container}>
+			<YAxis
+				data={yAxisData}
+				style={{ marginBottom: xAxisHeight }}
+				contentInset={verticalContentInset}
+				svg={axesSvg}
+			/>
+			<ScrollView
+				contentContainerStyle={styles.scrollViewContent}
+				horizontal
+				showsHorizontalScrollIndicator={false}
+			>
+				<View style={[styles.scrollContainer, { width: data.length * 100 }]}>
+					<LineChart
+						style={styles.lineChart}
+						data={yAxisData}
+						contentInset={verticalContentInset}
+						svg={{ stroke: colors.primary }}
+					>
+						<Grid />
+						<Decorator x={(x: any) => x} y={(y: any) => y} data={(data: any) => data} />
+					</LineChart>
+					<XAxis
+						style={styles.xAxis}
+						data={xAxisData}
+						formatLabel={(_, index) => xAxisData[index]}
+						contentInset={horizontalContentInset}
+						svg={axesSvg}
+					/>
+				</View>
+			</ScrollView>
+		</View>
+	);
 }
 
-export default AxesExample;
+export default React.memo(InrTestsGraph);
+
+const useStyles = makeStyles(() => ({
+	container: {
+		height: 250,
+		padding: 20,
+		flexDirection: "row",
+	},
+	scrollContainer: {
+		flex: 1,
+		marginHorizontal: 10,
+		height: 400,
+	},
+	yAxis: {
+		marginBottom: 30,
+	},
+	xAxis: {
+		flex: 1,
+	},
+	lineChart: {
+		flex: 1,
+	},
+	scrollViewContent: {
+		flexGrow: 1,
+	},
+	emptyGraph: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		height: 250,
+	},
+}));
