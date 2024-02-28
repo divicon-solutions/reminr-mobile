@@ -17,11 +17,12 @@ export default function MedicationsList({ navigation }: MedicationsListProps) {
 	const renderItem = useCallback(
 		({ item }: { item: MedicationDto }) => {
 			return (
-				<Card mode="contained">
+				<Card mode="contained" style={styles.medicationCard}>
 					<List.Item
 						title={item.name}
 						description={`${item.noOfPills} pills - ${parseDateToFormat(item.startDate)}`}
 						onPress={() => navigation.navigate("EditMedication", { medication: item })}
+						titleStyle={styles.medicationNameStyle}
 					/>
 				</Card>
 			);
@@ -71,5 +72,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 	divider: {
 		height: 10,
+	},
+	medicationCard: {
+		backgroundColor: theme.colors.onPrimary,
+	},
+	medicationNameStyle: {
+		fontWeight: "700",
+		fontSize: 17,
+		marginBottom: 15,
 	},
 }));

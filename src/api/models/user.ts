@@ -4,9 +4,11 @@
  * RemInr Api
  * OpenAPI spec version: 1.0
  */
+import type { CallbackRequest } from "./callbackRequest";
 import type { UserRole } from "./userRole";
 
 export interface User {
+	callbackRequests?: CallbackRequest[];
 	createdAt: string;
 	deletedAt: string | null;
 	email: string;

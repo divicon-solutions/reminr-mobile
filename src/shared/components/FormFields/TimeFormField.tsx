@@ -45,7 +45,9 @@ export default function TimeFormField({
 					value={moment(selectedDate).utc().format("hh:mm A")}
 					error={!!errorText}
 					outlineStyle={styles.outlineStyle}
-					right={<TextInput.Icon icon={"calendar"} onPress={() => setOpen(true)} />}
+					right={
+						<TextInput.Icon icon={"clock-time-eleven-outline"} onPress={() => setOpen(true)} />
+					}
 					{...props}
 					editable={false}
 				/>
@@ -71,7 +73,7 @@ export default function TimeFormField({
 	);
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 	container: {
 		width: "100%",
 	},
@@ -84,5 +86,6 @@ const useStyles = makeStyles(() => ({
 	outlineStyle: {
 		borderRadius: 8,
 		borderWidth: 0.5,
+		backgroundColor: theme.colors.onPrimary,
 	},
 }));

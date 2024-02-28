@@ -11,6 +11,9 @@ export const getCurrentUtcTimestampWithTimeOnly = () => {
 };
 
 export const parseDateToFormat = (date: string, format?: string) => {
+	if (!date) {
+		return "";
+	}
 	if (!format) {
 		format = "MM/DD/YYYY";
 	}

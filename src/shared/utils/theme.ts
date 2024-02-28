@@ -67,6 +67,18 @@ const customTheme = {
 		onAppBar: "rgb(255, 255, 255)",
 		appBarContainer: "rgb(224, 224, 255)",
 		onAppBarContainer: "rgb(2, 8, 101)",
+		success: "rgb(52, 106, 34)",
+		onSuccess: "rgb(255, 255, 255)",
+		successContainer: "rgb(180, 243, 154)",
+		onSuccessContainer: "rgb(4, 33, 0)",
+		warning: "rgb(255, 179, 174)",
+		onWarning: "rgb(104, 0, 11)",
+		warningContainer: "rgb(142, 19, 26)",
+		onWarningContainer: "rgb(255, 218, 215)",
+		pending: "#ffa621",
+		onPending: "rgb(255, 255, 255)",
+		pendingContainer: "rgb(255, 218, 215)",
+		onPendingContainer: "rgb(65, 0, 4)",
 	},
 };
 

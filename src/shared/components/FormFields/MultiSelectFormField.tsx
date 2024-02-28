@@ -48,6 +48,8 @@ export function MultiSelectFormField({
 				defaultOptions={defaultOptions ?? []}
 				setSelected={setSelected}
 				data={data}
+				boxStyles={{ backgroundColor: "white" }}
+				dropdownStyles={{ backgroundColor: "white" }}
 				{...props}
 			/>
 			{errorText && <HelperText type="error">{errorText}</HelperText>}

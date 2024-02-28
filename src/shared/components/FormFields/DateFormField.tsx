@@ -72,7 +72,7 @@ export default function DateFormField({
 	);
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 	container: {
 		width: "100%",
 	},
@@ -85,5 +85,6 @@ const useStyles = makeStyles(() => ({
 	outlineStyle: {
 		borderRadius: 8,
 		borderWidth: 0.5,
+		backgroundColor: theme.colors.onPrimary,
 	},
 }));

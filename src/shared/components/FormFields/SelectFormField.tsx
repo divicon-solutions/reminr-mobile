@@ -42,6 +42,8 @@ export function SelectFormField({
 				defaultOption={defaultOption}
 				setSelected={(value: string) => helpers.setValue(value)}
 				data={data}
+				boxStyles={{ backgroundColor: "white" }}
+				dropdownStyles={{ backgroundColor: "white" }}
 				{...props}
 			/>
 			{errorText && <HelperText type="error">{errorText}</HelperText>}

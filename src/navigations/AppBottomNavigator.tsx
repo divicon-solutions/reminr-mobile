@@ -11,15 +11,29 @@ import TodayScreen from "@features/Reminders/ReminderList";
 import DashboardScreen from "@features/Home/Dashboard";
 import MedicationsScreen from "@features/Medication/MedicationsList";
 import InrScreen from "@features/InrTest/InrList";
+import { StackNavigationProps } from "@navigations/types";
 
 const Tab = createBottomTabNavigator<AppBottomNavigatorParamList>();
+type AppBottomNavigatorProps = StackNavigationProps<"Home">;
 
-export default function AppBottomNavigator() {
+export default function AppBottomNavigator({ navigation }: AppBottomNavigatorProps) {
 	const { signOut } = useAuth();
 
 	const logout = useCallback(() => {
 		return <MIIcon name="logout" size={24} onPress={signOut} />;
 	}, [signOut]);
+
+	const settings = useCallback(() => {
+		return (
+			<MIIcon
+				name="settings"
+				size={24}
+				onPress={() => {
+					navigation.navigate("Settings");
+				}}
+			/>
+		);
+	}, [navigation]);
 
 	return (
 		<Tab.Navigator
@@ -33,7 +47,7 @@ export default function AppBottomNavigator() {
 					headerTitle: "Today",
 					tabBarLabel: "Today",
 					tabBarIcon: ({ color }) => <MIIcon name="today" color={color} size={24} />,
-					headerRight: logout,
+					headerRight: settings,
 				}}
 			/>
 			<Tab.Screen
@@ -43,7 +57,7 @@ export default function AppBottomNavigator() {
 					headerTitle: "Dashboard",
 					tabBarLabel: "Dashboard",
 					tabBarIcon: ({ color }) => <MIIcon name="dashboard" color={color} size={24} />,
-					headerRight: logout,
+					headerRight: settings,
 				}}
 			/>
 			<Tab.Screen
@@ -53,7 +67,7 @@ export default function AppBottomNavigator() {
 					headerTitle: "Medications",
 					tabBarLabel: "Medications",
 					tabBarIcon: ({ color }) => <MIIcon name="medication" color={color} size={24} />,
-					headerRight: logout,
+					headerRight: settings,
 				}}
 			/>
 			<Tab.Screen
@@ -63,7 +77,7 @@ export default function AppBottomNavigator() {
 					headerTitle: "INR Test",
 					tabBarLabel: "INR Test",
 					tabBarIcon: ({ color }) => <FIcon name="blood-drop" color={color} size={24} />,
-					headerRight: logout,
+					headerRight: settings,
 				}}
 			/>
 		</Tab.Navigator>

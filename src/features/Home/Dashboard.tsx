@@ -1,4 +1,11 @@
-import { Dimensions, RefreshControl, ScrollView, View } from "react-native";
+import {
+	Dimensions,
+	ImageBackground,
+	Pressable,
+	RefreshControl,
+	ScrollView,
+	View,
+} from "react-native";
 import React from "react";
 import { Button, Card, Text } from "react-native-paper";
 import { makeStyles, useAppTheme } from "@hooks/makeStyles";
@@ -6,8 +13,11 @@ import { useDashboardControllerGetDashboardData } from "@api";
 import Loader from "@components/Loader";
 import MedicationsGraph from "./MedicationsGraph";
 import InrTestsGraph from "./InrTestsGraph";
+import { StackNavigationProps } from "@navigations/types";
 
-export default function Dashboard() {
+type DashboardProps = StackNavigationProps<"Home">;
+
+export default function Dashboard({ navigation }: DashboardProps) {
 	const styles = useStyles();
 	const { data, isLoading, isRefetching, refetch } = useDashboardControllerGetDashboardData();
 	const [showMedicationsGraph, setShowMedicationsGraph] = React.useState(true);
@@ -24,51 +34,51 @@ export default function Dashboard() {
 		>
 			<View style={styles.upperView}>
 				<View>
-					<Text variant="titleMedium" style={{ fontWeight: "700" }}>
+					<Text variant="titleMedium" style={styles.cardUpperTitle}>
 						Wellness Score:
 					</Text>
 					<Card mode="contained" style={styles.wellnessScore}>
 						<Card.Content>
 							<Text variant="bodyMedium">
-								{
-									<Text variant="titleLarge" style={{ textAlign: "center" }}>
-										{data?.wellnessScore}
-									</Text>
-								}
+								{<Text variant="titleLarge">{data?.wellnessScore}</Text>}
 								/100
 							</Text>
 						</Card.Content>
 					</Card>
 				</View>
 				<View>
-					<Text variant="titleMedium" style={{ fontWeight: "700" }}>
+					<Text variant="titleMedium" style={styles.cardUpperTitle}>
 						Next INR Test:
 					</Text>
 					<Card mode="contained" style={styles.inrTest}>
-						<Card.Content>
-							<Text variant="bodyMedium" style={{ textAlign: "center" }}>
-								on
-							</Text>
-							<Text variant="bodyLarge" style={{ textAlign: "center" }}>
-								Mar 15th
-							</Text>
-						</Card.Content>
+						<ImageBackground>
+							<Card.Content>
+								<Text variant="bodyMedium" style={{ textAlign: "center" }}>
+									on
+								</Text>
+								<Text variant="bodyLarge">Mar 15th</Text>
+							</Card.Content>
+						</ImageBackground>
 					</Card>
 				</View>
 			</View>
-			<View>
-				<Text variant="titleMedium" style={{ fontWeight: "700" }}>
+			<Pressable
+				onPress={() =>
+					navigation.navigate("IncentivesOverview", { accountBalance: data?.incentiveAmount ?? 0 })
+				}
+			>
+				<Text variant="titleMedium" style={styles.cardUpperTitle}>
 					Incentives:
 				</Text>
 				<Card mode="contained" style={{ backgroundColor: colors.tertiaryContainer }}>
 					<Card.Content>
 						<Text variant="titleLarge">$ {data?.incentiveAmount} </Text>
-						<Text variant="bodyMedium" style={{ textAlign: "right", marginTop: 18 }}>
+						<Text variant="bodyMedium" style={styles.viewAccount}>
 							View account{">"}
 						</Text>
 					</Card.Content>
 				</Card>
-			</View>
+			</Pressable>
 
 			<View
 				style={{
@@ -79,7 +89,7 @@ export default function Dashboard() {
 					overflow: "hidden",
 				}}
 			>
-				<Text variant="titleMedium" style={{ fontWeight: "700", marginTop: 10 }}>
+				<Text variant="titleMedium" style={(styles.cardUpperTitle, { marginTop: 10 })}>
 					Your Progress
 				</Text>
 				<View style={styles.graphButtonsContainer}>
@@ -141,15 +151,20 @@ const useStyles = makeStyles((theme) => ({
 		marginBottom: 15,
 	},
 	wellnessScore: {
-		padding: 10,
+		height: 85,
 		backgroundColor: theme.colors.onPrimary,
+		flexDirection: "column",
+		justifyContent: "center",
+		width: 125,
+		alignItems: "center",
 	},
 	inrTest: {
-		paddingTop: 3,
-		paddingBottom: 3,
-		paddingLeft: 10,
-		paddingRight: 10,
+		height: 85,
 		backgroundColor: theme.colors.onPrimary,
+		flexDirection: "column",
+		justifyContent: "center",
+		width: 125,
+		alignItems: "center",
 	},
 	inrButton: {
 		width: Dimensions.get("window").width / 3,
@@ -169,5 +184,12 @@ const useStyles = makeStyles((theme) => ({
 		gap: 10,
 		marginTop: 10,
 		marginBottom: 10,
+	},
+	cardUpperTitle: {
+		fontWeight: "700",
+	},
+	viewAccount: {
+		textAlign: "right",
+		marginTop: 18,
 	},
 }));

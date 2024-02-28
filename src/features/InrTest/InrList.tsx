@@ -19,12 +19,14 @@ export default function InrList(props: InrListProps) {
 	const renderItem = useCallback(
 		({ item }: { item: InrTestDto }) => {
 			return (
-				<Card mode="contained">
+				<Card mode="contained" style={styles.inrResultCard}>
 					<List.Item
-						title={<Text style={styles.inrResultValue}>{item.inrValue.toString()}</Text>}
+						title={item.inrValue.toString()}
 						description={parseDateToFormat(item.date, "MMM DD, YYYY")}
 						right={(props) => <FIcon name="blood-drop" size={24} {...props} color={"red"} />}
 						onPress={() => navigation.navigate("EditInrValue", { inrTest: item })}
+						titleStyle={styles.inrResultValue}
+						descriptionStyle={styles.dateStyles}
 					/>
 				</Card>
 			);
@@ -48,7 +50,7 @@ export default function InrList(props: InrListProps) {
 						style={styles.addInrButton}
 						onPress={() => navigation.navigate("AddInrValue")}
 					>
-						Add INR Value
+						Add INR Test Result
 					</Button>
 				}
 				ItemSeparatorComponent={() => <View style={styles.divider} />}
@@ -78,5 +80,12 @@ const useStyles = makeStyles((theme) => ({
 	inrResultValue: {
 		fontWeight: "bold",
 		fontSize: 20,
+		marginBottom: 5,
+	},
+	inrResultCard: {
+		backgroundColor: theme.colors.onPrimary,
+	},
+	dateStyles: {
+		fontSize: 10,
 	},
 }));

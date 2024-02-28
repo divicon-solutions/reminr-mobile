@@ -30,6 +30,7 @@ export function TextFormField({ label, name, type, ...props }: Readonly<TextForm
 						helpers.setValue(Number(field.value));
 					}
 				}}
+				style={styles.inputStyles}
 				error={!!errorText}
 				secureTextEntry={hidePassword && type === "password"}
 				right={
@@ -48,7 +49,7 @@ export function TextFormField({ label, name, type, ...props }: Readonly<TextForm
 	);
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 	container: {
 		width: "100%",
 	},
@@ -61,5 +62,8 @@ const useStyles = makeStyles(() => ({
 	outlineStyle: {
 		borderRadius: 8,
 		borderWidth: 0.5,
+	},
+	inputStyles: {
+		backgroundColor: theme.colors.onPrimary,
 	},
 }));

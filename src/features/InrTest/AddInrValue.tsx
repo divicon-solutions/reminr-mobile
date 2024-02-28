@@ -67,7 +67,7 @@ export default function AddInrValue({ navigation }: AddInrValueProps) {
 							loading={isSubmitting}
 							style={styles.addInrButton}
 						>
-							Add INR Value
+							Add INR Test Result
 						</Button>
 					</SafeAreaView>
 				</KeyboardAvoidView>
