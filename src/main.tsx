@@ -9,6 +9,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { customTheme } from "@utils/theme";
 import { AuthProvider } from "@providers/auth";
 import * as RootNavigation from "@navigations/RootNavigation";
+import { backgroundService } from "@services/BackgroundService";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -36,6 +37,8 @@ const nativeErrorHandler = (errorString: string) => {
 };
 
 setNativeExceptionHandler(nativeErrorHandler);
+
+backgroundService.init();
 
 export default function Main() {
 	// const isDarkTheme = useColorScheme() === "dark";
