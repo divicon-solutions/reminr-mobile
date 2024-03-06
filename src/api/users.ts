@@ -136,6 +136,58 @@ export const useUsersControllerFindAll = <
 	return query;
 };
 
+export const usersControllerFindMe = (signal?: AbortSignal) => {
+	return mutator<UserDto>({ url: `/api/v1/users/me`, method: "GET", signal });
+};
+
+export const getUsersControllerFindMeQueryKey = () => {
+	return [`/api/v1/users/me`] as const;
+};
+
+export const getUsersControllerFindMeQueryOptions = <
+	TData = Awaited<ReturnType<typeof usersControllerFindMe>>,
+	TError = ErrorType<unknown>,
+>(options?: {
+	query?: Partial<
+		UseQueryOptions<Awaited<ReturnType<typeof usersControllerFindMe>>, TError, TData>
+	>;
+}) => {
+	const { query: queryOptions } = options ?? {};
+
+	const queryKey = queryOptions?.queryKey ?? getUsersControllerFindMeQueryKey();
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof usersControllerFindMe>>> = ({ signal }) =>
+		usersControllerFindMe(signal);
+
+	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+		Awaited<ReturnType<typeof usersControllerFindMe>>,
+		TError,
+		TData
+	> & { queryKey: QueryKey };
+};
+
+export type UsersControllerFindMeQueryResult = NonNullable<
+	Awaited<ReturnType<typeof usersControllerFindMe>>
+>;
+export type UsersControllerFindMeQueryError = ErrorType<unknown>;
+
+export const useUsersControllerFindMe = <
+	TData = Awaited<ReturnType<typeof usersControllerFindMe>>,
+	TError = ErrorType<unknown>,
+>(options?: {
+	query?: Partial<
+		UseQueryOptions<Awaited<ReturnType<typeof usersControllerFindMe>>, TError, TData>
+	>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const queryOptions = getUsersControllerFindMeQueryOptions(options);
+
+	const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+	query.queryKey = queryOptions.queryKey;
+
+	return query;
+};
+
 export const usersControllerFindOne = (id: string, signal?: AbortSignal) => {
 	return mutator<UserDto>({ url: `/api/v1/users/${id}`, method: "GET", signal });
 };

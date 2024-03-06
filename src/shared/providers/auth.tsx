@@ -1,6 +1,10 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { CreateUserDto, usersControllerCreate } from "@api";
+import { CreateUserDto, pushTokensControllerUnsubscribe, usersControllerCreate } from "@api";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { pushNotificationsService } from "@services/PushNotificationsService";
+import notifee, { EventType } from "@notifee/react-native";
+import messaging from "@react-native-firebase/messaging";
+import { storageService } from "@services/StorageService";
 
 interface AuthContext {
 	user: FirebaseAuthTypes.User | null;
@@ -25,8 +29,45 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 	const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
+	useEffect(() => {
+		if (!user) {
+			return;
+		}
+
+		notifee.onForegroundEvent(({ type, detail }) => {
+			console.log("[FCM] [onForegroundEvent] type", type, "detail", detail);
+			if (type === EventType.PRESS) {
+				pushNotificationsService.onSelectNotification(detail.notification);
+			}
+		});
+
+		notifee.getInitialNotification().then((initialNotification) => {
+			console.log("[FCM] [getInitialNotification] initialNotification", initialNotification);
+			pushNotificationsService.onInitialNotification(initialNotification);
+		});
+
+		const unsubscribeOnMessage = messaging().onMessage((remoteMessage) => {
+			console.log("[FCM] [onMessage] Message received", remoteMessage);
+			pushNotificationsService.displayNotification(remoteMessage);
+		});
+
+		const unsubscribeOnNotification = messaging().onNotificationOpenedApp((remoteMessage) => {
+			console.log(
+				"[FCM] [onNotificationOpenedApp] Notification caused app to open from background state:",
+				remoteMessage,
+			);
+			pushNotificationsService.onSelectedRemoteMessage(remoteMessage);
+		});
+
+		return () => {
+			unsubscribeOnMessage();
+			unsubscribeOnNotification();
+		};
+	}, [user]);
+
 	const onAuthStateChanged = useCallback(async (authUser: FirebaseAuthTypes.User | null) => {
 		if (authUser) {
+			pushNotificationsService.init(authUser.uid);
 			setUser(authUser);
 		}
 		setIsLoading(false);
@@ -43,10 +84,12 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 
 	const signOut = useCallback(async () => {
 		try {
-			console.log("Signing out1");
+			const token = await storageService.getFcmToken();
+			if (token) {
+				await pushTokensControllerUnsubscribe({ token });
+				storageService.setFcmToken(null);
+			}
 			await auth().signOut();
-			console.log("Signing out2");
-
 			setUser(null);
 		} catch (error) {
 			console.error(error);

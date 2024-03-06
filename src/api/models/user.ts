@@ -5,6 +5,7 @@
  * OpenAPI spec version: 1.0
  */
 import type { CallbackRequest } from "./callbackRequest";
+import type { PushToken } from "./pushToken";
 import type { UserRole } from "./userRole";
 
 export interface User {
@@ -16,6 +17,7 @@ export interface User {
 	id: string;
 	isVerified: boolean;
 	phoneNumber: string | null;
+	pushTokens?: PushToken[];
 	role: UserRole;
 	stickyReminder: boolean;
 	updatedAt: string;

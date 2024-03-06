@@ -5,10 +5,11 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface CreateUserDto {
-	email: string;
-	fullName: string;
-	id?: string;
+export interface UpdateContactRequestDto {
+	email?: string;
+	firstName?: string;
+	isResolved?: boolean;
+	lastName?: string;
+	message?: string;
 	phoneNumber?: string | null;
-	stickyReminder?: boolean;
 }

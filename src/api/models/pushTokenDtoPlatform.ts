@@ -5,10 +5,10 @@
  * OpenAPI spec version: 1.0
  */
 
-export type CreateUserDtoRole = (typeof CreateUserDtoRole)[keyof typeof CreateUserDtoRole];
+export type PushTokenDtoPlatform = (typeof PushTokenDtoPlatform)[keyof typeof PushTokenDtoPlatform];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const CreateUserDtoRole = {
-	ADMIN: "ADMIN",
-	USER: "USER",
+export const PushTokenDtoPlatform = {
+	IOS: "IOS",
+	ANDROID: "ANDROID",
 } as const;

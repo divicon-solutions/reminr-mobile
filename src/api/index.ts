@@ -9,3 +9,5 @@ export * from "./redeems";
 export * from "./dashboard";
 export * from "./upload";
 export * from "./callback-request";
+export * from "./contact-request";
+export * from "./push-tokens";

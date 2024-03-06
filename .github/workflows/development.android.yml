@@ -1,0 +1,53 @@
+name: Build and Deploy Development Android
+
+on:
+  workflow_dispatch:
+
+env:
+  ANDROID_BUILD_PATH: "android/app/build/outputs/apk/release/app-release.apk"
+
+jobs:
+  push-android:
+    name: Build and Deploy Android
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+      - name: Get build number
+        id: get-build
+        uses: mlilback/build-number@v1
+        with:
+          base: 0 # This will be added to the current build number
+          run-id: ${{ github.run_number }}
+      - name: Creating Keystore
+        run: |
+          echo "${{ secrets.DEV_KEY_STORE }}" | base64 --decode > /tmp/keystore.jks
+          echo "${{ secrets.DEV_KEY_PROPERTIES }}" | base64 --decode > android/key.properties
+          echo storeFile=/tmp/keystore.jks >> android/key.properties
+      - name: Creating .env file
+        run: |
+          echo "${{ secrets.DEV_ENV }}" > .env
+          echo "RN_VERSION_CODE=${{ steps.get-build.outputs.build-number }}" >> .env
+          echo "RN_VERSION_NAME=${{ vars.DEV_BUILD_NAME }}" >> .env
+      - name: Create Google Services file
+        run: |
+          echo "${{ secrets.DEV_GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+      - name: Build APK
+        run: |
+          ./gradlew assembleRelease
+        working-directory: android
+      - name: Deploy to Firebase App Distribution
+        run: |
+          firebase appdistribution:distribute ${{ env.ANDROID_BUILD_PATH }} \
+            --app ${{ secrets.DEV_ANDROID_APP_ID }} \
+            --token ${{ secrets.FIREBASE_TOKEN }} \
+            --groups android-testers \
+            --release-notes "Build ${{ github.run_number }}"
