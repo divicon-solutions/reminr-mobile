@@ -22,7 +22,7 @@ jobs:
         id: get-build
         uses: mlilback/build-number@v1
         with:
-          base: -2 # This will be added to the current build number
+          base: -3 # This will be added to the current build number
           run-id: ${{ github.run_number }}
       - name: Creating .env file
         run: |
