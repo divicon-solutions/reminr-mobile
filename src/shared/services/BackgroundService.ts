@@ -1,35 +1,30 @@
-import moment from "moment";
-import BackgroundTimer from "react-native-background-timer";
 import { localNotificationsService } from "./LocalNotificationsService";
-import { Platform } from "react-native";
+import { remindersControllerFindAll } from "@api";
 
 class BackgroundService {
 	async scheduleReminders() {
 		try {
-			localNotificationsService.createTriggerNotification({
-				title: "Good morning!",
-				body: "Don't forget to take your medication",
-				timestamp: moment().add(10, "seconds").toDate().getTime(),
+			const reminders = await remindersControllerFindAll();
+			const promises = reminders.map(async (reminder) => {
+				return localNotificationsService.createTriggerNotification({
+					title: reminder.title,
+					body: reminder.description ?? undefined,
+					timestamp: new Date(reminder.remindAt).getTime(),
+				});
 			});
+			await Promise.all(promises);
+			console.log("[BackgroundService] scheduleReminders: Reminders scheduled");
 		} catch (error) {
 			console.error("[BackgroundService] scheduleReminders:", error);
 		}
 	}
 
 	async init() {
-		const now = new Date();
-		// const midnight = moment().add(1, "days").startOf("day").toDate();
-		const midnight = moment().add(10, "seconds").toDate();
-		const timeUntilMidnight = midnight.getTime() - now.getTime();
-
-		if (Platform.OS === "ios") {
-			BackgroundTimer.start();
-		}
-
-		BackgroundTimer.setTimeout(async () => {
+		try {
 			await this.scheduleReminders();
-			this.init();
-		}, timeUntilMidnight);
+		} catch (error) {
+			console.error("[BackgroundService] [init] Error", error);
+		}
 	}
 }
 

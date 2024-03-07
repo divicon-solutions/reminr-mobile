@@ -64,6 +64,29 @@ class LocalNotificationsService {
 
 		return id;
 	}
+
+	async displayNotification(notification: Notification) {
+		const channelId = await notifee.createChannel({
+			id: "reminders",
+			name: "Reminders",
+		});
+		await notifee.displayNotification({
+			...notification,
+			android: {
+				channelId,
+			},
+		});
+	}
 }
 
 export const localNotificationsService = new LocalNotificationsService();
+
+export const setUpLocalNotificationsBackgroundHandler = () => {
+	notifee.onBackgroundEvent(async ({ type, detail }) => {
+		console.log(
+			"[LocalNotificationsService] [setUpLocalNotificationsBackgroundHandler]",
+			type,
+			detail,
+		);
+	});
+};

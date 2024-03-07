@@ -13,6 +13,7 @@ import {
 	pushTokensControllerCreate,
 	pushTokensControllerUnsubscribe,
 } from "@api";
+import { backgroundService } from "./BackgroundService";
 
 class PushNotificationsService {
 	private async requestPermissions() {
@@ -80,10 +81,6 @@ class PushNotificationsService {
 	}
 
 	async displayNotification(remoteMessage: FirebaseMessagingTypes.RemoteMessage | null) {
-		if (!remoteMessage?.notification) {
-			console.log("[PushNotificationsService] [displayNotification] Notification is null");
-			return;
-		}
 		await notifee.requestPermission();
 		const channelId = await notifee.createChannel({
 			id: "default",
@@ -92,11 +89,13 @@ class PushNotificationsService {
 			sound: "default",
 			visibility: AndroidVisibility.PUBLIC,
 		});
-		await notifee.displayNotification({
-			title: remoteMessage.notification.title,
-			body: remoteMessage.notification.body,
-			android: { channelId },
-		});
+		if (remoteMessage?.notification) {
+			await notifee.displayNotification({
+				title: remoteMessage.notification.title,
+				body: remoteMessage.notification.body,
+				android: { channelId },
+			});
+		}
 	}
 
 	async onInitialNotification(notification: InitialNotification | null) {
@@ -123,11 +122,12 @@ class PushNotificationsService {
 
 export const pushNotificationsService = new PushNotificationsService();
 
-export const setUpBackgroundNotifications = () => {
+export const setUpFirebaseMessagingBackgroundHandler = () => {
 	messaging().setBackgroundMessageHandler(async (remoteMessage) => {
 		console.log(
-			"[PushNotificationsService] [setUpBackgroundNotifications] onMessage",
+			"[PushNotificationsService] [setUpFirebaseMessagingBackgroundHandler] onMessage",
 			remoteMessage,
 		);
+		backgroundService.init();
 	});
 };
