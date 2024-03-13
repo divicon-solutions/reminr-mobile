@@ -23,9 +23,11 @@ class BackgroundService {
 	async runBackgroundServiceForNotification(notification: Notification) {
 		try {
 			// update the notification to run again in 5 minutes
-			const id = localNotificationsService.createIntervalNotification({
-				id: notification.id,
-				snooze: 300,
+			const newTimestamp = new Date().getTime() + 5 * 60 * 1000;
+			await localNotificationsService.updateTriggerNotification(notification.id ?? "", {
+				title: notification.title,
+				body: notification.body,
+				timestamp: newTimestamp,
 			});
 		} catch (error) {
 			console.error("[BackgroundService] runBackgroundServiceForNotification:", error);

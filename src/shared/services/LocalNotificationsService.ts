@@ -1,4 +1,5 @@
 import notifee, {
+	DisplayedNotification,
 	IntervalTrigger,
 	Notification,
 	TimeUnit,
@@ -36,6 +37,35 @@ class LocalNotificationsService {
 		);
 
 		return id;
+	}
+
+	async updateTriggerNotification(
+		id: string,
+		{ body, title, timestamp }: Partial<Notification> & { timestamp: number },
+	) {
+		await notifee.requestPermission();
+
+		const channelId = await notifee.createChannel({
+			id: "reminders",
+			name: "Reminders",
+		});
+
+		const trigger: TimestampTrigger = {
+			type: TriggerType.TIMESTAMP,
+			timestamp: timestamp,
+		};
+
+		await notifee.createTriggerNotification(
+			{
+				id,
+				title,
+				body,
+				android: {
+					channelId,
+				},
+			},
+			trigger,
+		);
 	}
 
 	async createIntervalNotification({ id, snooze }: { id: string; snooze: number }) {
