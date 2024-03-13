@@ -5,6 +5,7 @@
  * OpenAPI spec version: 1.0
  */
 import type { CallbackRequest } from "./callbackRequest";
+import type { Notification } from "./notification";
 import type { PushToken } from "./pushToken";
 import type { UserRole } from "./userRole";
 
@@ -16,6 +17,7 @@ export interface User {
 	fullName: string;
 	id: string;
 	isVerified: boolean;
+	notifications?: Notification[];
 	phoneNumber: string | null;
 	pushTokens?: PushToken[];
 	role: UserRole;

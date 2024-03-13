@@ -9,7 +9,7 @@ import {
 import { StackNavigationProps } from "@navigations/types";
 import { useAuth } from "@providers/auth";
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { ActionSheetIOS, Alert, Platform, SafeAreaView } from "react-native";
+import { ActionSheetIOS, Alert, Linking, Platform, SafeAreaView } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Button, Card, List, Switch, Text } from "react-native-paper";
 import MIcon from "react-native-vector-icons/MaterialIcons";
@@ -130,12 +130,17 @@ const Settings = ({ navigation }: SettingsProps) => {
 						cancelButtonIndex: 0,
 						userInterfaceStyle: "light",
 					},
-					(buttonIndex) => {
+					async (buttonIndex) => {
 						if (buttonIndex === 0) {
 						} else if (buttonIndex === 1) {
+							await callBackReqMutateAsync({
+								data: {
+									isResolved: false,
+								},
+							});
 							Alert.alert("Callback Requested", "We will call you back shortly");
 						} else if (buttonIndex === 2) {
-							Alert.alert("Email Sent", "We will respond to your email shortly");
+							Linking.openURL("mailto:support@reminr.com");
 						}
 					},
 				);
@@ -145,17 +150,16 @@ const Settings = ({ navigation }: SettingsProps) => {
 		}
 	};
 
-	const handleAction = (action) => {
+	const handleAction = async (action) => {
 		if (action === "Callback") {
-			// callBackReqMutateAsync({
-			// 	data: {
-			// 		isResolved: false,
-			// 		userId: user?.uid || "",
-			// 	},
-			// });
+			await callBackReqMutateAsync({
+				data: {
+					isResolved: false,
+				},
+			});
 			Alert.alert("Callback Requested", "We will call you back shortly");
 		} else if (action === "Email") {
-			Alert.alert("Email Sent", "We will respond to your email shortly");
+			Linking.openURL("mailto:support@reminr.com");
 		}
 		actionSheetRef.current?.setModalVisible(false);
 	};

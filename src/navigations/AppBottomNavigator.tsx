@@ -12,12 +12,15 @@ import DashboardScreen from "@features/Home/Dashboard";
 import MedicationsScreen from "@features/Medication/MedicationsList";
 import InrScreen from "@features/InrTest/InrList";
 import { StackNavigationProps } from "@navigations/types";
+import { Alert } from "react-native";
+import { useCallbackRequestControllerCreate } from "@api";
 
 const Tab = createBottomTabNavigator<AppBottomNavigatorParamList>();
 type AppBottomNavigatorProps = StackNavigationProps<"Home">;
 
 export default function AppBottomNavigator({ navigation }: AppBottomNavigatorProps) {
 	const { signOut } = useAuth();
+	const { mutateAsync: callBackReqMutateAsync } = useCallbackRequestControllerCreate();
 
 	const logout = useCallback(() => {
 		return <MIIcon name="logout" size={24} onPress={signOut} />;
@@ -35,6 +38,36 @@ export default function AppBottomNavigator({ navigation }: AppBottomNavigatorPro
 		);
 	}, [navigation]);
 
+	const callsupport = useCallback(() => {
+		return (
+			<MIIcon
+				name="call"
+				size={24}
+				onPress={() => {
+					// show a confirmation dialog
+
+					Alert.alert("Call Support", "Are you sure you want to request a call support?", [
+						{
+							text: "Cancel",
+							onPress: () => console.log("Cancel Pressed"),
+							style: "cancel",
+						},
+						{
+							text: "Yes",
+							onPress: async () => {
+								await callBackReqMutateAsync({
+									data: {
+										isResolved: false,
+									},
+								});
+							},
+						},
+					]);
+				}}
+			/>
+		);
+	}, []);
+
 	return (
 		<Tab.Navigator
 			screenOptions={{ header: BottomTabNavigationBar, headerShown: true }}
@@ -48,6 +81,7 @@ export default function AppBottomNavigator({ navigation }: AppBottomNavigatorPro
 					tabBarLabel: "Today",
 					tabBarIcon: ({ color }) => <MIIcon name="today" color={color} size={24} />,
 					headerRight: settings,
+					headerLeft: callsupport,
 				}}
 			/>
 			<Tab.Screen
@@ -58,6 +92,7 @@ export default function AppBottomNavigator({ navigation }: AppBottomNavigatorPro
 					tabBarLabel: "Dashboard",
 					tabBarIcon: ({ color }) => <MIIcon name="dashboard" color={color} size={24} />,
 					headerRight: settings,
+					headerLeft: callsupport,
 				}}
 			/>
 			<Tab.Screen
@@ -68,6 +103,7 @@ export default function AppBottomNavigator({ navigation }: AppBottomNavigatorPro
 					tabBarLabel: "Medications",
 					tabBarIcon: ({ color }) => <MIIcon name="medication" color={color} size={24} />,
 					headerRight: settings,
+					headerLeft: callsupport,
 				}}
 			/>
 			<Tab.Screen
@@ -78,6 +114,7 @@ export default function AppBottomNavigator({ navigation }: AppBottomNavigatorPro
 					tabBarLabel: "INR Test",
 					tabBarIcon: ({ color }) => <FIcon name="blood-drop" color={color} size={24} />,
 					headerRight: settings,
+					headerLeft: callsupport,
 				}}
 			/>
 		</Tab.Navigator>

@@ -11,11 +11,20 @@ import { makeStyles } from "@hooks/makeStyles";
 import SplashScreen from "@components/SplashScreen";
 import { RootStackParamList } from "@navigations/types";
 import { useAuth } from "@providers/auth";
+import notifee from "@notifee/react-native";
+import { backgroundService } from "@services/BackgroundService";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 function AppContainer() {
 	const { isLoading, user } = useAuth();
+
+	useEffect(() => {
+		backgroundService.init();
+		return notifee.onForegroundEvent(({ type, detail }) => {
+			console.log(type, detail);
+		});
+	}, []);
 
 	if (isLoading) {
 		return <SplashScreen />;
