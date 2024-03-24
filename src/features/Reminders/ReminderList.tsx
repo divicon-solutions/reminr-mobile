@@ -1,9 +1,10 @@
-import { FlatList, RefreshControl, Modal } from "react-native";
+import { FlatList, RefreshControl, Modal, View } from "react-native";
 import React, { useCallback } from "react";
 import { Card, List, Text } from "react-native-paper";
 import { Reminder, useRemindersControllerFindAll } from "@api";
 import Loader from "@components/Loader";
 import MCIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import IonIcon from "react-native-vector-icons/Ionicons";
 import ViewReminder from "./ViewReminder";
 import { makeStyles } from "@hooks/makeStyles";
 import { parseDateToFormat } from "@utils/formatters";
@@ -23,19 +24,35 @@ export default function ReminderList() {
 	};
 
 	const renderItem = useCallback(
-		({ item }: { item: Reminder }) => {
+		({ item, isDisabled }: { item: Reminder; isDisabled: boolean }) => {
 			return (
-				<Card mode="contained" style-={styles.card}>
+				<Card
+					mode="contained"
+					style={[styles.reminderCard, isDisabled && styles.disabledReminderCard]}
+				>
 					<List.Item
 						title={
 							<>
-								<Text variant="bodyMedium">{item.title}</Text>
+								<Text
+									style={[styles.reminderNameStyle, isDisabled && styles.disabledReminderText]}
+									variant="bodyMedium"
+								>
+									{item.title}
+								</Text>
 								<Text>{item.description}</Text>
 							</>
 						}
+						titleStyle={styles.reminderNameStyle}
 						description={parseDateToFormat(item.remindAt, "hh:mm A")}
+						descriptionStyle={[isDisabled && styles.disabledReminderText]}
 						onPress={() => handleReminderPress(item)}
-						right={() => <MCIcon name="timer-sand-complete" size={30} />}
+						right={() =>
+							isDisabled ? (
+								<IonIcon style={styles.doneIcon} name="checkmark-circle" size={30} />
+							) : (
+								<MCIcon style={styles.dueIcon} name="timer-sand-complete" size={30} />
+							)
+						}
 					/>
 				</Card>
 			);
@@ -47,12 +64,38 @@ export default function ReminderList() {
 		return <Loader />;
 	}
 
+	// filter data if the remindAt date is not today
 	return (
 		<>
+			{data?.filter(
+				(reminder) =>
+					new Date(reminder.remindAt).toDateString() === new Date().toDateString() &&
+					reminder.status === true,
+			)?.length > 0 ? (
+				<FlatList
+					data={data?.filter(
+						(reminder) =>
+							new Date(reminder.remindAt).toDateString() === new Date().toDateString() &&
+							reminder.status === true,
+					)}
+					renderItem={({ item }) => renderItem({ item: item, isDisabled: true })}
+					keyExtractor={(item) => item.id}
+					ItemSeparatorComponent={() => <View style={styles.divider} />}
+					ListHeaderComponent={<Text variant="headlineSmall">Medication Taken:</Text>}
+					ListEmptyComponent={<Text>No Medications</Text>}
+					refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
+					style={styles.root}
+				/>
+			) : null}
 			<FlatList
-				data={data}
-				renderItem={renderItem}
+				data={data?.filter(
+					(reminder) =>
+						new Date(reminder.remindAt).toDateString() === new Date().toDateString() &&
+						reminder.status === false,
+				)}
+				renderItem={({ item }) => renderItem({ item: item, isDisabled: false })}
 				keyExtractor={(item) => item.id}
+				ItemSeparatorComponent={() => <View style={styles.divider} />}
 				ListHeaderComponent={<Text variant="headlineSmall">Medication Due:</Text>}
 				ListEmptyComponent={<Text>No Medications</Text>}
 				refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
@@ -79,5 +122,28 @@ const useStyles = makeStyles((theme) => ({
 	},
 	card: {
 		borderRadius: 5,
+	},
+	reminderCard: {
+		backgroundColor: theme.colors.onPrimary,
+	},
+	disabledReminderCard: {
+		backgroundColor: theme.colors.disabledCard,
+	},
+	disabledReminderText: {
+		color: theme.colors.onDisabledCard,
+	},
+	divider: {
+		height: 10,
+	},
+	reminderNameStyle: {
+		fontWeight: "700",
+		fontSize: 17,
+		marginBottom: 15,
+	},
+	doneIcon: {
+		color: theme.colors.success,
+	},
+	dueIcon: {
+		color: theme.colors.pending,
 	},
 }));
