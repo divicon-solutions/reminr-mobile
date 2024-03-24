@@ -3,6 +3,7 @@ import React from "react";
 import {
 	CreateInrTestDto,
 	getInrTestControllerFindAllQueryKey,
+	useInrTestControllerRemove,
 	useInrTestControllerUpdate,
 } from "@api";
 import { Schema, number, object, string } from "yup";
@@ -27,6 +28,7 @@ type EditInrValueProps = StackNavigationProps<"EditInrValue">;
 export default function EditInrValue({ route, navigation }: EditInrValueProps) {
 	const { inrTest } = route.params;
 	const { mutateAsync } = useInrTestControllerUpdate();
+	const { mutateAsync: deleteMutateAsync } = useInrTestControllerRemove();
 	const styles = useStyles();
 	const queryClient = useQueryClient();
 
@@ -39,6 +41,13 @@ export default function EditInrValue({ route, navigation }: EditInrValueProps) {
 
 	const onSubmit = async (values: CreateInrTestDto) => {
 		await mutateAsync({ id: inrTest.id, data: { ...values, inrValue: Number(values.inrValue) } });
+		const queryKey = getInrTestControllerFindAllQueryKey();
+		queryClient.invalidateQueries({ queryKey });
+		navigation.goBack();
+	};
+
+	const onDelete = async () => {
+		await deleteMutateAsync({ id: inrTest.id });
 		const queryKey = getInrTestControllerFindAllQueryKey();
 		queryClient.invalidateQueries({ queryKey });
 		navigation.goBack();
@@ -59,7 +68,10 @@ export default function EditInrValue({ route, navigation }: EditInrValueProps) {
 						<TextFormField label="Remarks" name="remarks" />
 						<FileFormField label="Verification Image" name="verificationImage" />
 					</View>
-					<SafeAreaView>
+					<SafeAreaView style={styles.submitContainer}>
+						<Button mode="contained" style={styles.deleteButton} onPress={onDelete}>
+							Delete
+						</Button>
 						<Button
 							mode="contained"
 							onPress={() => handleSubmit()}
@@ -93,8 +105,18 @@ const useStyles = makeStyles((theme) => ({
 		alignSelf: "flex-end",
 	},
 	addInrButton: {
-		width: Dimensions.get("window").width / 2,
+		width: Dimensions.get("window").width / 2.5,
 		alignSelf: "center",
 		borderRadius: 0,
+	},
+	deleteButton: {
+		borderRadius: 0,
+		backgroundColor: theme.colors.error,
+		width: Dimensions.get("window").width / 2.5,
+	},
+	submitContainer: {
+		flexDirection: "row",
+		justifyContent: "space-around",
+		gap: 10,
 	},
 }));
