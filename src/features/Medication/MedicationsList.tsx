@@ -27,7 +27,7 @@ export default function MedicationsList({ navigation }: MedicationsListProps) {
 				</Card>
 			);
 		},
-		[navigation],
+		[navigation, styles.medicationCard, styles.medicationNameStyle],
 	);
 
 	if (isLoading) {
@@ -36,19 +36,17 @@ export default function MedicationsList({ navigation }: MedicationsListProps) {
 
 	return (
 		<>
+			<Button
+				mode="contained"
+				style={styles.addInrButton}
+				onPress={() => navigation.navigate("AddMedication")}
+			>
+				Add Medication
+			</Button>
 			<FlatList
 				data={data}
 				renderItem={renderItem}
 				keyExtractor={(item) => item.id}
-				ListHeaderComponent={
-					<Button
-						mode="contained"
-						style={styles.addInrButton}
-						onPress={() => navigation.navigate("AddMedication")}
-					>
-						Add Medication
-					</Button>
-				}
 				ItemSeparatorComponent={() => <View style={styles.divider} />}
 				onRefresh={refetch}
 				refreshing={isRefetching}
@@ -65,7 +63,8 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: theme.colors.background,
 	},
 	addInrButton: {
-		marginBottom: 10,
+		marginTop: 10,
+		marginBottom: 5,
 		width: Dimensions.get("window").width * 0.6,
 		alignSelf: "center",
 		borderRadius: 0,
