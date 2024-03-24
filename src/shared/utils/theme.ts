@@ -79,6 +79,8 @@ const customTheme = {
 		onPending: "rgb(255, 255, 255)",
 		pendingContainer: "rgb(255, 218, 215)",
 		onPendingContainer: "rgb(65, 0, 4)",
+		disabledCard: "rgb(255, 255, 255)",
+		onDisabledCard: "#A6A6A6",
 	},
 };
 
