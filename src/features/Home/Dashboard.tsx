@@ -1,11 +1,4 @@
-import {
-	Dimensions,
-	ImageBackground,
-	Pressable,
-	RefreshControl,
-	ScrollView,
-	View,
-} from "react-native";
+import { Dimensions, ImageBackground, RefreshControl, ScrollView, View } from "react-native";
 import React from "react";
 import { Button, Card, Text } from "react-native-paper";
 import { makeStyles, useAppTheme } from "@hooks/makeStyles";
@@ -33,53 +26,55 @@ export default function Dashboard({ navigation }: DashboardProps) {
 			refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
 		>
 			<View style={styles.upperView}>
-				<View>
-					<Text variant="titleMedium" style={styles.cardUpperTitle}>
-						Wellness Score:
-					</Text>
-					<Card mode="contained" style={styles.wellnessScore}>
-						<Card.Content>
-							<Text variant="bodyMedium">
-								{<Text variant="titleLarge">{data?.wellnessScore}</Text>}
-								/100
-							</Text>
-						</Card.Content>
-					</Card>
+				<View />
+				<View style={styles.container}>
+					<View style={styles.card}>
+						<Text style={styles.title}>
+							{data?.wellnessScore ?? 0} <Text style={styles.by100Text}>/100</Text>{" "}
+						</Text>
+						<Text style={styles.content}>{"Wellness Score"}</Text>
+					</View>
 				</View>
+				<View />
+			</View>
+			<View style={styles.upperView}>
 				<View>
 					<Text variant="titleMedium" style={styles.cardUpperTitle}>
-						Next INR Test:
+						Incentives:
 					</Text>
 					<Card mode="contained" style={styles.inrTest}>
 						<ImageBackground>
 							<Card.Content>
-								<Text variant="bodyMedium" style={{ textAlign: "center" }}>
-									on
-								</Text>
-								<Text variant="bodyLarge">Mar 15th</Text>
+								<Text variant="headlineSmall">$ {data?.incentiveAmount}</Text>
 							</Card.Content>
 						</ImageBackground>
 					</Card>
 				</View>
+				<View
+					style={{
+						flexDirection: "column",
+						justifyContent: "space-between",
+						marginTop: 15,
+					}}
+				>
+					<Button
+						mode="contained"
+						style={styles.incentiveButton}
+						onPress={() =>
+							navigation.navigate("RedeemAmount", { accountBalance: data?.incentiveAmount ?? 0 })
+						}
+					>
+						Redeem Incentives
+					</Button>
+					<Button
+						mode="contained"
+						style={styles.incentiveButton}
+						onPress={() => navigation.navigate("RedeemHistory")}
+					>
+						Redeem History
+					</Button>
+				</View>
 			</View>
-			<Pressable
-				onPress={() =>
-					navigation.navigate("IncentivesOverview", { accountBalance: data?.incentiveAmount ?? 0 })
-				}
-			>
-				<Text variant="titleMedium" style={styles.cardUpperTitle}>
-					Incentives:
-				</Text>
-				<Card mode="contained" style={{ backgroundColor: colors.tertiaryContainer }}>
-					<Card.Content>
-						<Text variant="titleLarge">$ {data?.incentiveAmount} </Text>
-						<Text variant="bodyMedium" style={styles.viewAccount}>
-							View account{">"}
-						</Text>
-					</Card.Content>
-				</Card>
-			</Pressable>
-
 			<View
 				style={{
 					marginTop: 20,
@@ -145,6 +140,33 @@ const useStyles = makeStyles((theme) => ({
 		padding: 18,
 		backgroundColor: theme.colors.background,
 	},
+	container: {
+		alignItems: "center",
+	},
+	card: {
+		width: 130,
+		height: 130,
+		borderRadius: 100,
+		backgroundColor: "#FFFFFF",
+		justifyContent: "center",
+		alignItems: "center",
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.15,
+		shadowRadius: 3.84,
+		elevation: 5,
+	},
+	title: {
+		fontSize: 20,
+		fontWeight: "bold",
+	},
+	content: {
+		fontSize: 13,
+		marginTop: 5,
+	},
 	upperView: {
 		flexDirection: "row",
 		justifyContent: "space-between",
@@ -157,6 +179,12 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: "center",
 		width: 125,
 		alignItems: "center",
+	},
+	incentiveButton: {
+		width: Dimensions.get("window").width / 2,
+		alignSelf: "center",
+		borderRadius: 0,
+		borderColor: theme.colors.primary,
 	},
 	inrTest: {
 		height: 85,
@@ -191,5 +219,25 @@ const useStyles = makeStyles((theme) => ({
 	viewAccount: {
 		textAlign: "right",
 		marginTop: 18,
+	},
+	iconContainer: {
+		width: 75,
+		height: 75,
+		borderRadius: 50,
+		backgroundColor: theme.colors.onPrimary,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	iconsView: {
+		flexDirection: "row",
+		justifyContent: "space-around",
+		marginTop: Dimensions.get("window").height * 0.1,
+	},
+	iconBottomText: {
+		fontSize: 11,
+		marginTop: 10,
+	},
+	by100Text: {
+		fontSize: 15,
 	},
 }));
