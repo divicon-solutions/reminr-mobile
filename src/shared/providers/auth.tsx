@@ -5,6 +5,7 @@ import { pushNotificationsService } from "@services/PushNotificationsService";
 import notifee, { EventType } from "@notifee/react-native";
 import messaging from "@react-native-firebase/messaging";
 import { storageService } from "@services/StorageService";
+import { localNotificationsService } from "@services/LocalNotificationsService";
 
 interface AuthContext {
 	user: FirebaseAuthTypes.User | null;
@@ -38,6 +39,12 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 			console.log("[FCM] [onForegroundEvent] type", type, "detail", detail);
 			if (type === EventType.PRESS) {
 				pushNotificationsService.onSelectNotification(detail.notification);
+			} else {
+				// auto snooze notification after 5 min
+				// localNotificationsService.snoozeNotification({
+				// 	id: detail?.notification?.id ?? "",
+				// 	snooze: 5,
+				// });
 			}
 		});
 

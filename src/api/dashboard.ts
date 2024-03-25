@@ -11,16 +11,16 @@ import type {
 	UseQueryOptions,
 	UseQueryResult,
 } from "@tanstack/react-query";
-import type { DashboardDataDto } from "./models";
+import type { AdminDashboardDataDto, DashboardDataDto } from "./models";
 import { mutator } from "./mutators/index";
 import type { ErrorType } from "./mutators/index";
 
 export const dashboardControllerGetDashboardData = (signal?: AbortSignal) => {
-	return mutator<DashboardDataDto>({ url: `/api/v1/dashboard`, method: "GET", signal });
+	return mutator<DashboardDataDto>({ url: `/api/v1/dashboard/member-data`, method: "GET", signal });
 };
 
 export const getDashboardControllerGetDashboardDataQueryKey = () => {
-	return [`/api/v1/dashboard`] as const;
+	return [`/api/v1/dashboard/member-data`] as const;
 };
 
 export const getDashboardControllerGetDashboardDataQueryOptions = <
@@ -60,6 +60,71 @@ export const useDashboardControllerGetDashboardData = <
 	>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 	const queryOptions = getDashboardControllerGetDashboardDataQueryOptions(options);
+
+	const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+	query.queryKey = queryOptions.queryKey;
+
+	return query;
+};
+
+export const dashboardControllerGetAdminDashboardData = (signal?: AbortSignal) => {
+	return mutator<AdminDashboardDataDto[]>({
+		url: `/api/v1/dashboard/admin-data`,
+		method: "GET",
+		signal,
+	});
+};
+
+export const getDashboardControllerGetAdminDashboardDataQueryKey = () => {
+	return [`/api/v1/dashboard/admin-data`] as const;
+};
+
+export const getDashboardControllerGetAdminDashboardDataQueryOptions = <
+	TData = Awaited<ReturnType<typeof dashboardControllerGetAdminDashboardData>>,
+	TError = ErrorType<unknown>,
+>(options?: {
+	query?: Partial<
+		UseQueryOptions<
+			Awaited<ReturnType<typeof dashboardControllerGetAdminDashboardData>>,
+			TError,
+			TData
+		>
+	>;
+}) => {
+	const { query: queryOptions } = options ?? {};
+
+	const queryKey = queryOptions?.queryKey ?? getDashboardControllerGetAdminDashboardDataQueryKey();
+
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof dashboardControllerGetAdminDashboardData>>
+	> = ({ signal }) => dashboardControllerGetAdminDashboardData(signal);
+
+	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+		Awaited<ReturnType<typeof dashboardControllerGetAdminDashboardData>>,
+		TError,
+		TData
+	> & { queryKey: QueryKey };
+};
+
+export type DashboardControllerGetAdminDashboardDataQueryResult = NonNullable<
+	Awaited<ReturnType<typeof dashboardControllerGetAdminDashboardData>>
+>;
+export type DashboardControllerGetAdminDashboardDataQueryError = ErrorType<unknown>;
+
+export const useDashboardControllerGetAdminDashboardData = <
+	TData = Awaited<ReturnType<typeof dashboardControllerGetAdminDashboardData>>,
+	TError = ErrorType<unknown>,
+>(options?: {
+	query?: Partial<
+		UseQueryOptions<
+			Awaited<ReturnType<typeof dashboardControllerGetAdminDashboardData>>,
+			TError,
+			TData
+		>
+	>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const queryOptions = getDashboardControllerGetAdminDashboardDataQueryOptions(options);
 
 	const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

@@ -8,6 +8,7 @@ import { useAuth } from "@providers/auth";
 import { StackNavigationProps } from "@navigations/types";
 import { makeStyles } from "@hooks/makeStyles";
 import KeyboardAvoidView from "@components/KeyboardAvoidView";
+import { AlertService } from "@services/AlertService";
 
 type FormValues = {
 	email: string;
@@ -27,7 +28,15 @@ export default function Login({ navigation }: LoginProps) {
 	const styles = useStyles();
 
 	const onSubmit = async (values: FormValues) => {
-		await signIn(values.email, values.password);
+		try {
+			await signIn(values.email, values.password);
+			navigation.navigate("Home", { screen: "Today" });
+		} catch (error: any) {
+			console.log(error);
+			if (error.code === "auth/invalid-credential") {
+				AlertService.errorMessage("Invalid email or password");
+			}
+		}
 	};
 
 	return (
@@ -61,6 +70,10 @@ export default function Login({ navigation }: LoginProps) {
 								style={styles.loginButton}
 							>
 								Login
+							</Button>
+
+							<Button mode="text" onPress={() => navigation.navigate("ForgotPassword")}>
+								Forgot Password?
 							</Button>
 
 							<Button mode="text" onPress={() => navigation.navigate("SignUp")}>

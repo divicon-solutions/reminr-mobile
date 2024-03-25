@@ -15,7 +15,7 @@ import { snakeCaseToUpperCamelCase } from "@utils/formatters";
 import { Formik } from "formik";
 import React from "react";
 import { View, SafeAreaView, Dimensions } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 import { Schema, object, mixed, number, string, array } from "yup";
 
 const schema: Schema<CreateMedicationDto> = object({
@@ -34,7 +34,7 @@ const schema: Schema<CreateMedicationDto> = object({
 				.required(),
 		)
 		.required(),
-	dosage: string(),
+	dosage: string().nullable(),
 	noOfPills: number().required(),
 	startDate: string().required(),
 	time: string().required(),
