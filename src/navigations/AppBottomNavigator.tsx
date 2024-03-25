@@ -19,12 +19,7 @@ const Tab = createBottomTabNavigator<AppBottomNavigatorParamList>();
 type AppBottomNavigatorProps = StackNavigationProps<"Home">;
 
 export default function AppBottomNavigator({ navigation }: AppBottomNavigatorProps) {
-	const { signOut } = useAuth();
 	const { mutateAsync: callBackReqMutateAsync } = useCallbackRequestControllerCreate();
-
-	const logout = useCallback(() => {
-		return <MIIcon name="logout" size={24} onPress={signOut} />;
-	}, [signOut]);
 
 	const settings = useCallback(() => {
 		return (

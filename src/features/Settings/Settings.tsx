@@ -9,7 +9,7 @@ import {
 import { StackNavigationProps } from "@navigations/types";
 import { useAuth } from "@providers/auth";
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { ActionSheetIOS, Alert, Linking, Platform, SafeAreaView } from "react-native";
+import { ActionSheetIOS, Alert, Linking, Platform, SafeAreaView, Webview } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Button, Card, List, Switch, Text } from "react-native-paper";
 import MIcon from "react-native-vector-icons/MaterialIcons";
@@ -147,6 +147,7 @@ const Settings = ({ navigation }: SettingsProps) => {
 			} else if (Platform.OS === "android") {
 				actionSheetRef.current?.show();
 			}
+		} else if (item.name === "About") {
 		}
 	};
 

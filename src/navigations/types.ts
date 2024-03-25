@@ -25,6 +25,7 @@ export type RootStackParamList = {
 	Settings: undefined;
 	Account: undefined;
 	ChangePassword: undefined;
+	ForgotPassword: undefined;
 };
 
 export type Navigation = {

@@ -12,10 +12,16 @@ import RedeemHistory from "@features/Redeem/RedeemHistory";
 import Account from "@features/Settings/Account";
 import Settings from "@features/Settings/Settings";
 import RedeemDetails from "@features/Redeem/RedeemDetails";
+import ForgotPassword from "@features/Authentication/ForgotPassword";
 
 export const unprotectedScreens: Navigation[] = [
 	{ name: "Login", Component: Login, options: { headerShown: false } },
 	{ name: "SignUp", Component: SignUp, options: { headerShown: false } },
+	{
+		name: "ForgotPassword",
+		Component: ForgotPassword,
+		options: { headerTitle: "Forgot Password" },
+	},
 ];
 
 export const protectedScreens: Navigation[] = [
