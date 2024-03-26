@@ -1,24 +1,24 @@
 import { View, SafeAreaView, Dimensions } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { StackNavigationProps } from "@navigations/types";
 import ADIcon from "react-native-vector-icons/AntDesign";
 import { makeStyles } from "@hooks/makeStyles";
 import { Button, Divider, Text } from "react-native-paper";
 import { parseDateToFormat } from "@utils/formatters";
+import Clipboard from "@react-native-clipboard/clipboard";
+import { AlertService } from "@services/AlertService";
 
 type RedeemDetailsProps = StackNavigationProps<"RedeemDetails">;
 
 export default function RedeemedCardDetails({ route }: RedeemDetailsProps) {
 	const { redeemTransaction } = route.params;
 	const styles = useStyles();
-	const [copyTransition, setCopyTransition] = useState(false);
 
 	const copyGiftCardCodeToClipboard = () => {
-		// if (redeemTransaction.giftCardCode) Clipboard.setString(redeemTransaction.giftCardCode);
-		setCopyTransition(true);
-		setTimeout(() => {
-			setCopyTransition(false);
-		}, 1000);
+		if (redeemTransaction?.giftCardCode) {
+			Clipboard.setString(redeemTransaction.giftCardCode);
+			AlertService.infoMessage("Copied");
+		}
 	};
 
 	return (
@@ -81,12 +81,8 @@ export default function RedeemedCardDetails({ route }: RedeemDetailsProps) {
 						<Text style={styles.giftCardCode}>{redeemTransaction.giftCardCode}</Text>
 					</View>
 
-					<Button
-						mode={copyTransition ? "contained" : "outlined"}
-						style={{ marginTop: 10 }}
-						onPress={copyGiftCardCodeToClipboard}
-					>
-						{copyTransition ? "Copied!" : "Copy Code"}
+					<Button mode={"outlined"} style={{ marginTop: 10 }} onPress={copyGiftCardCodeToClipboard}>
+						{"Copy Code"}
 					</Button>
 				</View>
 			)}
