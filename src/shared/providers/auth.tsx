@@ -13,6 +13,7 @@ interface AuthContext {
 	signOut: () => Promise<void>;
 	signUp: (payload: CreateUserDto & { password: string }) => Promise<void>;
 	changePassword: (oldPassword: string, newPassword: string) => Promise<void>;
+	forgotPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContext | undefined>(undefined);
@@ -153,9 +154,24 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 		}
 	}, []);
 
+	const forgotPassword = useCallback(async (email: string) => {
+		try {
+			await auth().sendPasswordResetEmail(email);
+		} catch (error: any) {
+			console.log(error);
+			if (error.code === "auth/invalid-email") {
+				throw new Error("Please check your email");
+			}
+			if (error.code === "auth/user-not-found") {
+				throw new Error("No user found with this email");
+			}
+			throw new Error("An error occurred while sending the reset password email");
+		}
+	}, []);
+
 	const value = useMemo(
-		() => ({ user, isLoading, signIn, signOut, signUp, changePassword }),
-		[user, isLoading, signIn, signOut, signUp, changePassword],
+		() => ({ user, isLoading, signIn, signOut, signUp, changePassword, forgotPassword }),
+		[user, isLoading, signIn, signOut, signUp, changePassword, forgotPassword],
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

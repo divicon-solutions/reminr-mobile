@@ -1,11 +1,13 @@
-import { Button, Text, View } from "react-native";
-import React, { Component } from "react";
+import { Dimensions, View } from "react-native";
+import React from "react";
 import { TextFormField } from "@components/FormFields/TextFormField";
 import KeyboardAvoidView from "@components/KeyboardAvoidView";
 import { Formik } from "formik";
 import { Schema, object, string } from "yup";
 import { makeStyles } from "@hooks/makeStyles";
-import { Dimensions, ViewStyle } from "react-native";
+import { Button } from "react-native-paper";
+import { useAuth } from "@providers/auth";
+import { AlertService } from "@services/AlertService";
 
 type FormValues = {
 	email: string;
@@ -17,21 +19,23 @@ const schema: Schema<FormValues> = object({
 
 export default function ForgotPassword() {
 	const styles = useStyles();
+	const { forgotPassword } = useAuth();
+
 	const onSubmit = async (values: FormValues) => {
 		try {
+			await forgotPassword(values.email);
+			AlertService.successMessage(
+				"If the email exists, a password reset link will be sent to your email.",
+			);
 		} catch (error: any) {
 			console.log(error);
 		}
 	};
 
 	return (
-		<Formik
-			initialValues={{ email: "", password: "" }}
-			validationSchema={schema}
-			onSubmit={onSubmit}
-		>
+		<Formik initialValues={{ email: "" }} validationSchema={schema} onSubmit={onSubmit}>
 			{({ handleSubmit, isSubmitting, isValid }) => (
-				<KeyboardAvoidView>
+				<KeyboardAvoidView style={styles.container} contentContainerStyle={styles.content}>
 					<View style={styles.form}>
 						<TextFormField
 							name="email"
@@ -48,12 +52,8 @@ export default function ForgotPassword() {
 								loading={isSubmitting}
 								style={styles.loginButton}
 							>
-								Login
+								Send Reset Link
 							</Button>
-
-							{/* <Button mode="text" onPress={() => navigation.navigate("SignUp")}>
-									Don't have an account? Sign up
-								</Button> */}
 						</View>
 					</View>
 				</KeyboardAvoidView>
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	form: {
 		gap: 10,
-	} as ViewStyle, // Add type assertion to make it compatible with ViewStyle
+	},
 	buttonGroup: {
 		marginTop: 20,
 	},
