@@ -71,8 +71,8 @@ function InrTestsGraph({ data }: InrTestsGraphProps) {
 					</LineChart>
 					<XAxis
 						style={styles.xAxis}
-						data={xAxisData}
-						formatLabel={(_, index) => xAxisData[index]}
+						data={xAxisData.map((_, index) => index)}
+						formatLabel={(index) => xAxisData[index]}
 						contentInset={horizontalContentInset}
 						svg={axesSvg}
 					/>

@@ -30,12 +30,9 @@ export default function Login({ navigation }: LoginProps) {
 	const onSubmit = async (values: FormValues) => {
 		try {
 			await signIn(values.email, values.password);
-			navigation.navigate("Home", { screen: "Today" });
 		} catch (error: any) {
-			console.log(error);
-			if (error.code === "auth/invalid-credential") {
-				AlertService.errorMessage("Invalid email or password");
-			}
+			const errMsg = error.message || "An error occurred";
+			AlertService.errorMessage(errMsg);
 		}
 	};
 

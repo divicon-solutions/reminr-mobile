@@ -13,7 +13,6 @@ class InterceptorService {
 
 	private async authTokenGetter() {
 		const idToken = await auth().currentUser?.getIdToken();
-
 		return idToken;
 	}
 

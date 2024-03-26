@@ -5,7 +5,6 @@ import { pushNotificationsService } from "@services/PushNotificationsService";
 import notifee, { EventType } from "@notifee/react-native";
 import messaging from "@react-native-firebase/messaging";
 import { storageService } from "@services/StorageService";
-import { localNotificationsService } from "@services/LocalNotificationsService";
 
 interface AuthContext {
 	user: FirebaseAuthTypes.User | null;
@@ -86,7 +85,24 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 	}, [onAuthStateChanged]);
 
 	const signIn = useCallback(async (email: string, password: string) => {
-		await auth().signInWithEmailAndPassword(email, password);
+		try {
+			await auth().signInWithEmailAndPassword(email, password);
+		} catch (error: any) {
+			console.error(error);
+			if (error.code === "auth/user-disabled") {
+				throw new Error("Your account has been disabled, please contact support");
+			}
+			if (error.code === "auth/user-not-found") {
+				throw new Error("Please check your email");
+			}
+			if (error.code === "auth/wrong-password") {
+				throw new Error("Please check your password");
+			}
+			if (error.code === "auth/too-many-requests") {
+				throw new Error("Too many requests, please try again later");
+			}
+			throw new Error("Error signing in");
+		}
 	}, []);
 
 	const signOut = useCallback(async () => {
@@ -96,8 +112,9 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 				await pushTokensControllerUnsubscribe({ token });
 				storageService.setFcmToken(null);
 			}
-			await auth().signOut();
-			setUser(null);
+			await auth()
+				.signOut()
+				.then(() => setUser(null));
 		} catch (error) {
 			console.error(error);
 		}

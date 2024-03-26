@@ -52,8 +52,8 @@ function MedicationsGraph({ data }: MedicationsGraphProps) {
 	return (
 		<View style={styles.container}>
 			<YAxis
-				data={yAxisData}
-				formatLabel={(value) => value}
+				data={yAxisData.map((_, index) => index)}
+				formatLabel={(value) => yAxisData[value]}
 				style={{ marginBottom: xAxisHeight }}
 				contentInset={verticalContentInset}
 				svg={axesSvg}
@@ -75,8 +75,8 @@ function MedicationsGraph({ data }: MedicationsGraphProps) {
 					</LineChart>
 					<XAxis
 						style={styles.xAxis}
-						data={xAxisData}
-						formatLabel={(value) => value}
+						data={xAxisData.map((_, index) => index)}
+						formatLabel={(index) => xAxisData[index]}
 						contentInset={horizontalContentInset}
 						svg={axesSvg}
 					/>
