@@ -27,6 +27,7 @@ type InrTestsGraphProps = Readonly<{
 }>;
 function InrTestsGraph({ data }: InrTestsGraphProps) {
 	const { colors } = useAppTheme();
+	const scrollViewRef = React.useRef<ScrollView>(null);
 
 	const yAxisData = useMemo(() => data.map((test) => test.inrValue), [data]);
 	const xAxisData = useMemo(() => data.map((test) => parseDateToFormat(test.date)), [data]);
@@ -55,9 +56,11 @@ function InrTestsGraph({ data }: InrTestsGraphProps) {
 				svg={axesSvg}
 			/>
 			<ScrollView
+				ref={scrollViewRef}
 				contentContainerStyle={styles.scrollViewContent}
 				horizontal
 				showsHorizontalScrollIndicator={false}
+				onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
 			>
 				<View style={[styles.scrollContainer, { width: data.length * 100 }]}>
 					<LineChart

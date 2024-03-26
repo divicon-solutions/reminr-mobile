@@ -28,11 +28,13 @@ type MedicationsGraphProps = Readonly<{
 function MedicationsGraph({ data }: MedicationsGraphProps) {
 	const { colors } = useAppTheme();
 
-	const yAxisData = useMemo(
-		() => data.map((test) => parseDateToFormat(test.acknowledgedAt, "hh:mm A")),
-		[data],
-	);
-	const xAxisData = useMemo(() => data.map((test) => parseDateToFormat(test.remindAt)), [data]);
+	// const yAxisData = useMemo(
+	// 	() => data.map((test) => parseDateToFormat(test.acknowledgedAt, "hh:mm A")),
+	// 	[data],
+	// );
+	// const xAxisData = useMemo(() => data.map((test) => parseDateToFormat(test.remindAt)), [data]);
+	const yAxisData = [];
+	const xAxisData = [];
 
 	const axesSvg = { fontSize: 10, fill: "grey" };
 	const verticalContentInset = { top: 10, bottom: 10 };

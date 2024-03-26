@@ -7,12 +7,16 @@ import Loader from "@components/Loader";
 import MedicationsGraph from "./MedicationsGraph";
 import InrTestsGraph from "./InrTestsGraph";
 import { StackNavigationProps } from "@navigations/types";
+import { useAuth } from "@providers/auth";
 
 type DashboardProps = StackNavigationProps<"Home">;
 
 export default function Dashboard({ navigation }: DashboardProps) {
 	const styles = useStyles();
-	const { data, isLoading, isRefetching, refetch } = useDashboardControllerGetDashboardData();
+	const { user } = useAuth();
+	const { data, isLoading, isRefetching, refetch } = useDashboardControllerGetDashboardData(
+		user?.uid ?? "",
+	);
 	const [showMedicationsGraph, setShowMedicationsGraph] = React.useState(true);
 	const { colors } = useAppTheme();
 
