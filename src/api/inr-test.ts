@@ -16,6 +16,7 @@ import type {
 import type {
 	CreateInrTestDto,
 	InrTestControllerCreate201,
+	InrTestControllerFindAllParams,
 	InrTestControllerUpdate200,
 	InrTestDto,
 	SuccessResponseDto,
@@ -84,29 +85,35 @@ export const useInrTestControllerCreate = <
 
 	return useMutation(mutationOptions);
 };
-export const inrTestControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<InrTestDto[]>({ url: `/api/v1/inr-test`, method: "GET", signal });
+export const inrTestControllerFindAll = (
+	params?: InrTestControllerFindAllParams,
+	signal?: AbortSignal,
+) => {
+	return mutator<InrTestDto[]>({ url: `/api/v1/inr-test`, method: "GET", params, signal });
 };
 
-export const getInrTestControllerFindAllQueryKey = () => {
-	return [`/api/v1/inr-test`] as const;
+export const getInrTestControllerFindAllQueryKey = (params?: InrTestControllerFindAllParams) => {
+	return [`/api/v1/inr-test`, ...(params ? [params] : [])] as const;
 };
 
 export const getInrTestControllerFindAllQueryOptions = <
 	TData = Awaited<ReturnType<typeof inrTestControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof inrTestControllerFindAll>>, TError, TData>
-	>;
-}) => {
+>(
+	params?: InrTestControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof inrTestControllerFindAll>>, TError, TData>
+		>;
+	},
+) => {
 	const { query: queryOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getInrTestControllerFindAllQueryKey();
+	const queryKey = queryOptions?.queryKey ?? getInrTestControllerFindAllQueryKey(params);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof inrTestControllerFindAll>>> = ({
 		signal,
-	}) => inrTestControllerFindAll(signal);
+	}) => inrTestControllerFindAll(params, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof inrTestControllerFindAll>>,
@@ -123,12 +130,15 @@ export type InrTestControllerFindAllQueryError = ErrorType<unknown>;
 export const useInrTestControllerFindAll = <
 	TData = Awaited<ReturnType<typeof inrTestControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof inrTestControllerFindAll>>, TError, TData>
-	>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const queryOptions = getInrTestControllerFindAllQueryOptions(options);
+>(
+	params?: InrTestControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof inrTestControllerFindAll>>, TError, TData>
+		>;
+	},
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const queryOptions = getInrTestControllerFindAllQueryOptions(params, options);
 
 	const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

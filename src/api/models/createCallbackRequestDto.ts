@@ -7,4 +7,5 @@
 
 export interface CreateCallbackRequestDto {
 	isResolved?: boolean;
+	userId: string;
 }

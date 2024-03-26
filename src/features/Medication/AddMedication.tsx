@@ -9,11 +9,13 @@ import { getCurrentUtcTimestamp, getCurrentUtcTimestampWithTimeOnly } from "@uti
 import { useQueryClient } from "@tanstack/react-query";
 import { StackNavigationProps } from "@navigations/types";
 import MedicationForm from "./MedicationForm";
+import { useAuth } from "@providers/auth";
 
 type AddMedicationProps = StackNavigationProps<"AddMedication">;
 
 export default function AddMedication({ navigation }: AddMedicationProps) {
 	const { mutateAsync } = useMedicationsControllerCreate();
+	const { user } = useAuth();
 
 	const queryClient = useQueryClient();
 
@@ -31,6 +33,7 @@ export default function AddMedication({ navigation }: AddMedicationProps) {
 		startDate: getCurrentUtcTimestamp(),
 		specificDays: [],
 		time: getCurrentUtcTimestampWithTimeOnly(),
+		userId: user?.uid ?? "",
 	};
 
 	return <MedicationForm initialValues={initialValues} onSubmit={onSubmit} />;

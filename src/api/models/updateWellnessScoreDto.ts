@@ -9,4 +9,5 @@ export interface UpdateWellnessScoreDto {
 	date?: string;
 	remarks?: string | null;
 	score?: number;
+	userId?: string;
 }

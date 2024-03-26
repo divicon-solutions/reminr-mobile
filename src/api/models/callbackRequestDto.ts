@@ -11,4 +11,5 @@ export interface CallbackRequestDto {
 	id: string;
 	isResolved: boolean;
 	updatedAt: string;
+	userId: string;
 }

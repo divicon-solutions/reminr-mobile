@@ -7,11 +7,15 @@ import { Button, Card, List } from "react-native-paper";
 import { parseDateToFormat } from "@utils/formatters";
 import { makeStyles } from "@hooks/makeStyles";
 import { BottomTabNavigationProps } from "@navigations/types";
+import { useAuth } from "@providers/auth";
 
 type MedicationsListProps = BottomTabNavigationProps<"Medications">;
 
 export default function MedicationsList({ navigation }: MedicationsListProps) {
-	const { data, isLoading, isRefetching, refetch } = useMedicationsControllerFindAll();
+	const { user } = useAuth();
+	const { data, isLoading, isRefetching, refetch } = useMedicationsControllerFindAll({
+		userId: user?.uid,
+	});
 	const styles = useStyles();
 
 	const renderItem = useCallback(

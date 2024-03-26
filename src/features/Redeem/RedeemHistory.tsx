@@ -6,11 +6,15 @@ import { makeStyles, useAppTheme } from "@hooks/makeStyles";
 import { Card, List } from "react-native-paper";
 import { parseDateToFormat } from "@utils/formatters";
 import { StackNavigationProps } from "@navigations/types";
+import { useAuth } from "@providers/auth";
 
 type RedeemHistoryProps = StackNavigationProps<"RedeemHistory">;
 
 export default function RedeemHistory({ navigation }: RedeemHistoryProps) {
-	const { data, isLoading, isRefetching, refetch } = useRedeemsControllerFindAll();
+	const { user } = useAuth();
+	const { data, isLoading, isRefetching, refetch } = useRedeemsControllerFindAll({
+		userId: user?.uid,
+	});
 	const styles = useStyles();
 	const { colors } = useAppTheme();
 
@@ -48,7 +52,13 @@ export default function RedeemHistory({ navigation }: RedeemHistoryProps) {
 				</Card>
 			);
 		},
-		[styles.redeemCard, styles.redeemNameStyle],
+		[
+			styles.redeemCard,
+			styles.redeemNameStyle,
+			colors.pending,
+			colors.successContainer,
+			navigation,
+		],
 	);
 
 	if (isLoading) {

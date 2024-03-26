@@ -5,8 +5,9 @@ import { Formik } from "formik";
 import { SelectFormField } from "@components/FormFields/SelectFormField";
 import { Button } from "react-native-paper";
 import { makeStyles } from "@hooks/makeStyles";
-import { CreateRedeemDto, RedeemDto, useRedeemsControllerCreate } from "@api";
+import { CreateRedeemDto, useRedeemsControllerCreate } from "@api";
 import { StackNavigationProps } from "@navigations/types";
+import { useAuth } from "@providers/auth";
 
 const giftCardOptions = [
 	{ label: "Amazon", value: "amazon" },
@@ -18,6 +19,7 @@ type RedeemAmountProps = StackNavigationProps<"RedeemAmount">;
 
 export default function RedeemAmount({ route, navigation }: RedeemAmountProps) {
 	const { accountBalance } = route.params;
+	const { user } = useAuth();
 	const amounts: { value: number }[] = useMemo(() => [], []);
 	const styles = useStyles();
 
@@ -27,6 +29,7 @@ export default function RedeemAmount({ route, navigation }: RedeemAmountProps) {
 		processedAt: null,
 		method: "GIFTCARD",
 		giftCardCode: null,
+		userId: user?.uid ?? "",
 	};
 
 	const { mutateAsync } = useRedeemsControllerCreate();

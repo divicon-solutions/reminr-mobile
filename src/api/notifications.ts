@@ -17,6 +17,7 @@ import type {
 	CreateNotificationDto,
 	NotificationDto,
 	NotificationsControllerCreateParams,
+	NotificationsControllerFindAllParams,
 } from "./models";
 import { mutator } from "./mutators/index";
 import type { ErrorType } from "./mutators/index";
@@ -85,29 +86,42 @@ export const useNotificationsControllerCreate = <
 
 	return useMutation(mutationOptions);
 };
-export const notificationsControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<NotificationDto[]>({ url: `/api/v1/notifications`, method: "GET", signal });
+export const notificationsControllerFindAll = (
+	params?: NotificationsControllerFindAllParams,
+	signal?: AbortSignal,
+) => {
+	return mutator<NotificationDto[]>({
+		url: `/api/v1/notifications`,
+		method: "GET",
+		params,
+		signal,
+	});
 };
 
-export const getNotificationsControllerFindAllQueryKey = () => {
-	return [`/api/v1/notifications`] as const;
+export const getNotificationsControllerFindAllQueryKey = (
+	params?: NotificationsControllerFindAllParams,
+) => {
+	return [`/api/v1/notifications`, ...(params ? [params] : [])] as const;
 };
 
 export const getNotificationsControllerFindAllQueryOptions = <
 	TData = Awaited<ReturnType<typeof notificationsControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerFindAll>>, TError, TData>
-	>;
-}) => {
+>(
+	params?: NotificationsControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerFindAll>>, TError, TData>
+		>;
+	},
+) => {
 	const { query: queryOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getNotificationsControllerFindAllQueryKey();
+	const queryKey = queryOptions?.queryKey ?? getNotificationsControllerFindAllQueryKey(params);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof notificationsControllerFindAll>>> = ({
 		signal,
-	}) => notificationsControllerFindAll(signal);
+	}) => notificationsControllerFindAll(params, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof notificationsControllerFindAll>>,
@@ -124,12 +138,15 @@ export type NotificationsControllerFindAllQueryError = ErrorType<unknown>;
 export const useNotificationsControllerFindAll = <
 	TData = Awaited<ReturnType<typeof notificationsControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerFindAll>>, TError, TData>
-	>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const queryOptions = getNotificationsControllerFindAllQueryOptions(options);
+>(
+	params?: NotificationsControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerFindAll>>, TError, TData>
+		>;
+	},
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const queryOptions = getNotificationsControllerFindAllQueryOptions(params, options);
 
 	const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

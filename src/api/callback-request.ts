@@ -15,6 +15,7 @@ import type {
 } from "@tanstack/react-query";
 import type {
 	CallbackRequestControllerCreate201,
+	CallbackRequestControllerFindAllParams,
 	CallbackRequestControllerUpdate200,
 	CallbackRequestDto,
 	CreateCallbackRequestDto,
@@ -86,29 +87,42 @@ export const useCallbackRequestControllerCreate = <
 
 	return useMutation(mutationOptions);
 };
-export const callbackRequestControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<CallbackRequestDto[]>({ url: `/api/v1/callback-request`, method: "GET", signal });
+export const callbackRequestControllerFindAll = (
+	params?: CallbackRequestControllerFindAllParams,
+	signal?: AbortSignal,
+) => {
+	return mutator<CallbackRequestDto[]>({
+		url: `/api/v1/callback-request`,
+		method: "GET",
+		params,
+		signal,
+	});
 };
 
-export const getCallbackRequestControllerFindAllQueryKey = () => {
-	return [`/api/v1/callback-request`] as const;
+export const getCallbackRequestControllerFindAllQueryKey = (
+	params?: CallbackRequestControllerFindAllParams,
+) => {
+	return [`/api/v1/callback-request`, ...(params ? [params] : [])] as const;
 };
 
 export const getCallbackRequestControllerFindAllQueryOptions = <
 	TData = Awaited<ReturnType<typeof callbackRequestControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof callbackRequestControllerFindAll>>, TError, TData>
-	>;
-}) => {
+>(
+	params?: CallbackRequestControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof callbackRequestControllerFindAll>>, TError, TData>
+		>;
+	},
+) => {
 	const { query: queryOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getCallbackRequestControllerFindAllQueryKey();
+	const queryKey = queryOptions?.queryKey ?? getCallbackRequestControllerFindAllQueryKey(params);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof callbackRequestControllerFindAll>>> = ({
 		signal,
-	}) => callbackRequestControllerFindAll(signal);
+	}) => callbackRequestControllerFindAll(params, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof callbackRequestControllerFindAll>>,
@@ -125,12 +139,15 @@ export type CallbackRequestControllerFindAllQueryError = ErrorType<unknown>;
 export const useCallbackRequestControllerFindAll = <
 	TData = Awaited<ReturnType<typeof callbackRequestControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof callbackRequestControllerFindAll>>, TError, TData>
-	>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const queryOptions = getCallbackRequestControllerFindAllQueryOptions(options);
+>(
+	params?: CallbackRequestControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof callbackRequestControllerFindAll>>, TError, TData>
+		>;
+	},
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const queryOptions = getCallbackRequestControllerFindAllQueryOptions(params, options);
 
 	const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

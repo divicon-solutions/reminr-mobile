@@ -18,4 +18,5 @@ export interface UpdateMedicationDto {
 	specificDays?: UpdateMedicationDtoSpecificDaysItem[];
 	startDate?: string;
 	time?: string;
+	userId?: string;
 }

@@ -5,7 +5,6 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface UpdateCallbackRequestDto {
-	isResolved?: boolean;
+export type NotificationsControllerFindAllParams = {
 	userId?: string;
-}
+};

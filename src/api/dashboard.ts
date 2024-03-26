@@ -15,31 +15,42 @@ import type { AdminDashboardDataDto, DashboardDataDto } from "./models";
 import { mutator } from "./mutators/index";
 import type { ErrorType } from "./mutators/index";
 
-export const dashboardControllerGetDashboardData = (signal?: AbortSignal) => {
-	return mutator<DashboardDataDto>({ url: `/api/v1/dashboard/member-data`, method: "GET", signal });
+export const dashboardControllerGetDashboardData = (id: string, signal?: AbortSignal) => {
+	return mutator<DashboardDataDto>({
+		url: `/api/v1/dashboard/member-data/${id}`,
+		method: "GET",
+		signal,
+	});
 };
 
-export const getDashboardControllerGetDashboardDataQueryKey = () => {
-	return [`/api/v1/dashboard/member-data`] as const;
+export const getDashboardControllerGetDashboardDataQueryKey = (id: string) => {
+	return [`/api/v1/dashboard/member-data/${id}`] as const;
 };
 
 export const getDashboardControllerGetDashboardDataQueryOptions = <
 	TData = Awaited<ReturnType<typeof dashboardControllerGetDashboardData>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof dashboardControllerGetDashboardData>>, TError, TData>
-	>;
-}) => {
+>(
+	id: string,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<
+				Awaited<ReturnType<typeof dashboardControllerGetDashboardData>>,
+				TError,
+				TData
+			>
+		>;
+	},
+) => {
 	const { query: queryOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getDashboardControllerGetDashboardDataQueryKey();
+	const queryKey = queryOptions?.queryKey ?? getDashboardControllerGetDashboardDataQueryKey(id);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof dashboardControllerGetDashboardData>>> = ({
 		signal,
-	}) => dashboardControllerGetDashboardData(signal);
+	}) => dashboardControllerGetDashboardData(id, signal);
 
-	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+	return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof dashboardControllerGetDashboardData>>,
 		TError,
 		TData
@@ -54,12 +65,19 @@ export type DashboardControllerGetDashboardDataQueryError = ErrorType<unknown>;
 export const useDashboardControllerGetDashboardData = <
 	TData = Awaited<ReturnType<typeof dashboardControllerGetDashboardData>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof dashboardControllerGetDashboardData>>, TError, TData>
-	>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const queryOptions = getDashboardControllerGetDashboardDataQueryOptions(options);
+>(
+	id: string,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<
+				Awaited<ReturnType<typeof dashboardControllerGetDashboardData>>,
+				TError,
+				TData
+			>
+		>;
+	},
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const queryOptions = getDashboardControllerGetDashboardDataQueryOptions(id, options);
 
 	const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

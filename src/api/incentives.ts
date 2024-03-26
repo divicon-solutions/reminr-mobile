@@ -17,6 +17,7 @@ import type {
 	CreateIncentiveDto,
 	IncentiveDto,
 	IncentivesControllerCreate201,
+	IncentivesControllerFindAllParams,
 	IncentivesControllerUpdate200,
 	SuccessResponseDto,
 	UpdateIncentiveDto,
@@ -84,29 +85,37 @@ export const useIncentivesControllerCreate = <
 
 	return useMutation(mutationOptions);
 };
-export const incentivesControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<IncentiveDto[]>({ url: `/api/v1/incentives`, method: "GET", signal });
+export const incentivesControllerFindAll = (
+	params?: IncentivesControllerFindAllParams,
+	signal?: AbortSignal,
+) => {
+	return mutator<IncentiveDto[]>({ url: `/api/v1/incentives`, method: "GET", params, signal });
 };
 
-export const getIncentivesControllerFindAllQueryKey = () => {
-	return [`/api/v1/incentives`] as const;
+export const getIncentivesControllerFindAllQueryKey = (
+	params?: IncentivesControllerFindAllParams,
+) => {
+	return [`/api/v1/incentives`, ...(params ? [params] : [])] as const;
 };
 
 export const getIncentivesControllerFindAllQueryOptions = <
 	TData = Awaited<ReturnType<typeof incentivesControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof incentivesControllerFindAll>>, TError, TData>
-	>;
-}) => {
+>(
+	params?: IncentivesControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof incentivesControllerFindAll>>, TError, TData>
+		>;
+	},
+) => {
 	const { query: queryOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getIncentivesControllerFindAllQueryKey();
+	const queryKey = queryOptions?.queryKey ?? getIncentivesControllerFindAllQueryKey(params);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof incentivesControllerFindAll>>> = ({
 		signal,
-	}) => incentivesControllerFindAll(signal);
+	}) => incentivesControllerFindAll(params, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof incentivesControllerFindAll>>,
@@ -123,12 +132,15 @@ export type IncentivesControllerFindAllQueryError = ErrorType<unknown>;
 export const useIncentivesControllerFindAll = <
 	TData = Awaited<ReturnType<typeof incentivesControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof incentivesControllerFindAll>>, TError, TData>
-	>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const queryOptions = getIncentivesControllerFindAllQueryOptions(options);
+>(
+	params?: IncentivesControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof incentivesControllerFindAll>>, TError, TData>
+		>;
+	},
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const queryOptions = getIncentivesControllerFindAllQueryOptions(params, options);
 
 	const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

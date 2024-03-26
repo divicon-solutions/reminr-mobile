@@ -13,4 +13,5 @@ export interface UpdateRedeemDto {
 	giftCardType?: UpdateRedeemDtoGiftCardType;
 	method?: UpdateRedeemDtoMethod;
 	processedAt?: string | null;
+	userId?: string;
 }

@@ -19,6 +19,7 @@ import type {
 	UpdateWellnessScoreDto,
 	WellnessScoreDto,
 	WellnessScoresControllerCreate201,
+	WellnessScoresControllerFindAllParams,
 	WellnessScoresControllerUpdate200,
 } from "./models";
 import { mutator } from "./mutators/index";
@@ -84,29 +85,42 @@ export const useWellnessScoresControllerCreate = <
 
 	return useMutation(mutationOptions);
 };
-export const wellnessScoresControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<WellnessScoreDto[]>({ url: `/api/v1/wellness-scores`, method: "GET", signal });
+export const wellnessScoresControllerFindAll = (
+	params?: WellnessScoresControllerFindAllParams,
+	signal?: AbortSignal,
+) => {
+	return mutator<WellnessScoreDto[]>({
+		url: `/api/v1/wellness-scores`,
+		method: "GET",
+		params,
+		signal,
+	});
 };
 
-export const getWellnessScoresControllerFindAllQueryKey = () => {
-	return [`/api/v1/wellness-scores`] as const;
+export const getWellnessScoresControllerFindAllQueryKey = (
+	params?: WellnessScoresControllerFindAllParams,
+) => {
+	return [`/api/v1/wellness-scores`, ...(params ? [params] : [])] as const;
 };
 
 export const getWellnessScoresControllerFindAllQueryOptions = <
 	TData = Awaited<ReturnType<typeof wellnessScoresControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof wellnessScoresControllerFindAll>>, TError, TData>
-	>;
-}) => {
+>(
+	params?: WellnessScoresControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof wellnessScoresControllerFindAll>>, TError, TData>
+		>;
+	},
+) => {
 	const { query: queryOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getWellnessScoresControllerFindAllQueryKey();
+	const queryKey = queryOptions?.queryKey ?? getWellnessScoresControllerFindAllQueryKey(params);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof wellnessScoresControllerFindAll>>> = ({
 		signal,
-	}) => wellnessScoresControllerFindAll(signal);
+	}) => wellnessScoresControllerFindAll(params, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof wellnessScoresControllerFindAll>>,
@@ -123,12 +137,15 @@ export type WellnessScoresControllerFindAllQueryError = ErrorType<unknown>;
 export const useWellnessScoresControllerFindAll = <
 	TData = Awaited<ReturnType<typeof wellnessScoresControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof wellnessScoresControllerFindAll>>, TError, TData>
-	>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const queryOptions = getWellnessScoresControllerFindAllQueryOptions(options);
+>(
+	params?: WellnessScoresControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof wellnessScoresControllerFindAll>>, TError, TData>
+		>;
+	},
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const queryOptions = getWellnessScoresControllerFindAllQueryOptions(params, options);
 
 	const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

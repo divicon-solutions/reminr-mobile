@@ -11,6 +11,7 @@ export interface IncentiveDto {
 	deletedAt: string | null;
 	id: string;
 	isRedeemed: boolean;
-	redeemedAmount: number | null;
+	redeemedAmount: number;
 	updatedAt: string;
+	userId: string;
 }

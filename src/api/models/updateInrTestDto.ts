@@ -9,5 +9,6 @@ export interface UpdateInrTestDto {
 	date?: string;
 	inrValue?: number;
 	remarks?: string | null;
+	userId?: string;
 	verificationImage?: string | null;
 }

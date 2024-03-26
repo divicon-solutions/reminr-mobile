@@ -13,5 +13,6 @@ export interface InrTestDto {
 	inrValue: number;
 	remarks: string | null;
 	updatedAt: string;
+	userId: string;
 	verificationImage: string | null;
 }

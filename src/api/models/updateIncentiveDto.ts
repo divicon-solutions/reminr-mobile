@@ -7,5 +7,5 @@
 
 export interface UpdateIncentiveDto {
 	amount?: number;
-	redeemedAmount?: number | null;
+	userId?: string;
 }

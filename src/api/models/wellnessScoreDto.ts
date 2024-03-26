@@ -13,4 +13,5 @@ export interface WellnessScoreDto {
 	remarks: string | null;
 	score: number;
 	updatedAt: string;
+	userId: string;
 }

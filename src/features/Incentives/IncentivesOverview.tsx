@@ -1,12 +1,5 @@
 import * as React from "react";
-import {
-	Alert,
-	Dimensions,
-	Pressable,
-	SafeAreaView,
-	View,
-	useWindowDimensions,
-} from "react-native";
+import { Dimensions, Pressable, SafeAreaView, View } from "react-native";
 import { makeStyles, useAppTheme } from "@hooks/makeStyles";
 import MIcon from "react-native-vector-icons/MaterialIcons";
 import ADIcon from "react-native-vector-icons/AntDesign";
@@ -17,7 +10,6 @@ type IncentivesOverviewProps = StackNavigationProps<"IncentivesOverview">;
 
 export default function IncentivesOverview({ navigation, route }: IncentivesOverviewProps) {
 	const { accountBalance } = route.params;
-	const layout = useWindowDimensions();
 	const styles = useStyles();
 	const { colors } = useAppTheme();
 

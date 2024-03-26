@@ -22,4 +22,5 @@ export interface MedicationDto {
 	startDate: string;
 	time: string;
 	updatedAt: string;
+	userId: string;
 }

@@ -16,17 +16,20 @@ import { makeStyles } from "@hooks/makeStyles";
 import { useQueryClient } from "@tanstack/react-query";
 import FileFormField from "@components/FormFields/FileFormField";
 import { StackNavigationProps } from "@navigations/types";
+import { useAuth } from "@providers/auth";
 
 const schema: Schema<CreateInrTestDto> = object({
 	date: string().required(),
 	inrValue: number().required(),
 	remarks: string().nullable(),
 	verificationImage: string().nullable(),
+	userId: string().required(),
 });
 
 type AddInrValueProps = StackNavigationProps<"AddInrValue">;
 export default function AddInrValue({ navigation }: AddInrValueProps) {
 	const { mutateAsync } = useInrTestControllerCreate();
+	const { user } = useAuth();
 	const styles = useStyles();
 	const queryClient = useQueryClient();
 
@@ -35,6 +38,7 @@ export default function AddInrValue({ navigation }: AddInrValueProps) {
 		inrValue: 0,
 		remarks: null,
 		verificationImage: null,
+		userId: user?.uid ?? "",
 	};
 
 	const onSubmit = async (values: CreateInrTestDto) => {

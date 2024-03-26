@@ -8,12 +8,16 @@ import { parseDateToFormat } from "@utils/formatters";
 import { makeStyles } from "@hooks/makeStyles";
 import FIcon from "react-native-vector-icons/Fontisto";
 import { BottomTabNavigationProps } from "@navigations/types";
+import { useAuth } from "@providers/auth";
 
 type InrListProps = BottomTabNavigationProps<"InrTest">;
 
 export default function InrList(props: InrListProps) {
 	const { navigation } = props;
-	const { data, isLoading, isRefetching, refetch } = useInrTestControllerFindAll();
+	const { user } = useAuth();
+	const { data, isLoading, isRefetching, refetch } = useInrTestControllerFindAll({
+		userId: user?.uid,
+	});
 	const styles = useStyles();
 
 	const renderItem = useCallback(

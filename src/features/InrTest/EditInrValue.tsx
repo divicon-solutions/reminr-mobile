@@ -16,17 +16,20 @@ import { makeStyles } from "@hooks/makeStyles";
 import { useQueryClient } from "@tanstack/react-query";
 import FileFormField from "@components/FormFields/FileFormField";
 import { StackNavigationProps } from "@navigations/types";
+import { useAuth } from "@providers/auth";
 
 const schema: Schema<CreateInrTestDto> = object({
 	date: string().required(),
 	inrValue: number().required(),
 	remarks: string().nullable(),
 	verificationImage: string().nullable(),
+	userId: string().required(),
 });
 
 type EditInrValueProps = StackNavigationProps<"EditInrValue">;
 export default function EditInrValue({ route, navigation }: EditInrValueProps) {
 	const { inrTest } = route.params;
+	const { user } = useAuth();
 	const { mutateAsync } = useInrTestControllerUpdate();
 	const { mutateAsync: deleteMutateAsync } = useInrTestControllerRemove();
 	const styles = useStyles();
@@ -37,6 +40,7 @@ export default function EditInrValue({ route, navigation }: EditInrValueProps) {
 		inrValue: inrTest.inrValue,
 		remarks: inrTest.remarks,
 		verificationImage: inrTest.verificationImage,
+		userId: user?.uid ?? "",
 	};
 
 	const onSubmit = async (values: CreateInrTestDto) => {

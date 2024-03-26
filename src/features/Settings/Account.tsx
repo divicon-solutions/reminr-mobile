@@ -1,12 +1,7 @@
-import { View, SafeAreaView, Text } from "react-native";
+import { View, SafeAreaView } from "react-native";
 import React from "react";
 import { Schema, string, object } from "yup";
-import {
-	CreateUserDto,
-	UpdateUserDto,
-	useUsersControllerFindOne,
-	useUsersControllerUpdate,
-} from "@api";
+import { UpdateUserDto, useUsersControllerFindOne, useUsersControllerUpdate } from "@api";
 import { StackNavigationProps } from "@navigations/types";
 import { Formik } from "formik";
 import KeyboardAvoidView from "@components/KeyboardAvoidView";
@@ -55,7 +50,7 @@ export default function Account({ navigation }: AccountProps) {
 
 	return (
 		<Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>
-			{({ handleSubmit, isValid, isSubmitting, errors }) => (
+			{({ handleSubmit, isValid, isSubmitting }) => (
 				<KeyboardAvoidView style={styles.container} contentContainerStyle={styles.containerStyle}>
 					<View style={styles.form}>
 						<TextFormField name="fullName" label="Full Name" />

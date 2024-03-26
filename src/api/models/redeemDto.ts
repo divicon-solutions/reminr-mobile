@@ -17,4 +17,5 @@ export interface RedeemDto {
 	method: RedeemDtoMethod;
 	processedAt: string | null;
 	updatedAt: string;
+	userId: string;
 }

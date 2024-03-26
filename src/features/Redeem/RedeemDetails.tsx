@@ -1,14 +1,14 @@
-/* eslint-disable react-native/no-inline-styles */
-import { View, SafeAreaView, Dimensions, FlatList } from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, SafeAreaView, Dimensions } from "react-native";
+import React, { useState } from "react";
 import { StackNavigationProps } from "@navigations/types";
 import ADIcon from "react-native-vector-icons/AntDesign";
 import { makeStyles } from "@hooks/makeStyles";
 import { Button, Divider, Text } from "react-native-paper";
 import { parseDateToFormat } from "@utils/formatters";
+
 type RedeemDetailsProps = StackNavigationProps<"RedeemDetails">;
 
-export default function RedeemedCardDetails({ route, navigation }: RedeemDetailsProps) {
+export default function RedeemedCardDetails({ route }: RedeemDetailsProps) {
 	const { redeemTransaction } = route.params;
 	const styles = useStyles();
 	const [copyTransition, setCopyTransition] = useState(false);

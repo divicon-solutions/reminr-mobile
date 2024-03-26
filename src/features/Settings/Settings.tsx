@@ -1,5 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable react-native/no-inline-styles */
 import {
 	CreateCallbackRequestDto,
 	useCallbackRequestControllerCreate,
@@ -9,7 +7,7 @@ import {
 import { StackNavigationProps } from "@navigations/types";
 import { useAuth } from "@providers/auth";
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { ActionSheetIOS, Alert, Linking, Platform, SafeAreaView, Webview } from "react-native";
+import { ActionSheetIOS, Alert, Linking, Platform, SafeAreaView } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Button, Card, List, Switch, Text } from "react-native-paper";
 import MIcon from "react-native-vector-icons/MaterialIcons";
@@ -34,8 +32,6 @@ const authItems = [
 ];
 
 type SettingsProps = StackNavigationProps<"Settings">;
-
-type d = CreateCallbackRequestDto;
 
 const Settings = ({ navigation }: SettingsProps) => {
 	const styles = useStyles();
@@ -156,6 +152,7 @@ const Settings = ({ navigation }: SettingsProps) => {
 			await callBackReqMutateAsync({
 				data: {
 					isResolved: false,
+					userId: user?.uid,
 				},
 			});
 			Alert.alert("Callback Requested", "We will call you back shortly");

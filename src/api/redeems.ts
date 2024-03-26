@@ -17,6 +17,7 @@ import type {
 	CreateRedeemDto,
 	RedeemDto,
 	RedeemsControllerCreate201,
+	RedeemsControllerFindAllParams,
 	RedeemsControllerUpdate200,
 	SuccessResponseDto,
 	UpdateRedeemDto,
@@ -84,29 +85,35 @@ export const useRedeemsControllerCreate = <
 
 	return useMutation(mutationOptions);
 };
-export const redeemsControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<RedeemDto[]>({ url: `/api/v1/redeems`, method: "GET", signal });
+export const redeemsControllerFindAll = (
+	params?: RedeemsControllerFindAllParams,
+	signal?: AbortSignal,
+) => {
+	return mutator<RedeemDto[]>({ url: `/api/v1/redeems`, method: "GET", params, signal });
 };
 
-export const getRedeemsControllerFindAllQueryKey = () => {
-	return [`/api/v1/redeems`] as const;
+export const getRedeemsControllerFindAllQueryKey = (params?: RedeemsControllerFindAllParams) => {
+	return [`/api/v1/redeems`, ...(params ? [params] : [])] as const;
 };
 
 export const getRedeemsControllerFindAllQueryOptions = <
 	TData = Awaited<ReturnType<typeof redeemsControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof redeemsControllerFindAll>>, TError, TData>
-	>;
-}) => {
+>(
+	params?: RedeemsControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof redeemsControllerFindAll>>, TError, TData>
+		>;
+	},
+) => {
 	const { query: queryOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getRedeemsControllerFindAllQueryKey();
+	const queryKey = queryOptions?.queryKey ?? getRedeemsControllerFindAllQueryKey(params);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof redeemsControllerFindAll>>> = ({
 		signal,
-	}) => redeemsControllerFindAll(signal);
+	}) => redeemsControllerFindAll(params, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof redeemsControllerFindAll>>,
@@ -123,12 +130,15 @@ export type RedeemsControllerFindAllQueryError = ErrorType<unknown>;
 export const useRedeemsControllerFindAll = <
 	TData = Awaited<ReturnType<typeof redeemsControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof redeemsControllerFindAll>>, TError, TData>
-	>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const queryOptions = getRedeemsControllerFindAllQueryOptions(options);
+>(
+	params?: RedeemsControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof redeemsControllerFindAll>>, TError, TData>
+		>;
+	},
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const queryOptions = getRedeemsControllerFindAllQueryOptions(params, options);
 
 	const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

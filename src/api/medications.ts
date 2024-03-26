@@ -17,6 +17,7 @@ import type {
 	CreateMedicationDto,
 	MedicationDto,
 	MedicationsControllerCreate201,
+	MedicationsControllerFindAllParams,
 	MedicationsControllerUpdate200,
 	SuccessResponseDto,
 	UpdateMedicationDto,
@@ -84,29 +85,37 @@ export const useMedicationsControllerCreate = <
 
 	return useMutation(mutationOptions);
 };
-export const medicationsControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<MedicationDto[]>({ url: `/api/v1/medications`, method: "GET", signal });
+export const medicationsControllerFindAll = (
+	params?: MedicationsControllerFindAllParams,
+	signal?: AbortSignal,
+) => {
+	return mutator<MedicationDto[]>({ url: `/api/v1/medications`, method: "GET", params, signal });
 };
 
-export const getMedicationsControllerFindAllQueryKey = () => {
-	return [`/api/v1/medications`] as const;
+export const getMedicationsControllerFindAllQueryKey = (
+	params?: MedicationsControllerFindAllParams,
+) => {
+	return [`/api/v1/medications`, ...(params ? [params] : [])] as const;
 };
 
 export const getMedicationsControllerFindAllQueryOptions = <
 	TData = Awaited<ReturnType<typeof medicationsControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof medicationsControllerFindAll>>, TError, TData>
-	>;
-}) => {
+>(
+	params?: MedicationsControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof medicationsControllerFindAll>>, TError, TData>
+		>;
+	},
+) => {
 	const { query: queryOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getMedicationsControllerFindAllQueryKey();
+	const queryKey = queryOptions?.queryKey ?? getMedicationsControllerFindAllQueryKey(params);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof medicationsControllerFindAll>>> = ({
 		signal,
-	}) => medicationsControllerFindAll(signal);
+	}) => medicationsControllerFindAll(params, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof medicationsControllerFindAll>>,
@@ -123,12 +132,15 @@ export type MedicationsControllerFindAllQueryError = ErrorType<unknown>;
 export const useMedicationsControllerFindAll = <
 	TData = Awaited<ReturnType<typeof medicationsControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof medicationsControllerFindAll>>, TError, TData>
-	>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const queryOptions = getMedicationsControllerFindAllQueryOptions(options);
+>(
+	params?: MedicationsControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof medicationsControllerFindAll>>, TError, TData>
+		>;
+	},
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const queryOptions = getMedicationsControllerFindAllQueryOptions(params, options);
 
 	const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
