@@ -144,6 +144,13 @@ const Settings = ({ navigation }: SettingsProps) => {
 				actionSheetRef.current?.show();
 			}
 		} else if (item.name === "About") {
+			// load
+		} else if (item.name === "Terms and Conditions") {
+			// load https://reminrapp.com/terms-conditions
+			Linking.openURL("https://reminrapp.com/terms-conditions");
+		} else if (item.name === "Privacy Policy") {
+			// load https://reminrapp.com/privacy-policy
+			Linking.openURL("https://reminrapp.com/privacy-policy");
 		}
 	};
 
