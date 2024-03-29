@@ -27,7 +27,7 @@ import type { ErrorType } from "./mutators/index";
 
 export const inrTestControllerCreate = (createInrTestDto: CreateInrTestDto) => {
 	return mutator<InrTestControllerCreate201>({
-		url: `/api/v1/inr-test`,
+		url: `/v1/inr-test`,
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		data: createInrTestDto,
@@ -89,11 +89,11 @@ export const inrTestControllerFindAll = (
 	params?: InrTestControllerFindAllParams,
 	signal?: AbortSignal,
 ) => {
-	return mutator<InrTestDto[]>({ url: `/api/v1/inr-test`, method: "GET", params, signal });
+	return mutator<InrTestDto[]>({ url: `/v1/inr-test`, method: "GET", params, signal });
 };
 
 export const getInrTestControllerFindAllQueryKey = (params?: InrTestControllerFindAllParams) => {
-	return [`/api/v1/inr-test`, ...(params ? [params] : [])] as const;
+	return [`/v1/inr-test`, ...(params ? [params] : [])] as const;
 };
 
 export const getInrTestControllerFindAllQueryOptions = <
@@ -148,11 +148,11 @@ export const useInrTestControllerFindAll = <
 };
 
 export const inrTestControllerFindOne = (id: string, signal?: AbortSignal) => {
-	return mutator<InrTestDto>({ url: `/api/v1/inr-test/${id}`, method: "GET", signal });
+	return mutator<InrTestDto>({ url: `/v1/inr-test/${id}`, method: "GET", signal });
 };
 
 export const getInrTestControllerFindOneQueryKey = (id: string) => {
-	return [`/api/v1/inr-test/${id}`] as const;
+	return [`/v1/inr-test/${id}`] as const;
 };
 
 export const getInrTestControllerFindOneQueryOptions = <
@@ -208,7 +208,7 @@ export const useInrTestControllerFindOne = <
 
 export const inrTestControllerUpdate = (id: string, updateInrTestDto: UpdateInrTestDto) => {
 	return mutator<InrTestControllerUpdate200>({
-		url: `/api/v1/inr-test/${id}`,
+		url: `/v1/inr-test/${id}`,
 		method: "PATCH",
 		headers: { "Content-Type": "application/json" },
 		data: updateInrTestDto,
@@ -267,7 +267,7 @@ export const useInrTestControllerUpdate = <
 	return useMutation(mutationOptions);
 };
 export const inrTestControllerRemove = (id: string) => {
-	return mutator<SuccessResponseDto>({ url: `/api/v1/inr-test/${id}`, method: "DELETE" });
+	return mutator<SuccessResponseDto>({ url: `/v1/inr-test/${id}`, method: "DELETE" });
 };
 
 export const getInrTestControllerRemoveMutationOptions = <

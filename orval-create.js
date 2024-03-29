@@ -12,7 +12,7 @@ const commonHooks = {
 	afterAllFilesWrite: "yarn format",
 };
 
-const baseUrl = "https://api-reminr-dev.web.app/api/v1";
+const baseUrl = "https://api-dev.reminrapp.com/v1";
 
 const instanceTemplate = `import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { http } from "@services/InterceptorService";

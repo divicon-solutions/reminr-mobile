@@ -27,7 +27,7 @@ import type { ErrorType } from "./mutators/index";
 
 export const incentivesControllerCreate = (createIncentiveDto: CreateIncentiveDto) => {
 	return mutator<IncentivesControllerCreate201>({
-		url: `/api/v1/incentives`,
+		url: `/v1/incentives`,
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		data: createIncentiveDto,
@@ -89,13 +89,13 @@ export const incentivesControllerFindAll = (
 	params?: IncentivesControllerFindAllParams,
 	signal?: AbortSignal,
 ) => {
-	return mutator<IncentiveDto[]>({ url: `/api/v1/incentives`, method: "GET", params, signal });
+	return mutator<IncentiveDto[]>({ url: `/v1/incentives`, method: "GET", params, signal });
 };
 
 export const getIncentivesControllerFindAllQueryKey = (
 	params?: IncentivesControllerFindAllParams,
 ) => {
-	return [`/api/v1/incentives`, ...(params ? [params] : [])] as const;
+	return [`/v1/incentives`, ...(params ? [params] : [])] as const;
 };
 
 export const getIncentivesControllerFindAllQueryOptions = <
@@ -150,11 +150,11 @@ export const useIncentivesControllerFindAll = <
 };
 
 export const incentivesControllerFindOne = (id: string, signal?: AbortSignal) => {
-	return mutator<IncentiveDto>({ url: `/api/v1/incentives/${id}`, method: "GET", signal });
+	return mutator<IncentiveDto>({ url: `/v1/incentives/${id}`, method: "GET", signal });
 };
 
 export const getIncentivesControllerFindOneQueryKey = (id: string) => {
-	return [`/api/v1/incentives/${id}`] as const;
+	return [`/v1/incentives/${id}`] as const;
 };
 
 export const getIncentivesControllerFindOneQueryOptions = <
@@ -210,7 +210,7 @@ export const useIncentivesControllerFindOne = <
 
 export const incentivesControllerUpdate = (id: string, updateIncentiveDto: UpdateIncentiveDto) => {
 	return mutator<IncentivesControllerUpdate200>({
-		url: `/api/v1/incentives/${id}`,
+		url: `/v1/incentives/${id}`,
 		method: "PATCH",
 		headers: { "Content-Type": "application/json" },
 		data: updateIncentiveDto,
@@ -269,7 +269,7 @@ export const useIncentivesControllerUpdate = <
 	return useMutation(mutationOptions);
 };
 export const incentivesControllerRemove = (id: string) => {
-	return mutator<SuccessResponseDto>({ url: `/api/v1/incentives/${id}`, method: "DELETE" });
+	return mutator<SuccessResponseDto>({ url: `/v1/incentives/${id}`, method: "DELETE" });
 };
 
 export const getIncentivesControllerRemoveMutationOptions = <

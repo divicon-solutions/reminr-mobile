@@ -16,7 +16,7 @@ import type { ErrorType } from "./mutators/index";
 
 export const pushTokensControllerCreate = (createPushTokenDto: CreatePushTokenDto) => {
 	return mutator<PushTokenDto>({
-		url: `/api/v1/push-tokens`,
+		url: `/v1/push-tokens`,
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		data: createPushTokenDto,
@@ -75,11 +75,7 @@ export const usePushTokensControllerCreate = <
 	return useMutation(mutationOptions);
 };
 export const pushTokensControllerUnsubscribe = (params: PushTokensControllerUnsubscribeParams) => {
-	return mutator<PushTokenDto>({
-		url: `/api/v1/push-tokens/unsubscribe`,
-		method: "DELETE",
-		params,
-	});
+	return mutator<PushTokenDto>({ url: `/v1/push-tokens/unsubscribe`, method: "DELETE", params });
 };
 
 export const getPushTokensControllerUnsubscribeMutationOptions = <

@@ -27,7 +27,7 @@ import type { ErrorType } from "./mutators/index";
 
 export const wellnessScoresControllerCreate = (createWellnessScoreDto: CreateWellnessScoreDto) => {
 	return mutator<WellnessScoresControllerCreate201>({
-		url: `/api/v1/wellness-scores`,
+		url: `/v1/wellness-scores`,
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		data: createWellnessScoreDto,
@@ -89,18 +89,13 @@ export const wellnessScoresControllerFindAll = (
 	params?: WellnessScoresControllerFindAllParams,
 	signal?: AbortSignal,
 ) => {
-	return mutator<WellnessScoreDto[]>({
-		url: `/api/v1/wellness-scores`,
-		method: "GET",
-		params,
-		signal,
-	});
+	return mutator<WellnessScoreDto[]>({ url: `/v1/wellness-scores`, method: "GET", params, signal });
 };
 
 export const getWellnessScoresControllerFindAllQueryKey = (
 	params?: WellnessScoresControllerFindAllParams,
 ) => {
-	return [`/api/v1/wellness-scores`, ...(params ? [params] : [])] as const;
+	return [`/v1/wellness-scores`, ...(params ? [params] : [])] as const;
 };
 
 export const getWellnessScoresControllerFindAllQueryOptions = <
@@ -155,11 +150,11 @@ export const useWellnessScoresControllerFindAll = <
 };
 
 export const wellnessScoresControllerFindOne = (id: string, signal?: AbortSignal) => {
-	return mutator<WellnessScoreDto>({ url: `/api/v1/wellness-scores/${id}`, method: "GET", signal });
+	return mutator<WellnessScoreDto>({ url: `/v1/wellness-scores/${id}`, method: "GET", signal });
 };
 
 export const getWellnessScoresControllerFindOneQueryKey = (id: string) => {
-	return [`/api/v1/wellness-scores/${id}`] as const;
+	return [`/v1/wellness-scores/${id}`] as const;
 };
 
 export const getWellnessScoresControllerFindOneQueryOptions = <
@@ -218,7 +213,7 @@ export const wellnessScoresControllerUpdate = (
 	updateWellnessScoreDto: UpdateWellnessScoreDto,
 ) => {
 	return mutator<WellnessScoresControllerUpdate200>({
-		url: `/api/v1/wellness-scores/${id}`,
+		url: `/v1/wellness-scores/${id}`,
 		method: "PATCH",
 		headers: { "Content-Type": "application/json" },
 		data: updateWellnessScoreDto,
@@ -277,7 +272,7 @@ export const useWellnessScoresControllerUpdate = <
 	return useMutation(mutationOptions);
 };
 export const wellnessScoresControllerRemove = (id: string) => {
-	return mutator<SuccessResponseDto>({ url: `/api/v1/wellness-scores/${id}`, method: "DELETE" });
+	return mutator<SuccessResponseDto>({ url: `/v1/wellness-scores/${id}`, method: "DELETE" });
 };
 
 export const getWellnessScoresControllerRemoveMutationOptions = <

@@ -28,7 +28,7 @@ export const contactRequestControllerCreate = (
 	createContactRequestDto: CreateContactRequestDto,
 ) => {
 	return mutator<ContactRequestControllerCreate201>({
-		url: `/api/v1/contact-request`,
+		url: `/v1/contact-request`,
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		data: createContactRequestDto,
@@ -87,11 +87,11 @@ export const useContactRequestControllerCreate = <
 	return useMutation(mutationOptions);
 };
 export const contactRequestControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<ContactRequestDto[]>({ url: `/api/v1/contact-request`, method: "GET", signal });
+	return mutator<ContactRequestDto[]>({ url: `/v1/contact-request`, method: "GET", signal });
 };
 
 export const getContactRequestControllerFindAllQueryKey = () => {
-	return [`/api/v1/contact-request`] as const;
+	return [`/v1/contact-request`] as const;
 };
 
 export const getContactRequestControllerFindAllQueryOptions = <
@@ -140,15 +140,11 @@ export const useContactRequestControllerFindAll = <
 };
 
 export const contactRequestControllerFindOne = (id: string, signal?: AbortSignal) => {
-	return mutator<ContactRequestDto>({
-		url: `/api/v1/contact-request/${id}`,
-		method: "GET",
-		signal,
-	});
+	return mutator<ContactRequestDto>({ url: `/v1/contact-request/${id}`, method: "GET", signal });
 };
 
 export const getContactRequestControllerFindOneQueryKey = (id: string) => {
-	return [`/api/v1/contact-request/${id}`] as const;
+	return [`/v1/contact-request/${id}`] as const;
 };
 
 export const getContactRequestControllerFindOneQueryOptions = <
@@ -207,7 +203,7 @@ export const contactRequestControllerUpdate = (
 	updateContactRequestDto: UpdateContactRequestDto,
 ) => {
 	return mutator<ContactRequestControllerUpdate200>({
-		url: `/api/v1/contact-request/${id}`,
+		url: `/v1/contact-request/${id}`,
 		method: "PATCH",
 		headers: { "Content-Type": "application/json" },
 		data: updateContactRequestDto,
@@ -266,7 +262,7 @@ export const useContactRequestControllerUpdate = <
 	return useMutation(mutationOptions);
 };
 export const contactRequestControllerRemove = (id: string) => {
-	return mutator<SuccessResponseDto>({ url: `/api/v1/contact-request/${id}`, method: "DELETE" });
+	return mutator<SuccessResponseDto>({ url: `/v1/contact-request/${id}`, method: "DELETE" });
 };
 
 export const getContactRequestControllerRemoveMutationOptions = <

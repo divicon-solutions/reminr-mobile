@@ -27,7 +27,7 @@ import type { ErrorType } from "./mutators/index";
 
 export const redeemsControllerCreate = (createRedeemDto: CreateRedeemDto) => {
 	return mutator<RedeemsControllerCreate201>({
-		url: `/api/v1/redeems`,
+		url: `/v1/redeems`,
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		data: createRedeemDto,
@@ -89,11 +89,11 @@ export const redeemsControllerFindAll = (
 	params?: RedeemsControllerFindAllParams,
 	signal?: AbortSignal,
 ) => {
-	return mutator<RedeemDto[]>({ url: `/api/v1/redeems`, method: "GET", params, signal });
+	return mutator<RedeemDto[]>({ url: `/v1/redeems`, method: "GET", params, signal });
 };
 
 export const getRedeemsControllerFindAllQueryKey = (params?: RedeemsControllerFindAllParams) => {
-	return [`/api/v1/redeems`, ...(params ? [params] : [])] as const;
+	return [`/v1/redeems`, ...(params ? [params] : [])] as const;
 };
 
 export const getRedeemsControllerFindAllQueryOptions = <
@@ -148,11 +148,11 @@ export const useRedeemsControllerFindAll = <
 };
 
 export const redeemsControllerFindOne = (id: string, signal?: AbortSignal) => {
-	return mutator<RedeemDto>({ url: `/api/v1/redeems/${id}`, method: "GET", signal });
+	return mutator<RedeemDto>({ url: `/v1/redeems/${id}`, method: "GET", signal });
 };
 
 export const getRedeemsControllerFindOneQueryKey = (id: string) => {
-	return [`/api/v1/redeems/${id}`] as const;
+	return [`/v1/redeems/${id}`] as const;
 };
 
 export const getRedeemsControllerFindOneQueryOptions = <
@@ -208,7 +208,7 @@ export const useRedeemsControllerFindOne = <
 
 export const redeemsControllerUpdate = (id: string, updateRedeemDto: UpdateRedeemDto) => {
 	return mutator<RedeemsControllerUpdate200>({
-		url: `/api/v1/redeems/${id}`,
+		url: `/v1/redeems/${id}`,
 		method: "PATCH",
 		headers: { "Content-Type": "application/json" },
 		data: updateRedeemDto,
@@ -267,7 +267,7 @@ export const useRedeemsControllerUpdate = <
 	return useMutation(mutationOptions);
 };
 export const redeemsControllerRemove = (id: string) => {
-	return mutator<SuccessResponseDto>({ url: `/api/v1/redeems/${id}`, method: "DELETE" });
+	return mutator<SuccessResponseDto>({ url: `/v1/redeems/${id}`, method: "DELETE" });
 };
 
 export const getRedeemsControllerRemoveMutationOptions = <
