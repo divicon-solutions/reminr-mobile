@@ -32,6 +32,8 @@
 		8045360C2B83D9A500BA2162 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 804535F92B83D9A400BA2162 /* SimpleLineIcons.ttf */; };
 		8045360D2B83D9A500BA2162 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 804535FA2B83D9A400BA2162 /* Zocial.ttf */; };
 		808BD5742B8061F7004335D7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 808BD5732B8061F7004335D7 /* GoogleService-Info.plist */; };
+		80FA37882BB740B200BD8001 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 80FA37872BB740B200BD8001 /* Config.xcconfig */; };
+		80FA378B2BB741A300BD8001 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80FA378A2BB741A300BD8001 /* File.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B8ED586C5CE9CFDD27E2B6AF /* Pods_RemInr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC7735501411F3328B525E6 /* Pods_RemInr.framework */; };
 /* End PBXBuildFile section */
@@ -81,6 +83,9 @@
 		804535FA2B83D9A400BA2162 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		808BD5732B8061F7004335D7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		80F195952B93E25C009ED42D /* RemInr.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RemInr.entitlements; path = RemInr/RemInr.entitlements; sourceTree = "<group>"; };
+		80FA37872BB740B200BD8001 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		80FA37892BB741A300BD8001 /* RemInr-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RemInr-Bridging-Header.h"; sourceTree = "<group>"; };
+		80FA378A2BB741A300BD8001 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RemInr/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AA72D7AC5FC3894427802BB0 /* Pods-RemInr.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemInr.debug.xcconfig"; path = "Target Support Files/Pods-RemInr/Pods-RemInr.debug.xcconfig"; sourceTree = "<group>"; };
 		CB087DBD7DF08D57687B3804 /* Pods-RemInr-RemInrTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemInr-RemInrTests.debug.xcconfig"; path = "Target Support Files/Pods-RemInr-RemInrTests/Pods-RemInr-RemInrTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -184,6 +189,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				80FA378A2BB741A300BD8001 /* File.swift */,
+				80FA37872BB740B200BD8001 /* Config.xcconfig */,
 				804535E72B83D97200BA2162 /* Fonts */,
 				808BD5732B8061F7004335D7 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* RemInr */,
@@ -192,6 +199,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				80FA37892BB741A300BD8001 /* RemInr-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -277,7 +285,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1520;
 					};
 				};
 			};
@@ -325,6 +333,7 @@
 				804536012B83D9A400BA2162 /* FontAwesome5_Solid.ttf in Resources */,
 				8045360A2B83D9A500BA2162 /* Foundation.ttf in Resources */,
 				804536022B83D9A400BA2162 /* Fontisto.ttf in Resources */,
+				80FA37882BB740B200BD8001 /* Config.xcconfig in Resources */,
 				804536092B83D9A500BA2162 /* Octicons.ttf in Resources */,
 				804535FB2B83D9A400BA2162 /* FontAwesome5_Regular.ttf in Resources */,
 				8045360B2B83D9A500BA2162 /* EvilIcons.ttf in Resources */,
@@ -497,6 +506,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				80FA378B2BB741A300BD8001 /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -516,6 +526,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CB087DBD7DF08D57687B3804 /* Pods-RemInr-RemInrTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -543,6 +554,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 166FBC2277174EDC8E50910B /* Pods-RemInr-RemInrTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = RemInrTests/Info.plist;
@@ -586,6 +598,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.divicon.reminr;
 				PRODUCT_NAME = RemInr;
+				SWIFT_OBJC_BRIDGING_HEADER = "RemInr-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -614,6 +627,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.divicon.reminr;
 				PRODUCT_NAME = RemInr;
+				SWIFT_OBJC_BRIDGING_HEADER = "RemInr-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -621,6 +635,7 @@
 		};
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 80FA37872BB740B200BD8001 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -700,10 +715,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -712,6 +724,7 @@
 		};
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 80FA37872BB740B200BD8001 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -783,10 +796,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
