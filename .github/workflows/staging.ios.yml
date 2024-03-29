@@ -1,4 +1,4 @@
-name: Build and Deploy IOS (Dev)
+name: Build and Deploy IOS (Staging)
 
 on:
   workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
         id: get-build
         uses: mlilback/build-number@v1
         with:
-          base: -3 # This will be added to the current build number
+          base: 0 # This will be added to the current build number
           run-id: ${{ github.run_number }}
       - name: Creating .env file
         run: |
@@ -56,13 +56,13 @@ jobs:
         uses: jsdaniell/create-json@v1.2.1
         with:
           name: "gcp.json"
-          json: ${{ secrets.GCP_SA_DEV }}
+          json: ${{ secrets.GCP_SA_PROD }}
       - name: Distribute APK
         run: |
           npm install -g firebase-tools
           export GOOGLE_APPLICATION_CREDENTIALS=gcp.json
           firebase appdistribution:distribute ${{ env.IOS_BUILD_PATH }} \
-            --app ${{ secrets.DEV_IOS_APP_ID }} \
+            --app ${{ secrets.PROD_IOS_APP_ID }} \
             --groups android-testers \
             --release-notes "Build ${{ github.run_number }}"
       - name: Post Distribute
