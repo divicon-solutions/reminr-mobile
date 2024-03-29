@@ -6,11 +6,16 @@ apply plugin: "com.google.gms.google-services"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 def rnVersionCode = project.env.get("RN_VERSION_CODE")
+def rnVersionName = project.env.get("RN_VERSION_NAME")
+
+if (System.getenv()["CI"] && (rnVersionCode == null || rnVersionName == null)) {
+    throw new FileNotFoundException("RN_VERSION_CODE or RN_VERSION_NAME not found!")
+}
+
 if (rnVersionCode == null) {
     rnVersionCode = '1'
 }
 
-def rnVersionName = project.env.get("RN_VERSION_NAME")
 if (rnVersionName == null) {
     rnVersionName = '1.0'
 }
@@ -102,8 +107,8 @@ android {
         applicationId "com.divicon.reminr"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode rnVersionCode.toInteger()
+        versionName rnVersionName
     }
     signingConfigs {
         debug {

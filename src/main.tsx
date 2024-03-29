@@ -2,13 +2,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { PaperProvider } from "react-native-paper";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { LogBox } from "react-native";
+import { LogBox, Platform } from "react-native";
 import App from "./App";
 import { setJSExceptionHandler, setNativeExceptionHandler } from "react-native-exception-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { customTheme } from "@utils/theme";
 import { AuthProvider } from "@providers/auth";
 import * as RootNavigation from "@navigations/RootNavigation";
+import { request, PERMISSIONS } from "react-native-permissions";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -43,6 +44,13 @@ export default function Main() {
 
 	useEffect(() => {
 		LogBox.ignoreAllLogs(true);
+		const requestAppTrackingTransparency = async () => {
+			if (Platform.OS === "ios") {
+				const status = await request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+				console.log("App Tracking Transparency status", status);
+			}
+		};
+		requestAppTrackingTransparency();
 	}, []);
 
 	return (
