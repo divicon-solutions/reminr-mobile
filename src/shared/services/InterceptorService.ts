@@ -3,6 +3,7 @@ import { AlertService } from "./AlertService";
 import { LoaderService } from "./LoaderService";
 import { environment } from "@environment";
 import auth from "@react-native-firebase/auth";
+import crashlytics from "@react-native-firebase/crashlytics";
 
 class InterceptorService {
 	private _axiosInstance: AxiosInstance;
@@ -66,6 +67,7 @@ class InterceptorService {
 				if (error.toString().includes("CanceledError")) {
 					return Promise.reject(error);
 				}
+				crashlytics().recordError(new Error(error));
 				console.error("[InterceptorService] error", error);
 				if (error.response) {
 					console.error("[InterceptorService] error.response", error.response.data);

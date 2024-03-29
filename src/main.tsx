@@ -10,6 +10,8 @@ import { customTheme } from "@utils/theme";
 import { AuthProvider } from "@providers/auth";
 import * as RootNavigation from "@navigations/RootNavigation";
 import { request, PERMISSIONS } from "react-native-permissions";
+import crashlytics from "@react-native-firebase/crashlytics";
+import { useCrashlytics } from "@hooks/useCrashlytics";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -26,6 +28,9 @@ const queryClient = new QueryClient({
 const errorHandler = (error: Error, isFatal: boolean) => {
 	// Perform any additional error handling here
 	console.error("[exceptionHandler] JS error:", error, { isFatal });
+	if (isFatal) {
+		crashlytics().recordError(error);
+	}
 };
 
 setJSExceptionHandler(errorHandler, false);
@@ -34,6 +39,7 @@ setJSExceptionHandler(errorHandler, false);
 const nativeErrorHandler = (errorString: string) => {
 	// Perform any additional error handling here
 	console.error("[exceptionHandler] Native error:", errorString);
+	crashlytics().recordError(new Error(errorString));
 };
 
 setNativeExceptionHandler(nativeErrorHandler);
@@ -52,6 +58,8 @@ export default function Main() {
 		};
 		requestAppTrackingTransparency();
 	}, []);
+
+	useCrashlytics();
 
 	return (
 		<QueryClientProvider client={queryClient}>

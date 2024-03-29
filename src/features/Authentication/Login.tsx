@@ -52,12 +52,7 @@ export default function Login({ navigation }: LoginProps) {
 							autoCapitalize="none"
 							textContentType="emailAddress"
 						/>
-						<TextFormField
-							name="password"
-							label="Password"
-							secureTextEntry
-							textContentType="password"
-						/>
+						<TextFormField name="password" label="Password" type="password" />
 						<View style={styles.buttonGroup}>
 							<Button
 								mode="contained"

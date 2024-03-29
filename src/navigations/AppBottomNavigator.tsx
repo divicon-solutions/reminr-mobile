@@ -20,12 +20,14 @@ type AppBottomNavigatorProps = StackNavigationProps<"Home">;
 
 export default function AppBottomNavigator({ navigation }: AppBottomNavigatorProps) {
 	const { mutateAsync: callBackReqMutateAsync } = useCallbackRequestControllerCreate();
+	const { user } = useAuth();
 
 	const settings = useCallback(() => {
 		return (
 			<MIIcon
 				name="settings"
 				size={24}
+				color={"black"}
 				onPress={() => {
 					navigation.navigate("Settings");
 				}}
@@ -38,9 +40,8 @@ export default function AppBottomNavigator({ navigation }: AppBottomNavigatorPro
 			<MIIcon
 				name="call"
 				size={24}
+				color={"black"}
 				onPress={() => {
-					// show a confirmation dialog
-
 					Alert.alert("Call Support", "Are you sure you want to request a call support?", [
 						{
 							text: "Cancel",
@@ -53,6 +54,7 @@ export default function AppBottomNavigator({ navigation }: AppBottomNavigatorPro
 								await callBackReqMutateAsync({
 									data: {
 										isResolved: false,
+										userId: user?.uid ?? "",
 									},
 								});
 							},
@@ -61,7 +63,7 @@ export default function AppBottomNavigator({ navigation }: AppBottomNavigatorPro
 				}}
 			/>
 		);
-	}, []);
+	}, [user, callBackReqMutateAsync]);
 
 	return (
 		<Tab.Navigator
