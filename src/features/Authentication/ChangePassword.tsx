@@ -1,21 +1,33 @@
-import { View, Alert } from "react-native";
+import { View } from "react-native";
 import React from "react";
 import { useAuth } from "@providers/auth";
 import { Formik } from "formik";
 import KeyboardAvoidView from "@components/KeyboardAvoidView";
 import { TextFormField } from "@components/FormFields/TextFormField";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, HelperText } from "react-native-paper";
-import { object, string } from "yup";
+import { Button } from "react-native-paper";
+import { object, ref, string } from "yup";
 import { makeStyles } from "@hooks/makeStyles";
 import { StackNavigationProps } from "@navigations/types";
 import { AlertService } from "@services/AlertService";
 
+const initialValues = {
+	oldPassword: "",
+	newPassword: "",
+	confirmPassword: "",
+};
+
 const schema = object({
-	oldPassword: string().required(),
-	newPassword: string().required(),
-	confirmPassword: string().required(),
+	oldPassword: string().required("Old password is required"),
+	newPassword: string()
+		.required("New password is required")
+		.min(8, "Password must be at least 8 characters long"),
+	confirmPassword: string()
+		.required("Confirm password is required")
+		.oneOf([ref("newPassword")], "Passwords do not match"),
 });
+
+type FormValues = typeof initialValues;
 
 type ChangePasswordProps = StackNavigationProps<"ChangePassword">;
 
@@ -23,32 +35,14 @@ export default function ChangePassword({ navigation }: ChangePasswordProps) {
 	const { changePassword } = useAuth();
 	const styles = useStyles();
 
-	const [arePasswordsMatching, setArePasswordsMatching] = React.useState(true);
-
-	const initialValues = {
-		oldPassword: "",
-		newPassword: "",
-		confirmPassword: "",
-	};
-
-	const onSubmit = async (values: {
-		oldPassword: string;
-		newPassword: string;
-		confirmPassword: string;
-	}) => {
-		if (values.newPassword !== values.confirmPassword) {
-			setArePasswordsMatching(false);
-			return;
-		}
-
-		setArePasswordsMatching(true);
-
+	const onSubmit = async (values: FormValues) => {
 		try {
 			await changePassword(values.oldPassword, values.newPassword);
 			AlertService.successMessage("Password changed successfully");
 			navigation.goBack();
 		} catch (error: any) {
-			Alert.alert("Error", error.message);
+			console.error(error);
+			AlertService.errorMessage(error.message);
 		}
 	};
 
@@ -57,12 +51,9 @@ export default function ChangePassword({ navigation }: ChangePasswordProps) {
 			{({ handleSubmit, isValid, isSubmitting }) => (
 				<KeyboardAvoidView style={styles.container} contentContainerStyle={styles.containerStyle}>
 					<View style={styles.form}>
-						<TextFormField type="password" name="oldPassword" label="Old Password" />
+						<TextFormField type="password" name="oldPassword" label="Current Password" />
 						<TextFormField type="password" name="newPassword" label="New Password" />
 						<TextFormField type="password" name="confirmPassword" label="Confirm Password" />
-						{!arePasswordsMatching && (
-							<HelperText type="error">New Password and Confirm Password do not match</HelperText>
-						)}
 					</View>
 					<SafeAreaView>
 						<Button

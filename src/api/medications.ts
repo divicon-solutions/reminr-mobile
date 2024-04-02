@@ -27,7 +27,7 @@ import type { ErrorType } from "./mutators/index";
 
 export const medicationsControllerCreate = (createMedicationDto: CreateMedicationDto) => {
 	return mutator<MedicationsControllerCreate201>({
-		url: `/api/v1/medications`,
+		url: `/v1/medications`,
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		data: createMedicationDto,
@@ -89,13 +89,13 @@ export const medicationsControllerFindAll = (
 	params?: MedicationsControllerFindAllParams,
 	signal?: AbortSignal,
 ) => {
-	return mutator<MedicationDto[]>({ url: `/api/v1/medications`, method: "GET", params, signal });
+	return mutator<MedicationDto[]>({ url: `/v1/medications`, method: "GET", params, signal });
 };
 
 export const getMedicationsControllerFindAllQueryKey = (
 	params?: MedicationsControllerFindAllParams,
 ) => {
-	return [`/api/v1/medications`, ...(params ? [params] : [])] as const;
+	return [`/v1/medications`, ...(params ? [params] : [])] as const;
 };
 
 export const getMedicationsControllerFindAllQueryOptions = <
@@ -150,11 +150,11 @@ export const useMedicationsControllerFindAll = <
 };
 
 export const medicationsControllerFindOne = (id: string, signal?: AbortSignal) => {
-	return mutator<MedicationDto>({ url: `/api/v1/medications/${id}`, method: "GET", signal });
+	return mutator<MedicationDto>({ url: `/v1/medications/${id}`, method: "GET", signal });
 };
 
 export const getMedicationsControllerFindOneQueryKey = (id: string) => {
-	return [`/api/v1/medications/${id}`] as const;
+	return [`/v1/medications/${id}`] as const;
 };
 
 export const getMedicationsControllerFindOneQueryOptions = <
@@ -213,7 +213,7 @@ export const medicationsControllerUpdate = (
 	updateMedicationDto: UpdateMedicationDto,
 ) => {
 	return mutator<MedicationsControllerUpdate200>({
-		url: `/api/v1/medications/${id}`,
+		url: `/v1/medications/${id}`,
 		method: "PATCH",
 		headers: { "Content-Type": "application/json" },
 		data: updateMedicationDto,
@@ -272,7 +272,7 @@ export const useMedicationsControllerUpdate = <
 	return useMutation(mutationOptions);
 };
 export const medicationsControllerRemove = (id: string) => {
-	return mutator<SuccessResponseDto>({ url: `/api/v1/medications/${id}`, method: "DELETE" });
+	return mutator<SuccessResponseDto>({ url: `/v1/medications/${id}`, method: "DELETE" });
 };
 
 export const getMedicationsControllerRemoveMutationOptions = <

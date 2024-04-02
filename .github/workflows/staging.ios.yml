@@ -1,0 +1,71 @@
+name: Build and Deploy IOS (Staging)
+
+on:
+  workflow_dispatch:
+
+env:
+  IOS_BUILD_PATH: "ios/build/outputs/ipa/release/RemInr.ipa"
+
+jobs:
+  push-ios:
+    name: Build and Deploy iOS
+    runs-on: ["self-hosted", "macOS", "ARM64"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+      - name: Get build number
+        id: get-build
+        uses: mlilback/build-number@v1
+        with:
+          base: 0 # This will be added to the current build number
+          run-id: ${{ github.run_number }}
+      - name: Creating .env file
+        run: |
+          echo "${{ vars.DEV_ENV }}" > .env
+          echo "RN_VERSION_CODE=${{ steps.get-build.outputs.build-number }}" >> .env
+          echo "RN_VERSION_NAME=${{ vars.DEV_BUILD_NAME }}" >> .env
+      - name: Create Google Info.plist
+        run: |
+          echo "${{ secrets.DEV_GOOGLE_INFO_PLIST }}" | base64 --decode > ios/GoogleService-Info.plist
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+      - name: Install Pods
+        run: |
+          npx pod-install
+      - name: Build IPA
+        run: |
+          xcodebuild -workspace ios/RemInr.xcworkspace \
+            -scheme RemInr \
+            -configuration Release \
+            -archivePath ios/build/archive/RemInr.xcarchive \
+            -destination 'generic/platform=iOS' \
+            clean archive | xcpretty
+      - name: Export Archive
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath ios/build/archive/RemInr.xcarchive \
+            -exportOptionsPlist ios/ExportOptions-AdHoc.plist \
+            -exportPath ios/build/outputs/ipa/release | xcpretty
+      - name: Create Application Credential File
+        uses: jsdaniell/create-json@v1.2.1
+        with:
+          name: "gcp.json"
+          json: ${{ secrets.GCP_SA_PROD }}
+      - name: Distribute APK
+        run: |
+          npm install -g firebase-tools
+          export GOOGLE_APPLICATION_CREDENTIALS=gcp.json
+          firebase appdistribution:distribute ${{ env.IOS_BUILD_PATH }} \
+            --app ${{ secrets.PROD_IOS_APP_ID }} \
+            --groups android-testers \
+            --release-notes "Build ${{ github.run_number }}"
+      - name: Post Distribute
+        run: |
+          echo "Removing ios/build"
+          rm -rf ios/build

@@ -5,6 +5,7 @@ import { pushNotificationsService } from "@services/PushNotificationsService";
 import notifee, { EventType } from "@notifee/react-native";
 import messaging from "@react-native-firebase/messaging";
 import { storageService } from "@services/StorageService";
+import crashlytics from "@react-native-firebase/crashlytics";
 
 interface AuthContext {
 	user: FirebaseAuthTypes.User | null;
@@ -75,6 +76,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 	const onAuthStateChanged = useCallback(async (authUser: FirebaseAuthTypes.User | null) => {
 		if (authUser) {
 			pushNotificationsService.init(authUser.uid);
+			crashlytics().setUserId(authUser.uid);
 			setUser(authUser);
 		}
 		setIsLoading(false);
@@ -90,6 +92,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 			await auth().signInWithEmailAndPassword(email, password);
 		} catch (error: any) {
 			console.error(error);
+			crashlytics().recordError(error);
 			if (error.code === "auth/user-disabled") {
 				throw new Error("Your account has been disabled, please contact support");
 			}
@@ -101,6 +104,9 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 			}
 			if (error.code === "auth/too-many-requests") {
 				throw new Error("Too many requests, please try again later");
+			}
+			if (error.code === "auth/invalid-credential") {
+				throw new Error("Please check your email and password");
 			}
 			throw new Error("Error signing in");
 		}
@@ -116,7 +122,8 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 			await auth()
 				.signOut()
 				.then(() => setUser(null));
-		} catch (error) {
+		} catch (error: any) {
+			crashlytics().recordError(error);
 			console.error(error);
 		}
 	}, []);
@@ -142,12 +149,12 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 					auth.EmailAuthProvider.credential(email, oldPassword), // Pass the email and old password
 				);
 				await user.updatePassword(newPassword);
-			} catch (error) {
+			} catch (error: any) {
 				const authError = error as FirebaseAuthTypes.NativeFirebaseAuthError;
 				console.error(authError);
-
+				crashlytics().recordError(error);
 				if (authError.code === "auth/invalid-credential") {
-					throw new Error("Invalid old password");
+					throw new Error("Please check your current password");
 				}
 				throw new Error("Error changing password");
 			}
@@ -159,6 +166,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 			await auth().sendPasswordResetEmail(email);
 		} catch (error: any) {
 			console.log(error);
+			crashlytics().recordError(error);
 			if (error.code === "auth/invalid-email") {
 				throw new Error("Please check your email");
 			}

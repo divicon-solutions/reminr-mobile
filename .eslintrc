@@ -9,6 +9,7 @@
 		"prettier/prettier": ["error"],
 		"@typescript-eslint/no-shadow": "off",
 		"react/react-in-jsx-scope": ["error"],
+		"react-native/no-inline-styles": "off"
 	},
 	"ignorePatterns": [
 		"babel.config.js",

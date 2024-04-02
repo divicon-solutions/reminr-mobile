@@ -1,5 +1,4 @@
 import notifee, {
-	DisplayedNotification,
 	IntervalTrigger,
 	Notification,
 	TimeUnit,

@@ -29,7 +29,7 @@ export const callbackRequestControllerCreate = (
 	createCallbackRequestDto: CreateCallbackRequestDto,
 ) => {
 	return mutator<CallbackRequestControllerCreate201>({
-		url: `/api/v1/callback-request`,
+		url: `/v1/callback-request`,
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		data: createCallbackRequestDto,
@@ -92,7 +92,7 @@ export const callbackRequestControllerFindAll = (
 	signal?: AbortSignal,
 ) => {
 	return mutator<CallbackRequestDto[]>({
-		url: `/api/v1/callback-request`,
+		url: `/v1/callback-request`,
 		method: "GET",
 		params,
 		signal,
@@ -102,7 +102,7 @@ export const callbackRequestControllerFindAll = (
 export const getCallbackRequestControllerFindAllQueryKey = (
 	params?: CallbackRequestControllerFindAllParams,
 ) => {
-	return [`/api/v1/callback-request`, ...(params ? [params] : [])] as const;
+	return [`/v1/callback-request`, ...(params ? [params] : [])] as const;
 };
 
 export const getCallbackRequestControllerFindAllQueryOptions = <
@@ -157,15 +157,11 @@ export const useCallbackRequestControllerFindAll = <
 };
 
 export const callbackRequestControllerFindOne = (id: string, signal?: AbortSignal) => {
-	return mutator<CallbackRequestDto>({
-		url: `/api/v1/callback-request/${id}`,
-		method: "GET",
-		signal,
-	});
+	return mutator<CallbackRequestDto>({ url: `/v1/callback-request/${id}`, method: "GET", signal });
 };
 
 export const getCallbackRequestControllerFindOneQueryKey = (id: string) => {
-	return [`/api/v1/callback-request/${id}`] as const;
+	return [`/v1/callback-request/${id}`] as const;
 };
 
 export const getCallbackRequestControllerFindOneQueryOptions = <
@@ -224,7 +220,7 @@ export const callbackRequestControllerUpdate = (
 	updateCallbackRequestDto: UpdateCallbackRequestDto,
 ) => {
 	return mutator<CallbackRequestControllerUpdate200>({
-		url: `/api/v1/callback-request/${id}`,
+		url: `/v1/callback-request/${id}`,
 		method: "PATCH",
 		headers: { "Content-Type": "application/json" },
 		data: updateCallbackRequestDto,
@@ -283,7 +279,7 @@ export const useCallbackRequestControllerUpdate = <
 	return useMutation(mutationOptions);
 };
 export const callbackRequestControllerRemove = (id: string) => {
-	return mutator<SuccessResponseDto>({ url: `/api/v1/callback-request/${id}`, method: "DELETE" });
+	return mutator<SuccessResponseDto>({ url: `/v1/callback-request/${id}`, method: "DELETE" });
 };
 
 export const getCallbackRequestControllerRemoveMutationOptions = <

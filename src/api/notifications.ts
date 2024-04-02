@@ -27,7 +27,7 @@ export const notificationsControllerCreate = (
 	params?: NotificationsControllerCreateParams,
 ) => {
 	return mutator<NotificationDto>({
-		url: `/api/v1/notifications`,
+		url: `/v1/notifications`,
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		data: createNotificationDto,
@@ -90,18 +90,13 @@ export const notificationsControllerFindAll = (
 	params?: NotificationsControllerFindAllParams,
 	signal?: AbortSignal,
 ) => {
-	return mutator<NotificationDto[]>({
-		url: `/api/v1/notifications`,
-		method: "GET",
-		params,
-		signal,
-	});
+	return mutator<NotificationDto[]>({ url: `/v1/notifications`, method: "GET", params, signal });
 };
 
 export const getNotificationsControllerFindAllQueryKey = (
 	params?: NotificationsControllerFindAllParams,
 ) => {
-	return [`/api/v1/notifications`, ...(params ? [params] : [])] as const;
+	return [`/v1/notifications`, ...(params ? [params] : [])] as const;
 };
 
 export const getNotificationsControllerFindAllQueryOptions = <

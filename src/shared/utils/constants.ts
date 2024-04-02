@@ -10,4 +10,8 @@ export const stringToListDto = (value: string): ListDto => {
 	};
 };
 
-export class Constants {}
+export class Constants {
+	static readonly supportEmail = "support@reminr.com";
+	static readonly termsAndConditionsUrl = "https://reminrapp.com/terms-conditions";
+	static readonly privacyPolicyUrl = "https://reminrapp.com/privacy-policy";
+}

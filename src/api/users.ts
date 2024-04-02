@@ -26,7 +26,7 @@ import type { ErrorType } from "./mutators/index";
 
 export const usersControllerCreate = (createUserDto: CreateUserDto) => {
 	return mutator<UsersControllerCreate201>({
-		url: `/api/v1/users`,
+		url: `/v1/users`,
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		data: createUserDto,
@@ -85,11 +85,11 @@ export const useUsersControllerCreate = <
 	return useMutation(mutationOptions);
 };
 export const usersControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<UserDto[]>({ url: `/api/v1/users`, method: "GET", signal });
+	return mutator<UserDto[]>({ url: `/v1/users`, method: "GET", signal });
 };
 
 export const getUsersControllerFindAllQueryKey = () => {
-	return [`/api/v1/users`] as const;
+	return [`/v1/users`] as const;
 };
 
 export const getUsersControllerFindAllQueryOptions = <
@@ -137,11 +137,11 @@ export const useUsersControllerFindAll = <
 };
 
 export const usersControllerFindMe = (signal?: AbortSignal) => {
-	return mutator<UserDto>({ url: `/api/v1/users/me`, method: "GET", signal });
+	return mutator<UserDto>({ url: `/v1/users/me`, method: "GET", signal });
 };
 
 export const getUsersControllerFindMeQueryKey = () => {
-	return [`/api/v1/users/me`] as const;
+	return [`/v1/users/me`] as const;
 };
 
 export const getUsersControllerFindMeQueryOptions = <
@@ -189,11 +189,11 @@ export const useUsersControllerFindMe = <
 };
 
 export const usersControllerFindOne = (id: string, signal?: AbortSignal) => {
-	return mutator<UserDto>({ url: `/api/v1/users/${id}`, method: "GET", signal });
+	return mutator<UserDto>({ url: `/v1/users/${id}`, method: "GET", signal });
 };
 
 export const getUsersControllerFindOneQueryKey = (id: string) => {
-	return [`/api/v1/users/${id}`] as const;
+	return [`/v1/users/${id}`] as const;
 };
 
 export const getUsersControllerFindOneQueryOptions = <
@@ -248,7 +248,7 @@ export const useUsersControllerFindOne = <
 
 export const usersControllerUpdate = (id: string, updateUserDto: UpdateUserDto) => {
 	return mutator<UsersControllerUpdate200>({
-		url: `/api/v1/users/${id}`,
+		url: `/v1/users/${id}`,
 		method: "PATCH",
 		headers: { "Content-Type": "application/json" },
 		data: updateUserDto,
@@ -307,7 +307,7 @@ export const useUsersControllerUpdate = <
 	return useMutation(mutationOptions);
 };
 export const usersControllerRemove = (id: string) => {
-	return mutator<SuccessResponseDto>({ url: `/api/v1/users/${id}`, method: "DELETE" });
+	return mutator<SuccessResponseDto>({ url: `/v1/users/${id}`, method: "DELETE" });
 };
 
 export const getUsersControllerRemoveMutationOptions = <

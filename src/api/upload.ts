@@ -19,7 +19,7 @@ export const uploadControllerUpload = (uploadFileRequestDto: UploadFileRequestDt
 	}
 
 	return mutator<UploadFileResponseDto>({
-		url: `/api/v1/upload`,
+		url: `/v1/upload`,
 		method: "POST",
 		headers: { "Content-Type": "multipart/form-data" },
 		data: formData,

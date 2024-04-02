@@ -1,10 +1,10 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Grid, LineChart, XAxis, YAxis } from "react-native-svg-charts";
 import { ScrollView, View } from "react-native";
 import { Circle } from "react-native-svg";
 import { makeStyles, useAppTheme } from "@hooks/makeStyles";
 import { TakenMedicationDto } from "@api";
-import { parseDateToFormat } from "@utils/formatters";
+// import { parseDateToFormat } from "@utils/formatters";
 import { Text } from "react-native-paper";
 
 function Decorator({ x, y, data }: { x: any; y: any; data: any }) {
@@ -33,8 +33,8 @@ function MedicationsGraph({ data }: MedicationsGraphProps) {
 	// 	[data],
 	// );
 	// const xAxisData = useMemo(() => data.map((test) => parseDateToFormat(test.remindAt)), [data]);
-	const yAxisData = [];
-	const xAxisData = [];
+	const yAxisData: number[] = [];
+	const xAxisData: number[] = [];
 
 	const axesSvg = { fontSize: 10, fill: "grey" };
 	const verticalContentInset = { top: 10, bottom: 10 };

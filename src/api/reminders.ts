@@ -26,7 +26,7 @@ import type { ErrorType } from "./mutators/index";
 
 export const remindersControllerCreate = (createReminderDto: CreateReminderDto) => {
 	return mutator<RemindersControllerCreate201>({
-		url: `/api/v1/reminders`,
+		url: `/v1/reminders`,
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		data: createReminderDto,
@@ -85,11 +85,11 @@ export const useRemindersControllerCreate = <
 	return useMutation(mutationOptions);
 };
 export const remindersControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<Reminder[]>({ url: `/api/v1/reminders`, method: "GET", signal });
+	return mutator<Reminder[]>({ url: `/v1/reminders`, method: "GET", signal });
 };
 
 export const getRemindersControllerFindAllQueryKey = () => {
-	return [`/api/v1/reminders`] as const;
+	return [`/v1/reminders`] as const;
 };
 
 export const getRemindersControllerFindAllQueryOptions = <
@@ -138,11 +138,11 @@ export const useRemindersControllerFindAll = <
 };
 
 export const remindersControllerFindOne = (id: string, signal?: AbortSignal) => {
-	return mutator<Reminder>({ url: `/api/v1/reminders/${id}`, method: "GET", signal });
+	return mutator<Reminder>({ url: `/v1/reminders/${id}`, method: "GET", signal });
 };
 
 export const getRemindersControllerFindOneQueryKey = (id: string) => {
-	return [`/api/v1/reminders/${id}`] as const;
+	return [`/v1/reminders/${id}`] as const;
 };
 
 export const getRemindersControllerFindOneQueryOptions = <
@@ -198,7 +198,7 @@ export const useRemindersControllerFindOne = <
 
 export const remindersControllerUpdate = (id: string, updateReminderDto: UpdateReminderDto) => {
 	return mutator<RemindersControllerUpdate200>({
-		url: `/api/v1/reminders/${id}`,
+		url: `/v1/reminders/${id}`,
 		method: "PATCH",
 		headers: { "Content-Type": "application/json" },
 		data: updateReminderDto,
@@ -257,7 +257,7 @@ export const useRemindersControllerUpdate = <
 	return useMutation(mutationOptions);
 };
 export const remindersControllerRemove = (id: string) => {
-	return mutator<SuccessResponseDto>({ url: `/api/v1/reminders/${id}`, method: "DELETE" });
+	return mutator<SuccessResponseDto>({ url: `/v1/reminders/${id}`, method: "DELETE" });
 };
 
 export const getRemindersControllerRemoveMutationOptions = <

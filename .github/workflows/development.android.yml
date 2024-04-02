@@ -1,4 +1,4 @@
-name: Build and Deploy Development Android
+name: Build and Deploy Android (Dev)
 
 on:
   workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
         id: get-build
         uses: mlilback/build-number@v1
         with:
-          base: 0 # This will be added to the current build number
+          base: -5 # This will be added to the current build number
           run-id: ${{ github.run_number }}
       - name: Creating Keystore
         run: |
@@ -31,7 +31,7 @@ jobs:
           echo storeFile=/tmp/keystore.jks >> android/key.properties
       - name: Creating .env file
         run: |
-          echo "${{ secrets.DEV_ENV }}" > .env
+          echo "${{ vars.DEV_ENV }}" > .env
           echo "RN_VERSION_CODE=${{ steps.get-build.outputs.build-number }}" >> .env
           echo "RN_VERSION_NAME=${{ vars.DEV_BUILD_NAME }}" >> .env
       - name: Create Google Services file
@@ -44,10 +44,20 @@ jobs:
         run: |
           ./gradlew assembleRelease
         working-directory: android
-      - name: Deploy to Firebase App Distribution
+      - name: Create Application Credential File
+        uses: jsdaniell/create-json@v1.2.1
+        with:
+          name: "gcp.json"
+          json: ${{ secrets.GCP_SA_DEV }}
+      - name: Distribute APK
         run: |
+          npm install -g firebase-tools
+          export GOOGLE_APPLICATION_CREDENTIALS=gcp.json
           firebase appdistribution:distribute ${{ env.ANDROID_BUILD_PATH }} \
             --app ${{ secrets.DEV_ANDROID_APP_ID }} \
-            --token ${{ secrets.FIREBASE_TOKEN }} \
             --groups android-testers \
             --release-notes "Build ${{ github.run_number }}"
+      - name: Post Distribute
+        run: |
+          echo "Remove build files"
+          rm -rf android/app/build

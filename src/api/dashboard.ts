@@ -17,14 +17,14 @@ import type { ErrorType } from "./mutators/index";
 
 export const dashboardControllerGetDashboardData = (id: string, signal?: AbortSignal) => {
 	return mutator<DashboardDataDto>({
-		url: `/api/v1/dashboard/member-data/${id}`,
+		url: `/v1/dashboard/member-data/${id}`,
 		method: "GET",
 		signal,
 	});
 };
 
 export const getDashboardControllerGetDashboardDataQueryKey = (id: string) => {
-	return [`/api/v1/dashboard/member-data/${id}`] as const;
+	return [`/v1/dashboard/member-data/${id}`] as const;
 };
 
 export const getDashboardControllerGetDashboardDataQueryOptions = <
@@ -88,14 +88,14 @@ export const useDashboardControllerGetDashboardData = <
 
 export const dashboardControllerGetAdminDashboardData = (signal?: AbortSignal) => {
 	return mutator<AdminDashboardDataDto[]>({
-		url: `/api/v1/dashboard/admin-data`,
+		url: `/v1/dashboard/admin-data`,
 		method: "GET",
 		signal,
 	});
 };
 
 export const getDashboardControllerGetAdminDashboardDataQueryKey = () => {
-	return [`/api/v1/dashboard/admin-data`] as const;
+	return [`/v1/dashboard/admin-data`] as const;
 };
 
 export const getDashboardControllerGetAdminDashboardDataQueryOptions = <

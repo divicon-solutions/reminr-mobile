@@ -6,10 +6,10 @@ import { useDashboardControllerGetDashboardData } from "@api";
 import Loader from "@components/Loader";
 import MedicationsGraph from "./MedicationsGraph";
 import InrTestsGraph from "./InrTestsGraph";
-import { StackNavigationProps } from "@navigations/types";
+import { BottomTabNavigationProps } from "@navigations/types";
 import { useAuth } from "@providers/auth";
 
-type DashboardProps = StackNavigationProps<"Home">;
+type DashboardProps = BottomTabNavigationProps<"Dashboard">;
 
 export default function Dashboard({ navigation }: DashboardProps) {
 	const styles = useStyles();
