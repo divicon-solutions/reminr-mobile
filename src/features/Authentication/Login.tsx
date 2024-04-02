@@ -17,9 +17,7 @@ type FormValues = {
 
 const schema: Schema<FormValues> = object({
 	email: string().email("Email is not valid").required("Email is required"),
-	password: string()
-		.min(8, "Password must be at least 8 characters")
-		.required("Password is required"),
+	password: string().required("Password is required"),
 });
 
 type LoginProps = StackNavigationProps<"Login">;
