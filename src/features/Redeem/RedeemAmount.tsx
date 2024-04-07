@@ -11,8 +11,10 @@ import { useAuth } from "@providers/auth";
 
 const giftCardOptions = [
 	{ label: "Amazon", value: "amazon" },
-	{ label: "Flipkart", value: "flipkart" },
-	{ label: "Myntra", value: "myntra" },
+	{ label: "Kroger", value: "kroger" },
+	{ label: "Walmart", value: "walmart" },
+	{ label: "VISA", value: "visa" },
+	{ label: "Star Bucks", value: "starbucks" },
 ];
 
 type RedeemAmountProps = StackNavigationProps<"RedeemAmount">;
