@@ -15,7 +15,7 @@ import Loader from "@components/Loader";
 
 const schema: Schema<UpdateUserDto> = object({
 	fullName: string().required(),
-	phoneNumber: string().required(),
+	phoneNumber: string().nullable(),
 });
 
 type AccountProps = StackNavigationProps<"Account">;
