@@ -32,6 +32,26 @@ export default function ViewReminder(props: ViewReminderProps) {
 		closeModal();
 	};
 
+	const handleUnTaken = async () => {
+		await mutateAsync({
+			id: reminder.id,
+			data: { status: false, acknowledgedAt: null },
+		});
+		const queryKey = getRemindersControllerFindAllQueryKey();
+		queryClient.invalidateQueries({ queryKey });
+		closeModal();
+	};
+
+	const handleSkip = async () => {
+		await mutateAsync({
+			id: reminder.id,
+			data: { status: false, acknowledgedAt: new Date().toISOString() },
+		});
+		const queryKey = getRemindersControllerFindAllQueryKey();
+		queryClient.invalidateQueries({ queryKey });
+		closeModal();
+	};
+
 	return (
 		<SafeAreaView style={styles.root}>
 			<View>
@@ -48,24 +68,35 @@ export default function ViewReminder(props: ViewReminderProps) {
 					)}
 				/>
 			</View>
-			<View>
-				{
-					// hide snooze button if reminder time is in the past
-					new Date(reminder.remindAt) < new Date() && (
-						<Button mode="contained" onPress={closeModal} style={styles.snoozeButton}>
-							Snooze
-						</Button>
-					)
-				}
+			{reminder.status ? (
 				<View style={styles.buttonGroup}>
-					<Button mode="outlined" onPress={props.closeModal} style={styles.skipButton}>
+					<Button mode="outlined" onPress={handleSkip} style={styles.skipButton}>
 						Skip
 					</Button>
-					<Button mode="contained" onPress={handleTaken} style={styles.takenButton}>
-						Taken
+					<Button mode="contained" onPress={handleUnTaken} style={styles.takenButton}>
+						Un Take
 					</Button>
 				</View>
-			</View>
+			) : (
+				<View>
+					{
+						// hide snooze button if reminder time is in the past
+						new Date(reminder.remindAt) < new Date() && (
+							<Button mode="contained" onPress={closeModal} style={styles.snoozeButton}>
+								Snooze
+							</Button>
+						)
+					}
+					<View style={styles.buttonGroup}>
+						<Button mode="outlined" onPress={handleSkip} style={styles.skipButton}>
+							Skip
+						</Button>
+						<Button mode="contained" onPress={handleTaken} style={styles.takenButton}>
+							Taken
+						</Button>
+					</View>
+				</View>
+			)}
 		</SafeAreaView>
 	);
 }
