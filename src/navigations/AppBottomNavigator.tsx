@@ -13,13 +13,14 @@ import MedicationsScreen from "@features/Medication/MedicationsList";
 import InrScreen from "@features/InrTest/InrList";
 import { StackNavigationProps } from "@navigations/types";
 import { Alert } from "react-native";
-import { useCallbackRequestControllerCreate } from "@api";
+import { useCallbackRequestControllerCreate, useUsersControllerFindMe } from "@api";
 
 const Tab = createBottomTabNavigator<AppBottomNavigatorParamList>();
 type AppBottomNavigatorProps = StackNavigationProps<"Home">;
 
 export default function AppBottomNavigator({ navigation }: AppBottomNavigatorProps) {
 	const { mutateAsync: callBackReqMutateAsync } = useCallbackRequestControllerCreate();
+	const { data } = useUsersControllerFindMe();
 	const { user } = useAuth();
 
 	const settings = useCallback(() => {
@@ -42,28 +43,38 @@ export default function AppBottomNavigator({ navigation }: AppBottomNavigatorPro
 				size={24}
 				color={"black"}
 				onPress={() => {
-					Alert.alert("Call Support", "Are you sure you want to request a call support?", [
-						{
-							text: "Cancel",
-							onPress: () => console.log("Cancel Pressed"),
-							style: "cancel",
-						},
-						{
-							text: "Yes",
-							onPress: async () => {
-								await callBackReqMutateAsync({
-									data: {
-										isResolved: false,
-										userId: user?.uid ?? "",
-									},
-								});
+					if (data?.phoneNumber?.length)
+						Alert.alert("Call Support", "Are you sure you want to request a call support?", [
+							{
+								text: "Cancel",
+								onPress: () => console.log("Cancel Pressed"),
+								style: "cancel",
 							},
-						},
-					]);
+							{
+								text: "Yes",
+								onPress: async () => {
+									await callBackReqMutateAsync({
+										data: {
+											isResolved: false,
+											userId: user?.uid ?? "",
+										},
+									});
+								},
+							},
+						]);
+					else {
+						Alert.alert("Call Support", "Please update phone number to get a call back", [
+							{
+								text: "Ok",
+								onPress: () => navigation.navigate("Account"),
+								style: "cancel",
+							},
+						]);
+					}
 				}}
 			/>
 		);
-	}, [user, callBackReqMutateAsync]);
+	}, [user, callBackReqMutateAsync, data?.phoneNumber?.length, navigation]);
 
 	return (
 		<Tab.Navigator
