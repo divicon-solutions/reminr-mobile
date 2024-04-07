@@ -1,5 +1,5 @@
 import { FlatList, RefreshControl, Modal, View } from "react-native";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Card, List, Text } from "react-native-paper";
 import { Reminder, useRemindersControllerFindAll } from "@api";
 import Loader from "@components/Loader";
@@ -8,12 +8,19 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 import ViewReminder from "./ViewReminder";
 import { makeStyles } from "@hooks/makeStyles";
 import { parseDateToFormat } from "@utils/formatters";
+import { backgroundService } from "@services/BackgroundService";
 
 export default function ReminderList() {
 	const { data, isLoading, isRefetching, refetch } = useRemindersControllerFindAll();
 	const [selectedReminder, setSelectedReminder] = React.useState<Reminder | null>(null);
 
 	const styles = useStyles();
+
+	useEffect(() => {}, [JSON.stringify(data)]);
+
+	useEffect(() => {
+		backgroundService.runBackgroundServiceForNotification();
+	}, []);
 
 	const handleReminderPress = (reminder: Reminder) => {
 		setSelectedReminder(reminder);
@@ -25,6 +32,7 @@ export default function ReminderList() {
 
 	const renderItem = useCallback(
 		({ item, isDisabled }: { item: Reminder; isDisabled: boolean }) => {
+			const isDue = new Date(item.remindAt) < new Date();
 			return (
 				<Card
 					mode="contained"
@@ -50,7 +58,7 @@ export default function ReminderList() {
 							isDisabled ? (
 								<IonIcon style={styles.doneIcon} name="checkmark-circle" size={30} />
 							) : (
-								<MCIcon style={styles.dueIcon} name="timer-sand-complete" size={30} />
+								isDue && <MCIcon style={styles.dueIcon} name="timer-sand-complete" size={30} />
 							)
 						}
 					/>
@@ -70,47 +78,74 @@ export default function ReminderList() {
 			{data?.filter(
 				(reminder) =>
 					new Date(reminder.remindAt).toDateString() === new Date().toDateString() &&
-					reminder.status === true,
+					reminder.status === false,
 			)?.length > 0 ? (
+				<>
+					<View style={styles.headerTitles}>
+						<Text variant="titleMedium">Upcoming:</Text>
+					</View>
+					<FlatList
+						data={data?.filter(
+							(reminder) =>
+								new Date(reminder.remindAt).toDateString() !== new Date().toDateString(),
+						)}
+						renderItem={({ item }) => renderItem({ item: item, isDisabled: false })}
+						keyExtractor={(item) => item.id}
+						refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
+						style={styles.root}
+					/>
+				</>
+			) : null}
+
+			<View>
+				{data?.filter(
+					(reminder) =>
+						new Date(reminder.remindAt).toDateString() === new Date().toDateString() &&
+						reminder.status === true,
+				)?.length > 0 ? (
+					<>
+						<View style={styles.headerTitles}>
+							<Text variant="titleMedium">Taken:</Text>
+						</View>
+						<FlatList
+							data={data?.filter(
+								(reminder) =>
+									new Date(reminder.remindAt).toDateString() === new Date().toDateString() &&
+									reminder.status === true,
+							)}
+							renderItem={({ item }) => renderItem({ item: item, isDisabled: true })}
+							keyExtractor={(item) => item.id}
+							refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
+							style={styles.root}
+						/>
+					</>
+				) : null}
+				<View style={styles.headerTitles}>
+					<Text variant="titleMedium">Upcoming:</Text>
+				</View>
 				<FlatList
 					data={data?.filter(
 						(reminder) =>
 							new Date(reminder.remindAt).toDateString() === new Date().toDateString() &&
-							reminder.status === true,
+							reminder.status === false,
 					)}
-					renderItem={({ item }) => renderItem({ item: item, isDisabled: true })}
+					renderItem={({ item }) => renderItem({ item: item, isDisabled: false })}
 					keyExtractor={(item) => item.id}
 					ItemSeparatorComponent={() => <View style={styles.divider} />}
-					ListHeaderComponent={<Text variant="headlineSmall">Medication Taken:</Text>}
-					ListEmptyComponent={<Text>No Medications</Text>}
 					refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
 					style={styles.root}
 				/>
-			) : null}
-			<FlatList
-				data={data?.filter(
-					(reminder) =>
-						new Date(reminder.remindAt).toDateString() === new Date().toDateString() &&
-						reminder.status === false,
-				)}
-				renderItem={({ item }) => renderItem({ item: item, isDisabled: false })}
-				keyExtractor={(item) => item.id}
-				ItemSeparatorComponent={() => <View style={styles.divider} />}
-				ListHeaderComponent={<Text variant="headlineSmall">Medication Due:</Text>}
-				ListEmptyComponent={<Text>No Medications</Text>}
-				refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
-				style={styles.root}
-			/>
-			<Modal
-				visible={selectedReminder != null}
-				onDismiss={handleReminderDismiss}
-				animationType="slide"
-				presentationStyle="pageSheet"
-			>
-				{selectedReminder && (
-					<ViewReminder reminder={selectedReminder} closeModal={handleReminderDismiss} />
-				)}
-			</Modal>
+				<Modal
+					visible={selectedReminder != null}
+					onDismiss={handleReminderDismiss}
+					animationType="slide"
+					presentationStyle="pageSheet"
+				>
+					{selectedReminder && (
+						<ViewReminder reminder={selectedReminder} closeModal={handleReminderDismiss} />
+					)}
+				</Modal>
+			</View>
 		</>
 	);
 }
@@ -145,5 +180,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	dueIcon: {
 		color: theme.colors.pending,
+	},
+	headerTitles: {
+		marginLeft: 12,
+		marginTop: 10,
 	},
 }));
