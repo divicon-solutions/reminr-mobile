@@ -1,8 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+export type NotificationsTracker = Record<
+	string,
+	{
+		notificationId: string;
+		date: string;
+	}
+>;
+
 class StorageService {
 	private _fcmTokenKey = "fcmToken";
 	private _crashlyticsEnabledKey = "crashlyticsEnabled";
+	private _notificationsTrackerKey = "notificationsTracker";
 
 	async getFcmToken() {
 		return await AsyncStorage.getItem(this._fcmTokenKey);
@@ -23,6 +32,15 @@ class StorageService {
 			return;
 		}
 		await AsyncStorage.setItem(this._fcmTokenKey, token);
+	}
+
+	async getNotificationsTracker(): Promise<NotificationsTracker> {
+		const value = await AsyncStorage.getItem(this._notificationsTrackerKey);
+		return value ? JSON.parse(value) : {};
+	}
+
+	async setNotificationsTracker(tracker: NotificationsTracker) {
+		await AsyncStorage.setItem(this._notificationsTrackerKey, JSON.stringify(tracker));
 	}
 }
 

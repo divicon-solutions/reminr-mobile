@@ -106,6 +106,14 @@ class LocalNotificationsService {
 			},
 		});
 	}
+
+	async cancelNotifications(ids: string[]) {
+		try {
+			await notifee.cancelTriggerNotifications(ids);
+		} catch (error) {
+			console.error("[LocalNotificationsService] [cancelNotifications]", error);
+		}
+	}
 }
 
 export const localNotificationsService = new LocalNotificationsService();

@@ -128,6 +128,19 @@ export const setUpFirebaseMessagingBackgroundHandler = () => {
 			"[PushNotificationsService] [setUpFirebaseMessagingBackgroundHandler] onMessage",
 			remoteMessage,
 		);
-		backgroundService.init();
+		const metaData = remoteMessage.data?.metaData;
+		if (typeof metaData === "string") {
+			try {
+				const data = JSON.parse(metaData);
+				if (data.type === "SCHEDULE_REMINDERS") {
+					await backgroundService.scheduleReminders();
+				}
+			} catch (error) {
+				console.error(
+					"[PushNotificationsService] [setUpFirebaseMessagingBackgroundHandler]",
+					error,
+				);
+			}
+		}
 	});
 };
