@@ -10,8 +10,9 @@ class LocalNotificationsService {
 	async createTriggerNotification({
 		body,
 		title,
+		data,
 		timestamp,
-	}: Pick<Notification, "title" | "body"> & { timestamp: number }) {
+	}: Pick<Notification, "title" | "body" | "data"> & { timestamp: number }) {
 		await notifee.requestPermission();
 
 		const channelId = await notifee.createChannel({
@@ -28,6 +29,7 @@ class LocalNotificationsService {
 			{
 				title,
 				body,
+				data,
 				android: {
 					channelId,
 				},
@@ -67,31 +69,40 @@ class LocalNotificationsService {
 		);
 	}
 
-	async createIntervalNotification({ id, snooze }: { id: string; snooze: number }) {
-		await notifee.requestPermission();
+	async createIntervalNotification({
+		title,
+		body,
+		snooze,
+	}: Pick<Notification, "title" | "body"> & { snooze: number }) {
+		try {
+			await notifee.requestPermission();
 
-		const channelId = await notifee.createChannel({
-			id: "reminders",
-			name: "Reminders",
-		});
+			const channelId = await notifee.createChannel({
+				id: "reminders",
+				name: "Reminders",
+			});
 
-		const trigger: IntervalTrigger = {
-			type: TriggerType.INTERVAL,
-			interval: snooze,
-			timeUnit: TimeUnit.SECONDS,
-		};
+			const trigger: IntervalTrigger = {
+				type: TriggerType.INTERVAL,
+				interval: snooze,
+				timeUnit: TimeUnit.SECONDS,
+			};
 
-		await notifee.createTriggerNotification(
-			{
-				id,
-				android: {
-					channelId,
+			const id = await notifee.createTriggerNotification(
+				{
+					title,
+					body,
+					android: {
+						channelId,
+					},
 				},
-			},
-			trigger,
-		);
+				trigger,
+			);
 
-		return id;
+			return id;
+		} catch (error) {
+			console.error("[LocalNotificationsService] [createIntervalNotification]", error);
+		}
 	}
 
 	async displayNotification(notification: Notification) {

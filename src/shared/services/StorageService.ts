@@ -8,10 +8,19 @@ export type NotificationsTracker = Record<
 	}
 >;
 
+export type SnoozeNotifications = Record<
+	string,
+	{
+		notificationId: string;
+		timestamp: number;
+	}
+>;
+
 class StorageService {
 	private _fcmTokenKey = "fcmToken";
 	private _crashlyticsEnabledKey = "crashlyticsEnabled";
 	private _notificationsTrackerKey = "notificationsTracker";
+	private _snoozeNotificationsKey = "snoozeNotifications";
 
 	async getFcmToken() {
 		return await AsyncStorage.getItem(this._fcmTokenKey);
@@ -41,6 +50,15 @@ class StorageService {
 
 	async setNotificationsTracker(tracker: NotificationsTracker) {
 		await AsyncStorage.setItem(this._notificationsTrackerKey, JSON.stringify(tracker));
+	}
+
+	async getSnoozeNotifications(): Promise<SnoozeNotifications> {
+		const value = await AsyncStorage.getItem(this._snoozeNotificationsKey);
+		return value ? JSON.parse(value) : {};
+	}
+
+	async setSnoozeNotifications(snoozeNotifications: SnoozeNotifications) {
+		await AsyncStorage.setItem(this._snoozeNotificationsKey, JSON.stringify(snoozeNotifications));
 	}
 }
 

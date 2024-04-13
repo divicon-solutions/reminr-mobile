@@ -7,10 +7,14 @@ import MCIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import ViewReminder from "./ViewReminder";
 import { makeStyles } from "@hooks/makeStyles";
-import { parseDateToFormat } from "@utils/formatters";
+import { getTodayTimestamp, parseDateToFormat } from "@utils/formatters";
+
+const now = getTodayTimestamp();
 
 export default function ReminderList() {
-	const { data, isLoading, isRefetching, refetch } = useRemindersControllerFindAll();
+	const { data, isLoading, isRefetching, refetch } = useRemindersControllerFindAll({
+		date: now,
+	});
 	const [selectedReminder, setSelectedReminder] = React.useState<Reminder | null>(null);
 
 	const styles = useStyles();
@@ -24,8 +28,7 @@ export default function ReminderList() {
 	};
 
 	const renderItem = useCallback(
-		({ item, isDisabled }: { item: Reminder; isDisabled: boolean }) => {
-			const isDue = new Date(item.remindAt).getTime() < new Date().getTime();
+		({ item, isDisabled, isDue }: { item: Reminder; isDisabled: boolean; isDue: boolean }) => {
 			return (
 				<Card
 					mode="contained"
@@ -44,7 +47,7 @@ export default function ReminderList() {
 							</>
 						}
 						titleStyle={styles.reminderNameStyle}
-						description={parseDateToFormat(item.remindAt, "hh:mm A")}
+						description={parseDateToFormat(item.remindAt, "hh:mm A", true)}
 						descriptionStyle={[isDisabled && styles.disabledReminderText]}
 						onPress={() => handleReminderPress(item)}
 						right={() =>
@@ -66,6 +69,26 @@ export default function ReminderList() {
 		[data],
 	);
 	const upcomingReminders = useMemo(
+		() =>
+			data?.filter(
+				(reminder) =>
+					new Date(reminder.remindAt).getTime() > new Date().getTime() &&
+					reminder.status !== true &&
+					reminder.acknowledgedAt === null,
+			) || [],
+		[data],
+	);
+	const dueReminders = useMemo(
+		() =>
+			data?.filter(
+				(reminder) =>
+					new Date(reminder.remindAt).getTime() < new Date().getTime() &&
+					reminder.status !== true &&
+					reminder.acknowledgedAt === null,
+			) || [],
+		[data],
+	);
+	const skippedReminders = useMemo(
 		() => data?.filter((reminder) => reminder.status === false) || [],
 		[data],
 	);
@@ -73,9 +96,11 @@ export default function ReminderList() {
 	const sectionList = useMemo(() => {
 		return [
 			{ title: "Upcoming", data: upcomingReminders },
+			{ title: "Due", data: dueReminders },
 			{ title: "Taken", data: takenReminders },
+			{ title: "Skipped", data: skippedReminders },
 		];
-	}, [takenReminders, upcomingReminders]);
+	}, [takenReminders, dueReminders, upcomingReminders, skippedReminders]);
 
 	if (isLoading) {
 		return <Loader />;
@@ -84,10 +109,14 @@ export default function ReminderList() {
 	return (
 		<>
 			<SectionList
-				sections={sectionList}
+				sections={sectionList.filter((section) => section.data.length > 0)}
 				keyExtractor={(item) => item.id}
 				renderItem={({ item, section }) =>
-					renderItem({ item, isDisabled: section.title === "Taken" })
+					renderItem({
+						item,
+						isDisabled: section.title === "Taken",
+						isDue: section.title === "Due",
+					})
 				}
 				renderSectionHeader={({ section: { title } }) => (
 					<View style={styles.headerTitles}>
@@ -95,6 +124,7 @@ export default function ReminderList() {
 					</View>
 				)}
 				refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
+				ItemSeparatorComponent={() => <View style={styles.divider} />}
 				style={styles.root}
 			/>
 			<Modal
@@ -143,7 +173,6 @@ const useStyles = makeStyles((theme) => ({
 		color: theme.colors.pending,
 	},
 	headerTitles: {
-		marginLeft: 12,
-		marginTop: 10,
+		paddingVertical: 10,
 	},
 }));
