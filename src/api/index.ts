@@ -12,3 +12,4 @@ export * from "./callback-request";
 export * from "./contact-request";
 export * from "./push-tokens";
 export * from "./notifications";
+export * from "./gift-card-type";

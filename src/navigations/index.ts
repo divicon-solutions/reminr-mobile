@@ -20,7 +20,7 @@ export const unprotectedScreens: Navigation[] = [
 	{
 		name: "ForgotPassword",
 		Component: ForgotPassword,
-		options: { headerTitle: "Forgot Password" },
+		options: { headerTitle: " " },
 	},
 ];
 

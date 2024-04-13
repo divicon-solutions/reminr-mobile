@@ -4,13 +4,12 @@
  * RemInr Api
  * OpenAPI spec version: 1.0
  */
-import type { CreateRedeemDtoGiftCardType } from "./createRedeemDtoGiftCardType";
 import type { CreateRedeemDtoMethod } from "./createRedeemDtoMethod";
 
 export interface CreateRedeemDto {
 	amount: number;
+	expiryAt?: string | null;
 	giftCardCode?: string | null;
-	giftCardType?: CreateRedeemDtoGiftCardType;
 	method: CreateRedeemDtoMethod;
 	processedAt?: string | null;
 	userId: string;

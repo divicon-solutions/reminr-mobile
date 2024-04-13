@@ -1,33 +1,28 @@
 import { View, SafeAreaView, Dimensions } from "react-native";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import KeyboardAvoidView from "@components/KeyboardAvoidView";
 import { Formik } from "formik";
 import { SelectFormField } from "@components/FormFields/SelectFormField";
 import { Button } from "react-native-paper";
 import { makeStyles } from "@hooks/makeStyles";
-import { CreateRedeemDto, useRedeemsControllerCreate } from "@api";
+import {
+	CreateRedeemDto,
+	useGiftCardTypeControllerFindAll,
+	useRedeemsControllerCreate,
+} from "@api";
 import { StackNavigationProps } from "@navigations/types";
 import { useAuth } from "@providers/auth";
-
-const giftCardOptions = [
-	{ label: "Amazon", value: "amazon" },
-	{ label: "Kroger", value: "kroger" },
-	{ label: "Walmart", value: "walmart" },
-	{ label: "VISA", value: "visa" },
-	{ label: "Star Bucks", value: "starbucks" },
-];
 
 type RedeemAmountProps = StackNavigationProps<"RedeemAmount">;
 
 export default function RedeemAmount({ route, navigation }: RedeemAmountProps) {
 	const { accountBalance } = route.params;
 	const { user } = useAuth();
-	const amounts: { value: number }[] = useMemo(() => [], []);
 	const styles = useStyles();
+	const { data } = useGiftCardTypeControllerFindAll();
 
 	const initialValues: CreateRedeemDto = {
 		amount: 0,
-		giftCardType: null,
 		processedAt: null,
 		method: "GIFTCARD",
 		giftCardCode: null,
@@ -41,11 +36,17 @@ export default function RedeemAmount({ route, navigation }: RedeemAmountProps) {
 		navigation.goBack();
 	};
 
-	useEffect(() => {
+	const amounts = useMemo(() => {
+		const result: { value: number }[] = [];
 		for (let i = 5; i <= accountBalance; i += 5) {
-			amounts.push({ value: i });
+			result.push({ value: i });
 		}
-	}, [accountBalance, amounts]);
+		return result;
+	}, [accountBalance]);
+
+	const giftCardOptions = useMemo(() => {
+		return data?.map((item) => ({ value: item.id, label: item.name })) ?? [];
+	}, [data]);
 
 	return (
 		<Formik onSubmit={onSubmit} initialValues={initialValues}>

@@ -17,6 +17,7 @@ import type {
 	CreateReminderDto,
 	Reminder,
 	RemindersControllerCreate201,
+	RemindersControllerFindAllParams,
 	RemindersControllerUpdate200,
 	SuccessResponseDto,
 	UpdateReminderDto,
@@ -84,29 +85,35 @@ export const useRemindersControllerCreate = <
 
 	return useMutation(mutationOptions);
 };
-export const remindersControllerFindAll = (signal?: AbortSignal) => {
-	return mutator<Reminder[]>({ url: `/v1/reminders`, method: "GET", signal });
+export const remindersControllerFindAll = (
+	params: RemindersControllerFindAllParams,
+	signal?: AbortSignal,
+) => {
+	return mutator<Reminder[]>({ url: `/v1/reminders`, method: "GET", params, signal });
 };
 
-export const getRemindersControllerFindAllQueryKey = () => {
-	return [`/v1/reminders`] as const;
+export const getRemindersControllerFindAllQueryKey = (params: RemindersControllerFindAllParams) => {
+	return [`/v1/reminders`, ...(params ? [params] : [])] as const;
 };
 
 export const getRemindersControllerFindAllQueryOptions = <
 	TData = Awaited<ReturnType<typeof remindersControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof remindersControllerFindAll>>, TError, TData>
-	>;
-}) => {
+>(
+	params: RemindersControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof remindersControllerFindAll>>, TError, TData>
+		>;
+	},
+) => {
 	const { query: queryOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getRemindersControllerFindAllQueryKey();
+	const queryKey = queryOptions?.queryKey ?? getRemindersControllerFindAllQueryKey(params);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof remindersControllerFindAll>>> = ({
 		signal,
-	}) => remindersControllerFindAll(signal);
+	}) => remindersControllerFindAll(params, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof remindersControllerFindAll>>,
@@ -123,12 +130,15 @@ export type RemindersControllerFindAllQueryError = ErrorType<unknown>;
 export const useRemindersControllerFindAll = <
 	TData = Awaited<ReturnType<typeof remindersControllerFindAll>>,
 	TError = ErrorType<unknown>,
->(options?: {
-	query?: Partial<
-		UseQueryOptions<Awaited<ReturnType<typeof remindersControllerFindAll>>, TError, TData>
-	>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const queryOptions = getRemindersControllerFindAllQueryOptions(options);
+>(
+	params: RemindersControllerFindAllParams,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof remindersControllerFindAll>>, TError, TData>
+		>;
+	},
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const queryOptions = getRemindersControllerFindAllQueryOptions(params, options);
 
 	const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
