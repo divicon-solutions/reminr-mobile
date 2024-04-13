@@ -8,6 +8,7 @@ import { parseDateToFormat } from "@utils/formatters";
 import { makeStyles } from "@hooks/makeStyles";
 import { BottomTabNavigationProps } from "@navigations/types";
 import { useAuth } from "@providers/auth";
+import NoDataFound from "@components/NoDataFound";
 
 type MedicationsListProps = BottomTabNavigationProps<"Medications">;
 
@@ -56,6 +57,7 @@ export default function MedicationsList({ navigation }: MedicationsListProps) {
 				refreshing={isRefetching}
 				refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
 				style={styles.root}
+				ListEmptyComponent={NoDataFound}
 			/>
 		</>
 	);

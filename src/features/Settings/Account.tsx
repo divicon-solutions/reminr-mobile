@@ -1,7 +1,7 @@
 import { View, SafeAreaView } from "react-native";
 import React from "react";
 import { Schema, string, object } from "yup";
-import { UpdateUserDto, useUsersControllerFindOne, useUsersControllerUpdate } from "@api";
+import { UpdateUserDto, useUsersControllerFindMe, useUsersControllerUpdate } from "@api";
 import { StackNavigationProps } from "@navigations/types";
 import { Formik } from "formik";
 import KeyboardAvoidView from "@components/KeyboardAvoidView";
@@ -23,7 +23,7 @@ type AccountProps = StackNavigationProps<"Account">;
 export default function Account({ navigation }: AccountProps) {
 	const { user } = useAuth();
 	const { mutateAsync } = useUsersControllerUpdate();
-	const { data, isLoading, refetch } = useUsersControllerFindOne(user?.uid || "");
+	const { data, isLoading, refetch } = useUsersControllerFindMe();
 	const styles = useStyles();
 	const initialValues: UpdateUserDto = {
 		fullName: data?.fullName || "", // Provide a default value for fullName

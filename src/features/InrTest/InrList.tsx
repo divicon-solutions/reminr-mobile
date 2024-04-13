@@ -9,6 +9,7 @@ import { makeStyles } from "@hooks/makeStyles";
 import FIcon from "react-native-vector-icons/Fontisto";
 import { BottomTabNavigationProps } from "@navigations/types";
 import { useAuth } from "@providers/auth";
+import NoDataFound from "@components/NoDataFound";
 
 type InrListProps = BottomTabNavigationProps<"InrTest">;
 
@@ -60,6 +61,7 @@ export default function InrList(props: InrListProps) {
 				refreshing={isRefetching}
 				refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
 				style={styles.root}
+				ListEmptyComponent={NoDataFound}
 			/>
 		</>
 	);

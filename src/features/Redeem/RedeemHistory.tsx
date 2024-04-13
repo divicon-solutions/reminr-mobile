@@ -7,6 +7,7 @@ import { Card, List } from "react-native-paper";
 import { parseDateToFormat } from "@utils/formatters";
 import { StackNavigationProps } from "@navigations/types";
 import { useAuth } from "@providers/auth";
+import NoDataFound from "@components/NoDataFound";
 
 type RedeemHistoryProps = StackNavigationProps<"RedeemHistory">;
 
@@ -75,6 +76,7 @@ export default function RedeemHistory({ navigation }: RedeemHistoryProps) {
 			refreshing={isRefetching}
 			refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
 			style={styles.root}
+			ListEmptyComponent={NoDataFound}
 		/>
 	);
 }

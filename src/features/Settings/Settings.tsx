@@ -1,6 +1,6 @@
 import {
 	useCallbackRequestControllerCreate,
-	useUsersControllerFindOne,
+	useUsersControllerFindMe,
 	useUsersControllerUpdate,
 } from "@api";
 import { StackNavigationProps } from "@navigations/types";
@@ -56,11 +56,7 @@ const Settings = ({ navigation }: SettingsProps) => {
 	const { mutateAsync: callBackReqMutateAsync } = useCallbackRequestControllerCreate();
 	const actionSheetRef = useRef<ActionSheetRef>(null);
 
-	const { data, refetch } = useUsersControllerFindOne(user?.uid ?? "", {
-		query: {
-			enabled: !!user?.uid,
-		},
-	});
+	const { data, refetch } = useUsersControllerFindMe();
 	const [isEnabled, setIsEnabled] = useState(data?.stickyReminder || false);
 	const [isCrashlyticsEnabled, setIsCrashlyticsEnabled] = useState(
 		crashlytics().isCrashlyticsCollectionEnabled,

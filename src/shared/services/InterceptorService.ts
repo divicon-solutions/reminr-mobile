@@ -67,6 +67,10 @@ class InterceptorService {
 				if (error.toString().includes("CanceledError")) {
 					return Promise.reject(error);
 				}
+				if (!error.response?.config?.headers?.Authorization) {
+					// if the request was made without an auth token, then no need to show the error
+					return Promise.reject(error);
+				}
 				crashlytics().recordError(new Error(error));
 				console.error("[InterceptorService] error", error);
 				if (error.response) {

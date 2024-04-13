@@ -132,6 +132,7 @@ export default function AppBottomNavigator({ navigation }: AppBottomNavigatorPro
 function BottomTabBar({ navigation, state, descriptors, insets }: Readonly<BottomTabBarProps>) {
 	return (
 		<BottomNavigation.Bar
+			activeIndicatorStyle={{ backgroundColor: "rgb(187, 195, 255)" }}
 			navigationState={state}
 			safeAreaInsets={insets}
 			onTabPress={({ route, preventDefault }): void => {

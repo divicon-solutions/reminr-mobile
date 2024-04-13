@@ -8,6 +8,7 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 import ViewReminder from "./ViewReminder";
 import { makeStyles } from "@hooks/makeStyles";
 import { getTodayTimestamp, parseDateToFormat } from "@utils/formatters";
+import NoDataFound from "@components/NoDataFound";
 
 const now = getTodayTimestamp();
 
@@ -125,6 +126,7 @@ export default function ReminderList() {
 				)}
 				refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
 				ItemSeparatorComponent={() => <View style={styles.divider} />}
+				ListEmptyComponent={NoDataFound}
 				style={styles.root}
 			/>
 			<Modal
