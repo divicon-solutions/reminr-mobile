@@ -26,6 +26,7 @@ export type RootStackParamList = {
 	Account: undefined;
 	ChangePassword: undefined;
 	ForgotPassword: undefined;
+	VerifyEmail: undefined;
 };
 
 export type Navigation = {

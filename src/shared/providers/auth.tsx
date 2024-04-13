@@ -16,6 +16,7 @@ interface AuthContext {
 	signUp: (payload: CreateUserDto & { password: string }) => Promise<void>;
 	changePassword: (oldPassword: string, newPassword: string) => Promise<void>;
 	forgotPassword: (email: string) => Promise<void>;
+	resendVerificationEmail: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContext | undefined>(undefined);
@@ -146,6 +147,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 	const signUp = useCallback(
 		async ({ password, ...rest }: CreateUserDto & { password: string }) => {
 			const userCredential = await auth().createUserWithEmailAndPassword(rest.email, password);
+			await userCredential.user?.sendEmailVerification();
 			const { result } = await usersControllerCreate({ ...rest, id: userCredential.user.uid });
 			if (!result) {
 				auth().currentUser?.delete();
@@ -192,9 +194,34 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 		}
 	}, []);
 
+	const resendVerificationEmail = useCallback(async () => {
+		const user = auth().currentUser;
+		if (user) {
+			await user.sendEmailVerification();
+		}
+	}, []);
+
 	const value = useMemo(
-		() => ({ user, isLoading, signIn, signOut, signUp, changePassword, forgotPassword }),
-		[user, isLoading, signIn, signOut, signUp, changePassword, forgotPassword],
+		() => ({
+			user,
+			isLoading,
+			signIn,
+			signOut,
+			signUp,
+			changePassword,
+			forgotPassword,
+			resendVerificationEmail,
+		}),
+		[
+			user,
+			isLoading,
+			signIn,
+			signOut,
+			signUp,
+			changePassword,
+			forgotPassword,
+			resendVerificationEmail,
+		],
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -11,6 +11,7 @@ import { makeStyles } from "@hooks/makeStyles";
 import SplashScreen from "@components/SplashScreen";
 import { RootStackParamList } from "@navigations/types";
 import { useAuth } from "@providers/auth";
+import VerifyEmail from "@features/Authentication/VerifyEmail";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -27,6 +28,17 @@ function AppContainer() {
 				{unprotectedScreens.map(({ name, Component, options }) => (
 					<Stack.Screen key={name} name={name} component={Component} options={options} />
 				))}
+			</Stack.Navigator>
+		);
+	}
+
+	if (user.emailVerified === false) {
+		return (
+			<Stack.Navigator
+				initialRouteName="VerifyEmail"
+				screenOptions={{ header: StackNavigationBar }}
+			>
+				<Stack.Screen name="VerifyEmail" component={VerifyEmail} options={{ headerShown: false }} />
 			</Stack.Navigator>
 		);
 	}
