@@ -1,4 +1,4 @@
-import { Dimensions, View } from "react-native";
+import { Dimensions, Image, View } from "react-native";
 import React from "react";
 import { TextFormField } from "@components/FormFields/TextFormField";
 import KeyboardAvoidView from "@components/KeyboardAvoidView";
@@ -8,6 +8,7 @@ import { makeStyles } from "@hooks/makeStyles";
 import { Button } from "react-native-paper";
 import { useAuth } from "@providers/auth";
 import { AlertService } from "@services/AlertService";
+import { StackNavigationProps } from "@navigations/types";
 
 type FormValues = {
 	email: string;
@@ -17,7 +18,8 @@ const schema: Schema<FormValues> = object({
 	email: string().email("Email is not valid").required("Email is required"),
 });
 
-export default function ForgotPassword() {
+type ForgotPasswordProps = StackNavigationProps<"ForgotPassword">;
+export default function ForgotPassword({ navigation }: ForgotPasswordProps) {
 	const styles = useStyles();
 	const { forgotPassword } = useAuth();
 
@@ -27,6 +29,8 @@ export default function ForgotPassword() {
 			AlertService.successMessage(
 				"If the email exists, a password reset link will be sent to your email.",
 			);
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+			navigation.goBack();
 		} catch (error: any) {
 			console.log(error);
 		}
@@ -37,6 +41,7 @@ export default function ForgotPassword() {
 			{({ handleSubmit, isSubmitting, isValid }) => (
 				<KeyboardAvoidView style={styles.container} contentContainerStyle={styles.content}>
 					<View style={styles.form}>
+						<Image source={require("@assets/logo.png")} style={styles.logo} />
 						<TextFormField
 							name="email"
 							label="Email"
@@ -62,14 +67,13 @@ export default function ForgotPassword() {
 	);
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	container: {
 		padding: 16,
-		backgroundColor: theme.colors.background,
+		backgroundColor: "white",
 	},
 	content: {
 		flexGrow: 1,
-		justifyContent: "center",
 	},
 	form: {
 		gap: 10,
@@ -80,6 +84,11 @@ const useStyles = makeStyles((theme) => ({
 	loginButton: {
 		width: Dimensions.get("window").width * 0.7,
 		borderRadius: 0,
+		alignSelf: "center",
+	},
+	logo: {
+		width: 200,
+		height: 200,
 		alignSelf: "center",
 	},
 }));

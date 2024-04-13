@@ -6,6 +6,7 @@ import notifee, { EventType } from "@notifee/react-native";
 import messaging from "@react-native-firebase/messaging";
 import { storageService } from "@services/StorageService";
 import crashlytics from "@react-native-firebase/crashlytics";
+import { backgroundService } from "@services/BackgroundService";
 
 interface AuthContext {
 	user: FirebaseAuthTypes.User | null;
@@ -56,6 +57,20 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 
 		const unsubscribeOnMessage = messaging().onMessage((remoteMessage) => {
 			console.log("[FCM] [onMessage] Message received", remoteMessage);
+			const metaData = remoteMessage.data?.metaData;
+			if (typeof metaData === "string") {
+				try {
+					const data = JSON.parse(metaData);
+					if (data.type === "SCHEDULE_REMINDERS") {
+						backgroundService.scheduleReminders();
+					}
+				} catch (error) {
+					console.error(
+						"[PushNotificationsService] [setUpFirebaseMessagingBackgroundHandler]",
+						error,
+					);
+				}
+			}
 			pushNotificationsService.displayNotification(remoteMessage);
 		});
 

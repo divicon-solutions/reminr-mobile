@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, View } from "react-native";
+import { Dimensions, Image, View } from "react-native";
 import { Formik } from "formik";
 import { Schema, object, string } from "yup";
 import { TextFormField } from "@components/FormFields/TextFormField";
@@ -50,6 +50,7 @@ export default function SignUp({ navigation }: SignUpProps) {
 			{({ handleSubmit, isSubmitting, isValid }) => (
 				<KeyboardAvoidView style={styles.container} contentContainerStyle={styles.content}>
 					<View style={styles.form}>
+						<Image source={require("@assets/logo.png")} style={styles.logo} />
 						<TextFormField name="fullName" label="Full Name" />
 						<TextFormField
 							name="email"
@@ -92,10 +93,10 @@ export default function SignUp({ navigation }: SignUpProps) {
 	);
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	container: {
 		padding: 16,
-		backgroundColor: theme.colors.background,
+		backgroundColor: "white",
 	},
 	content: {
 		flexGrow: 1,
@@ -110,6 +111,11 @@ const useStyles = makeStyles((theme) => ({
 	signUpButton: {
 		width: Dimensions.get("window").width * 0.7,
 		borderRadius: 0,
+		alignSelf: "center",
+	},
+	logo: {
+		width: 200,
+		height: 200,
 		alignSelf: "center",
 	},
 }));
