@@ -9,6 +9,7 @@ import { CreateUserDto } from "@api";
 import { makeStyles } from "@hooks/makeStyles";
 import KeyboardAvoidView from "@components/KeyboardAvoidView";
 import { StackNavigationProps } from "@navigations/types";
+import { getTimeZone } from "react-native-localize";
 
 type FormValues = CreateUserDto & {
 	password: string;
@@ -38,7 +39,8 @@ export default function SignUp({ navigation }: SignUpProps) {
 	const styles = useStyles();
 
 	const onSubmit = async ({ confirmPassword: _, ...values }: FormValues) => {
-		await signUp(values);
+		const timeZone = getTimeZone();
+		await signUp({ ...values, timeZone });
 	};
 
 	return (
@@ -62,14 +64,14 @@ export default function SignUp({ navigation }: SignUpProps) {
 						<TextFormField
 							name="password"
 							label="Password"
-							secureTextEntry
-							textContentType="password"
+							type="password"
+							autoComplete="new-password"
 						/>
 						<TextFormField
 							name="confirmPassword"
 							label="Confirm Password"
-							secureTextEntry
-							textContentType="password"
+							type="password"
+							autoComplete="new-password"
 						/>
 						<View style={styles.buttonGroup}>
 							<Button

@@ -11,4 +11,5 @@ export interface CreateUserDto {
 	id?: string;
 	phoneNumber?: string | null;
 	stickyReminder?: boolean;
+	timeZone?: string;
 }

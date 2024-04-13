@@ -16,5 +16,6 @@ export interface UserDto {
 	phoneNumber: string | null;
 	role: UserDtoRole;
 	stickyReminder: boolean;
+	timeZone: string;
 	updatedAt: string;
 }

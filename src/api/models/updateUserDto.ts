@@ -10,4 +10,5 @@ export interface UpdateUserDto {
 	fullName?: string;
 	phoneNumber?: string | null;
 	stickyReminder?: boolean;
+	timeZone?: string;
 }

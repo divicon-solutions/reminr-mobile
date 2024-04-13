@@ -22,5 +22,6 @@ export interface User {
 	pushTokens?: PushToken[];
 	role: UserRole;
 	stickyReminder: boolean;
+	timeZone: string;
 	updatedAt: string;
 }
