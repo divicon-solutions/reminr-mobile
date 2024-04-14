@@ -63,7 +63,7 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS=gcp.json
           firebase appdistribution:distribute ${{ env.IOS_BUILD_PATH }} \
             --app ${{ secrets.PROD_IOS_APP_ID }} \
-            --groups android-testers \
+            --groups ios-testers \
             --release-notes "Build ${{ github.run_number }}"
       - name: Post Distribute
         run: |
