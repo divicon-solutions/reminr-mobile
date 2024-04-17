@@ -59,5 +59,4 @@ jobs:
             --release-notes "Build ${{ github.run_number }}"
       - name: Post Distribute
         run: |
-          echo "Remove build files"
-          rm -rf android/app/build
+          git clean -ffdx

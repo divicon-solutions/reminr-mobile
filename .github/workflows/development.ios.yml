@@ -67,5 +67,4 @@ jobs:
             --release-notes "Build ${{ github.run_number }}"
       - name: Post Distribute
         run: |
-          echo "Removing ios/build"
-          rm -rf ios/build
+          git clean -ffdx
