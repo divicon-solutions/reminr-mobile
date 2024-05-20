@@ -52,7 +52,7 @@ jobs:
         run: |
           xcodebuild -exportArchive \
             -archivePath ios/build/archive/RemInr.xcarchive \
-            -exportOptionsPlist ios/ExportOptions-AdHoc.plist \
+            -exportOptionsPlist ios/ExportOptions-AppStore.plist \
             -exportPath ios/build/outputs/ipa/release | xcpretty
       - name: Validate IPA
         run: |
