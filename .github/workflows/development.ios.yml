@@ -65,6 +65,3 @@ jobs:
             --app ${{ secrets.DEV_IOS_APP_ID }} \
             --groups ios-testers \
             --release-notes "Build ${{ github.run_number }}"
-      - name: Post Distribute
-        run: |
-          git clean -ffdx
