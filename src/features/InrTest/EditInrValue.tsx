@@ -66,7 +66,7 @@ export default function EditInrValue({ route, navigation }: EditInrValueProps) {
 							label="INR Value"
 							name="inrValue"
 							type="number"
-							keyboardType="number-pad"
+							keyboardType="decimal-pad"
 						/>
 						<DateFormField label="Date" name="date" />
 						<TextFormField label="Remarks" name="remarks" />

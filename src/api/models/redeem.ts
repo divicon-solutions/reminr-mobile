@@ -4,18 +4,22 @@
  * RemInr Api
  * OpenAPI spec version: 1.0
  */
-import type { RedeemDtoMethod } from "./redeemDtoMethod";
+import type { RedeemGiftCardType } from "./redeemGiftCardType";
+import type { RedeemMethod } from "./redeemMethod";
+import type { User } from "./user";
 
-export interface RedeemDto {
+export interface Redeem {
 	amount: number;
 	createdAt: string;
 	deletedAt: string | null;
 	expiryAt: string | null;
 	giftCardCode: string | null;
+	giftCardType?: RedeemGiftCardType;
 	giftCardTypeId: string | null;
 	id: string;
-	method: RedeemDtoMethod;
+	method: RedeemMethod;
 	processedAt: string | null;
 	updatedAt: string;
+	user?: User;
 	userId: string;
 }

@@ -10,6 +10,7 @@ export interface UpdateRedeemDto {
 	amount?: number;
 	expiryAt?: string | null;
 	giftCardCode?: string | null;
+	giftCardTypeId?: string | null;
 	method?: UpdateRedeemDtoMethod;
 	processedAt?: string | null;
 	userId?: string;

@@ -15,6 +15,7 @@ import type {
 } from "@tanstack/react-query";
 import type {
 	CreateRedeemDto,
+	Redeem,
 	RedeemDto,
 	RedeemsControllerCreate201,
 	RedeemsControllerFindAllParams,
@@ -148,7 +149,7 @@ export const useRedeemsControllerFindAll = <
 };
 
 export const redeemsControllerFindOne = (id: string, signal?: AbortSignal) => {
-	return mutator<RedeemDto>({ url: `/v1/redeems/${id}`, method: "GET", signal });
+	return mutator<Redeem>({ url: `/v1/redeems/${id}`, method: "GET", signal });
 };
 
 export const getRedeemsControllerFindOneQueryKey = (id: string) => {

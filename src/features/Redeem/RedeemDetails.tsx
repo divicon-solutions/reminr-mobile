@@ -7,11 +7,13 @@ import { Button, Divider, Text } from "react-native-paper";
 import { parseDateToFormat } from "@utils/formatters";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { AlertService } from "@services/AlertService";
+import { useRedeemsControllerFindOne } from "@api";
+import Loader from "@components/Loader";
 
 type RedeemDetailsProps = StackNavigationProps<"RedeemDetails">;
 
 export default function RedeemedCardDetails({ route }: RedeemDetailsProps) {
-	const { redeemTransaction } = route.params;
+	const { data: redeemTransaction, isLoading } = useRedeemsControllerFindOne(route.params.redeemId);
 	const styles = useStyles();
 
 	const copyGiftCardCodeToClipboard = () => {
@@ -20,6 +22,10 @@ export default function RedeemedCardDetails({ route }: RedeemDetailsProps) {
 			AlertService.infoMessage("Copied");
 		}
 	};
+
+	if (isLoading || !redeemTransaction) {
+		return <Loader />;
+	}
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
@@ -60,7 +66,7 @@ export default function RedeemedCardDetails({ route }: RedeemDetailsProps) {
 			</View>
 			<View style={styles.itemContainer}>
 				<Text style={styles.label}>{"Gift Card"}:</Text>
-				<Text style={styles.value}>{redeemTransaction.giftCardType}</Text>
+				<Text style={styles.value}>{redeemTransaction.giftCardType?.name}</Text>
 			</View>
 			<View style={styles.itemContainer}>
 				<Text style={styles.label}>{"Requested Date"}:</Text>

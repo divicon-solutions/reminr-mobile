@@ -1,4 +1,4 @@
-import { InrTestDto, MedicationDto, RedeemDto } from "@api";
+import { InrTestDto, MedicationDto } from "@api";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps, NavigatorScreenParams } from "@react-navigation/native";
 import { StackNavigationOptions, StackScreenProps } from "@react-navigation/stack";
@@ -21,7 +21,7 @@ export type RootStackParamList = {
 	IncentivesOverview: { accountBalance: number };
 	RedeemAmount: { accountBalance: number };
 	RedeemHistory: undefined;
-	RedeemDetails: { redeemTransaction: RedeemDto };
+	RedeemDetails: { redeemId: string };
 	Settings: undefined;
 	Account: undefined;
 	ChangePassword: undefined;

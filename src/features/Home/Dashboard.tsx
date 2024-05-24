@@ -17,7 +17,7 @@ export default function Dashboard({ navigation }: DashboardProps) {
 	const { data, isLoading, isRefetching, refetch } = useDashboardControllerGetDashboardData(
 		user?.uid ?? "",
 	);
-	const [showMedicationsGraph, setShowMedicationsGraph] = React.useState(true);
+	const [showMedicationsGraph, setShowMedicationsGraph] = React.useState(false);
 	const { colors } = useAppTheme();
 
 	if (isLoading) {

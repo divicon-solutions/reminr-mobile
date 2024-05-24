@@ -10,6 +10,6 @@ export interface CreateContactRequestDto {
 	firstName: string;
 	isResolved?: boolean;
 	lastName: string;
-	message: string;
+	message?: string | null;
 	phoneNumber?: string | null;
 }

@@ -4,16 +4,13 @@
  * RemInr Api
  * OpenAPI spec version: 1.0
  */
+import type { Redeem } from "./redeem";
 
-export interface ContactRequestDto {
+export interface GiftCardType {
 	createdAt: string;
 	deletedAt: string | null;
-	email: string;
-	firstName: string;
 	id: string;
-	isResolved: boolean;
-	lastName: string;
-	message: string | null;
-	phoneNumber: string | null;
+	name: string;
+	redeems?: Redeem[];
 	updatedAt: string;
 }

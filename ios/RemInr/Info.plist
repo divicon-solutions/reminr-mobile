@@ -32,7 +32,7 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(DISPLAY_NAME) uses your camera to take photos.</string>
+	<string>$(DISPLAY_NAME) uses your camera to take verification images for Inr Test compliance.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(DISPLAY_NAME) uses your location to show you nearby events and to help you find your way around.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

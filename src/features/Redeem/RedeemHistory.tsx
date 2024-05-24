@@ -31,7 +31,7 @@ export default function RedeemHistory({ navigation }: RedeemHistoryProps) {
 						},
 					]}
 					onPress={() => {
-						navigation.navigate("RedeemDetails", { redeemTransaction: item });
+						navigation.navigate("RedeemDetails", { redeemId: item.id });
 					}}
 				>
 					<List.Item

@@ -19,7 +19,7 @@ type Item = {
 		| "account"
 		| "stickyReminder"
 		| "contact"
-		| "about"
+		// | "about"
 		| "terms"
 		| "privacy"
 		| "changePassword"
@@ -36,7 +36,7 @@ const accountItems: Item[] = [
 ];
 
 const otherItems: Item[] = [
-	{ id: "about", name: "About", icon: "info" },
+	// { id: "about", name: "About", icon: "info" },
 	{ id: "terms", name: "Terms and Conditions", icon: "description" },
 	{ id: "privacy", name: "Privacy Policy", icon: "privacy-tip" },
 ];
@@ -155,9 +155,9 @@ const Settings = ({ navigation }: SettingsProps) => {
 					}
 					break;
 				}
-				case "about":
-					crashlytics().crash();
-					break;
+				// case "about":
+				// 	crashlytics().crash();
+				// 	break;
 				case "terms":
 					Linking.openURL(Constants.termsAndConditionsUrl);
 					break;
