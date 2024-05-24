@@ -1,12 +1,13 @@
 import {
 	useCallbackRequestControllerCreate,
 	useUsersControllerFindMe,
+	useUsersControllerRemove,
 	useUsersControllerUpdate,
 } from "@api";
 import { StackNavigationProps } from "@navigations/types";
 import { useAuth } from "@providers/auth";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { View, ActionSheetIOS, Linking, Platform, SectionList } from "react-native";
+import { View, ActionSheetIOS, Linking, Platform, SectionList, Alert } from "react-native";
 import { Button, Card, List, Switch, Text } from "react-native-paper";
 import MIcon from "react-native-vector-icons/MaterialIcons";
 import { makeStyles } from "@hooks/makeStyles";
@@ -24,6 +25,7 @@ type Item = {
 		| "privacy"
 		| "changePassword"
 		| "crashlytics"
+		| "deleteAccount"
 		| "logout";
 	name: string;
 	icon: string;
@@ -45,14 +47,16 @@ const authItems: Item[] = [
 	{ id: "crashlytics", name: "Send bug reports", icon: "bug-report" },
 	{ id: "changePassword", name: "Change Password", icon: "password" },
 	{ id: "logout", name: "Logout", icon: "logout" },
+	{ id: "deleteAccount", name: "Delete My Account", icon: "delete" },
 ];
 
 type SettingsProps = StackNavigationProps<"Settings">;
 
 const Settings = ({ navigation }: SettingsProps) => {
 	const styles = useStyles();
-	const { signOut, user } = useAuth();
+	const { signOut, user, deleteAccount } = useAuth();
 	const { mutateAsync } = useUsersControllerUpdate();
+	const { mutateAsync: deleteUserMutateAsync } = useUsersControllerRemove();
 	const { mutateAsync: callBackReqMutateAsync } = useCallbackRequestControllerCreate();
 	const actionSheetRef = useRef<ActionSheetRef>(null);
 
@@ -84,14 +88,22 @@ const Settings = ({ navigation }: SettingsProps) => {
 		({ item, onPress }: { item: Item; onPress: (item: Item) => void }) => (
 			<Card mode="contained" style={styles.cardItem} onPress={() => onPress(item)}>
 				<List.Item
-					title={<Text style={{ color: item.id === "logout" ? "red" : "black" }}>{item.name}</Text>}
+					title={
+						<Text
+							style={{
+								color: item.id === "logout" || item.id === "deleteAccount" ? "red" : "black",
+							}}
+						>
+							{item.name}
+						</Text>
+					}
 					left={() => {
 						return (
 							<MIcon
 								name={item.icon}
 								size={20}
 								style={{ paddingLeft: 10 }}
-								color={item.id === "logout" ? "red" : "black"}
+								color={item.id === "logout" || item.id === "deleteAccount" ? "red" : "black"}
 							/>
 						);
 					}}
@@ -167,6 +179,26 @@ const Settings = ({ navigation }: SettingsProps) => {
 				case "changePassword":
 					navigation.navigate("ChangePassword");
 					break;
+				case "deleteAccount": {
+					Alert.alert(
+						"Delete Account",
+						"Are you sure you want to delete your account? This action is irreversible.",
+						[
+							{ text: "Cancel", style: "cancel" },
+							{
+								text: "Delete",
+								style: "destructive",
+								onPress: async () => {
+									if (user?.uid) {
+										await deleteUserMutateAsync({ id: user.uid });
+										await deleteAccount();
+									}
+								},
+							},
+						],
+					);
+					break;
+				}
 				case "logout":
 					signOut();
 					break;
@@ -175,7 +207,15 @@ const Settings = ({ navigation }: SettingsProps) => {
 					break;
 			}
 		},
-		[actionSheetRef, callBackReqMutateAsync, navigation, signOut, user?.uid],
+		[
+			actionSheetRef,
+			callBackReqMutateAsync,
+			navigation,
+			signOut,
+			deleteUserMutateAsync,
+			deleteAccount,
+			user?.uid,
+		],
 	);
 
 	const handleAction = async (action: "Callback" | "Email") => {

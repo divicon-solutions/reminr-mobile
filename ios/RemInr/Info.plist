@@ -38,7 +38,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(DISPLAY_NAME) uses your photo library to let you share images, videos, and other content.</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>This tracking improves our analytics accuracy. </string>	
+	<string>We would like to track some of the behavioral Data to improve your experience with our app and the app itself. We won't pass your data on to somebody else.</string>	
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

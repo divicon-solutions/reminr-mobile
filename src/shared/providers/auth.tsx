@@ -17,6 +17,7 @@ interface AuthContext {
 	changePassword: (oldPassword: string, newPassword: string) => Promise<void>;
 	forgotPassword: (email: string) => Promise<void>;
 	resendVerificationEmail: () => Promise<void>;
+	deleteAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContext | undefined>(undefined);
@@ -201,6 +202,14 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 		}
 	}, []);
 
+	const deleteAccount = useCallback(async () => {
+		const user = auth().currentUser;
+		if (user) {
+			await user.delete();
+			setUser(null);
+		}
+	}, []);
+
 	const value = useMemo(
 		() => ({
 			user,
@@ -211,6 +220,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 			changePassword,
 			forgotPassword,
 			resendVerificationEmail,
+			deleteAccount,
 		}),
 		[
 			user,
@@ -221,6 +231,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 			changePassword,
 			forgotPassword,
 			resendVerificationEmail,
+			deleteAccount,
 		],
 	);
 

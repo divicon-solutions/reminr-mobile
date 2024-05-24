@@ -16,8 +16,8 @@ import { useCrashlytics } from "@hooks/useCrashlytics";
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
-			refetchOnWindowFocus: false,
-			refetchOnMount: false,
+			refetchOnWindowFocus: true,
+			refetchOnMount: true,
 			retry: false,
 		},
 	},
