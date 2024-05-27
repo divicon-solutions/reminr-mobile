@@ -29,7 +29,7 @@ export default function Dashboard({ navigation }: DashboardProps) {
 			style={styles.root}
 			refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
 		>
-			<View style={styles.upperView}>
+			{/* <View style={styles.upperView}>
 				<View />
 				<View style={styles.container}>
 					<View style={styles.card}>
@@ -40,7 +40,7 @@ export default function Dashboard({ navigation }: DashboardProps) {
 					</View>
 				</View>
 				<View />
-			</View>
+			</View> */}
 			<View style={styles.upperView}>
 				<View>
 					<Text variant="titleMedium" style={styles.cardUpperTitle}>
